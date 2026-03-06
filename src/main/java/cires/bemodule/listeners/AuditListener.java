@@ -1,24 +1,17 @@
-package cires.bemodule.entities;
+package cires.bemodule.listeners;
 
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Date;
 
-@Table(name = "audit")
+
+
 @Data
 public class AuditListener {
-    @Id
-    private Long id;
 
-    @PrePersist
-    @PreUpdate
-    @PreRemove
-    private void beforeAnyOperation(Object object){
-        System.out.println("Before any operation");
-        @Column(name = "operation")
         private String operation;
 
-        @Column(name = "timestamp")
         private long timestamp;
 
         // standard setters and getters for the new properties
@@ -43,4 +36,4 @@ public class AuditListener {
             setTimestamp((new Date()).getTime());
         }
     }
-}
+
