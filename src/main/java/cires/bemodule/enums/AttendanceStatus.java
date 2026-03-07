@@ -1,6 +1,6 @@
 package cires.bemodule.enums;
 
-public enum Status {
+public enum AttendanceStatus {
     PRESENT,
     LATE,
     ABSENT,
