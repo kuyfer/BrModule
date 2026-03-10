@@ -1,13 +1,20 @@
 package cires.bemodule.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "participants")
 public class Participant {
 
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "first_name", nullable = false)
     private String firstName;
@@ -20,10 +27,10 @@ public class Participant {
 
     private String phone;
 
-    // optional: link to a user account if internal
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    // getters and setters
+
 }

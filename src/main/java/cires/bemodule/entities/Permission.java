@@ -1,12 +1,19 @@
 package cires.bemodule.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "permissions")
 public class Permission{
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true)
@@ -15,5 +22,5 @@ public class Permission{
     private String resource;
     private String action;
 
-    // getters and setters
+
 }
