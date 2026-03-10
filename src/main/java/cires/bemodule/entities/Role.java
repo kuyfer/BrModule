@@ -1,5 +1,6 @@
 package cires.bemodule.entities;
 
+import cires.bemodule.enums.RoleType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,6 +23,11 @@ public class Role {
     private String name;
 
     private String description;
+
+    @Enumerated(EnumType.STRING)
+    @Column(unique = true, nullable = false)
+    private RoleType roleName;
+
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 //TODO : add exception handling
 @Service
-public class UserDetailsSer implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
