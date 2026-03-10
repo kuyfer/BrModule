@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-// MAYBE : add a constructor with 3 parameters
+// MAYBE : add a constructor with 3 parameters (bearer)
 public class AuthResponse {
     private String accessToken;
     private String refreshToken;
-    private String tokenType = "Bearer";
+    private String tokenType ;
     private Long expiresIn;
 
 }
