@@ -51,7 +51,6 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout() {
-        // JWT tokens are stateless, so logout is handled client-side
         return ResponseEntity.ok().build();
     }
 }

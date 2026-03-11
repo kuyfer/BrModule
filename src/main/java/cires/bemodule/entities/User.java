@@ -1,7 +1,7 @@
 package cires.bemodule.entities;
 
 
-import cires.bemodule.enums.UserStatus;
+import cires.bemodule.enums.AccountStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,7 +36,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UserStatus status;
+    private AccountStatus accountStatus;
 
     @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
