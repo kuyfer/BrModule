@@ -1,6 +1,5 @@
 package cires.bemodule.dev;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
@@ -10,9 +9,12 @@ import java.util.Map;
 
 @RestController
 public class DebugController {
-    
-    @Autowired
-    private RequestMappingHandlerMapping requestMappingHandlerMapping;
+
+    private final RequestMappingHandlerMapping requestMappingHandlerMapping;
+
+    public DebugController(RequestMappingHandlerMapping requestMappingHandlerMapping) {
+        this.requestMappingHandlerMapping = requestMappingHandlerMapping;
+    }
     
     @GetMapping("/debug/endpoints")
     public Map<String, String> getEndpoints() {

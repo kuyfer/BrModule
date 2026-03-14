@@ -5,6 +5,8 @@ import cires.bemodule.entities.User;
 import cires.bemodule.enums.AccountStatus;
 import cires.bemodule.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +14,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
 
+    Logger logger = LoggerFactory.getLogger(UserService.class);
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+
     public User registerUser(RegisterRequest request) {
+        logger.info("registerUser");
         if (userRepository.findByUsername(request.getUsername()) != null)
             throw new RuntimeException("Username already exists");
 

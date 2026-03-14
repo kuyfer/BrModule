@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     @GetMapping
-    public void getAllUsers() {}
+    public String getAllUsers() {
+        return "All users";
+    }
 
     @PostMapping
     public void createUser(@RequestBody Object user) {}
