@@ -1,5 +1,6 @@
 package cires.bemodule.services;
 
+import cires.bemodule.entities.TrainingSession;
 import cires.bemodule.repositories.TrainingSessionRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,5 +16,8 @@ public class TrainingSessionService {
         this.trainerService = trainerService;
         this.participantService = participantService;
 
+    }
+    public TrainingSession CreateTrainingSession(TrainingSession trainingSession) {
+        return trainingSessionRepository.save(trainingSession);
     }
 }
