@@ -1,12 +1,19 @@
 package cires.bemodule.repositories;
 
+import cires.bemodule.entities.Permission;
 import cires.bemodule.entities.Role;
+import cires.bemodule.enums.RoleType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
-    Role findByName(String name);
+
+    @Override
+    Optional<Role> findById(Long aLong);
+
+    Optional<Role> findByroleName(RoleType roleName);
+
 }
