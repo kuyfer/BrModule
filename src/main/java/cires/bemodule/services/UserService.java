@@ -1,5 +1,6 @@
 package cires.bemodule.services;
 
+import cires.bemodule.dev.UserRegisteredEvent;
 import cires.bemodule.dtos.RegisterRequest;
 import cires.bemodule.entities.User;
 import cires.bemodule.enums.AccountStatus;
@@ -7,6 +8,7 @@ import cires.bemodule.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ public class UserService {
 
     Logger logger = LoggerFactory.getLogger(UserService.class);
 
+    private final ApplicationEventPublisher publisher;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -35,7 +38,7 @@ public class UserService {
         user.setLastName(request.getLastName());
         user.setEmail(request.getEmail());
         user.setAccountStatus(AccountStatus.ACTIVE);
-
+       // publisher.publishEvent(new UserRegisteredEvent(this, user.getEmail()));
         return userRepository.save(user);
     }
 }

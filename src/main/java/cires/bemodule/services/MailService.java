@@ -16,7 +16,6 @@ public class MailService {
         this.javaMailSender = javaMailSender;
     }
 
-
     public void sendPlainText(String to, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
