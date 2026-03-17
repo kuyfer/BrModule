@@ -4,15 +4,17 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
+@Data @NoArgsConstructor @AllArgsConstructor
+@Table(name = "session_participants")
 public class SessionParticipant {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
-    
+    private Long id;
+
     @ManyToOne
     @JoinColumn(name = "training_session_id")
     private TrainingSession trainingSession;
@@ -20,4 +22,8 @@ public class SessionParticipant {
     @ManyToOne
     @JoinColumn(name = "participant_id")
     private Participant participant;
+
+    @OneToMany(mappedBy = "sessionParticipant")
+    private List<Attendance> attendances = new ArrayList<>();
+
 }

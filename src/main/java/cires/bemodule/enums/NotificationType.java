@@ -1,7 +1,7 @@
 package cires.bemodule.enums;
 
 public enum NotificationType {
-        ACCOUNT_CREATION,
+    ACCOUNT_CREATION,
     PASSWORD_RESET,
     TRAINER_ASSIGNMENT,
     SESSION_REMINDER,

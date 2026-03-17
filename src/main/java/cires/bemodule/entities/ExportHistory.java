@@ -1,21 +1,26 @@
 package cires.bemodule.entities;
 
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import cires.bemodule.enums.ExportFormat;
+import cires.bemodule.enums.ExportStatus;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Data @NoArgsConstructor @AllArgsConstructor
+@Table(name = "export_history")
 public class ExportHistory {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ExportStatus exportStatus;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ExportFormat exportFormat;
+
 }
