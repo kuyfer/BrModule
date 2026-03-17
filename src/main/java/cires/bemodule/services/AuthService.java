@@ -3,7 +3,6 @@ package cires.bemodule.services;
 import cires.bemodule.dtos.AuthResponse;
 import cires.bemodule.dtos.LoginRequest;
 import cires.bemodule.dtos.RefreshTokenRequest;
-import cires.bemodule.models.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +15,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-@Service
+
 @RequiredArgsConstructor
+@Service
 public class AuthService {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthService.class);

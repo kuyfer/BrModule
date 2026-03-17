@@ -4,11 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 // MAYBE : add a constructor with 3 parameters (bearer)
+@Data @AllArgsConstructor @NoArgsConstructor
 public class AuthResponse {
+
     private String accessToken;
     private String refreshToken;
     private String tokenType ;

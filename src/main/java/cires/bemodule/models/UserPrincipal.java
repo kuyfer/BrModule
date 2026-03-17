@@ -5,19 +5,15 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Optional;
-
 
 // TODO : implement boolean methods
 public class UserPrincipal implements UserDetails {
+
     private User user;
 
-    public UserPrincipal(User user) {
-        this.user = user;
-    }
+    public UserPrincipal(User user) {this.user = user;}
 
     // TODO : return list.of() or collection of roles
     @Override

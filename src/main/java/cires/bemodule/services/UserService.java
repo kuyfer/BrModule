@@ -1,6 +1,5 @@
 package cires.bemodule.services;
 
-import cires.bemodule.dev.UserRegisteredEvent;
 import cires.bemodule.dtos.RegisterRequest;
 import cires.bemodule.entities.User;
 import cires.bemodule.enums.AccountStatus;
@@ -12,13 +11,14 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-@Service
+
 @RequiredArgsConstructor
+@Service
 public class UserService {
 
     Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    private final ApplicationEventPublisher publisher;
+    //private final ApplicationEventPublisher publisher;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -28,7 +28,7 @@ public class UserService {
         if (userRepository.findByUsername(request.getUsername()) != null)
             throw new RuntimeException("Username already exists");
 
-        if (userRepository.findByEmail(request.getEmail()) != null)
+        if (userRepository.findByEmail(request.getEmail()).isPresent())
             throw new RuntimeException("Email already exists");
 
         User user = new User();
@@ -37,7 +37,7 @@ public class UserService {
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setEmail(request.getEmail());
-        user.setAccountStatus(AccountStatus.ACTIVE);
+        user.setAccountStatus(AccountStatus.PENDING);
        // publisher.publishEvent(new UserRegisteredEvent(this, user.getEmail()));
         return userRepository.save(user);
     }
