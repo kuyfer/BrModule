@@ -1,15 +1,22 @@
 package cires.bemodule.services;
 
 import cires.bemodule.dtos.RegisterRequest;
+import cires.bemodule.dtos.UserDTO;
 import cires.bemodule.entities.User;
 import cires.bemodule.enums.AccountStatus;
+import cires.bemodule.mappers.UserMapper;
 import cires.bemodule.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -21,6 +28,8 @@ public class UserService {
     //private final ApplicationEventPublisher publisher;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
+    private final ModelMapper modelMapper;
 
 
     public User registerUser(RegisterRequest request) {
@@ -40,5 +49,16 @@ public class UserService {
         user.setAccountStatus(AccountStatus.PENDING);
        // publisher.publishEvent(new UserRegisteredEvent(this, user.getEmail()));
         return userRepository.save(user);
+    }
+
+    public UserDTO getUser(Long id) {
+        User user = userRepository.findById(id).orElseThrow();
+        return userMapper.convertUserToUserDTO(user);
+    }
+
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll()
+                .stream().map((element) -> modelMapper.map(element, UserDTO.class))
+                .collect(Collectors.toList());
     }
 }
