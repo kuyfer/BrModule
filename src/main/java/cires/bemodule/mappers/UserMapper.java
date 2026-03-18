@@ -12,12 +12,8 @@ public class UserMapper {
 
     public UserMapper(ModelMapper modelMapper) {this.modelMapper = modelMapper;}
 
-    public UserDTO convertUserToUserDTO(User user) {
-        return modelMapper.map(user, UserDTO.class);
-    }
+    public UserDTO convertUserToUserDTO(User user) {return modelMapper.map(user, UserDTO.class);}
 
-    public User convertUserDTOToUser(UserDTO userDTO) {
-        return modelMapper.map(userDTO, User.class);
-    }
+    public User convertUserDTOToUser(UserDTO userDTO) {return modelMapper.map(userDTO, User.class);}
 
 }

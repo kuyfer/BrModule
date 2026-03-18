@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data @NoArgsConstructor @AllArgsConstructor
-@Table(name = "subsidiaries")
-public class Subsidiary {
+@Table(name = "organizations")
+public class Organization {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,11 +18,8 @@ public class Subsidiary {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @Column(nullable = false)
-    private String address;
-
-    @ManyToOne
-    @JoinColumn(name = "organization_id")
-    private Organization organization;
+    @OneToMany(mappedBy = "organization")
+    private Set<Subsidiary> subsidiaries = new HashSet<>();
 
 }
+
