@@ -61,4 +61,20 @@ public class UserService {
                 .stream().map((element) -> modelMapper.map(element, UserDTO.class))
                 .collect(Collectors.toList());
     }
+
+    public void activateAccount(Long id){
+        User user = userRepository.findById(id).orElseThrow();
+        user.setAccountStatus(AccountStatus.ACTIVE);
+        userRepository.save(user);
+    }
+
+    public void deactivateAccount(Long id){
+        User user = userRepository.findById(id).orElseThrow();
+        user.setAccountStatus(AccountStatus.INACTIVE);
+        userRepository.save(user);
+    }
+
+    public void deleteUser(Long id){
+        userRepository.deleteById(id);
+    }
 }

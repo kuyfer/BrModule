@@ -6,8 +6,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
 
-@Entity
+@Audited @Entity
 @Data @NoArgsConstructor @AllArgsConstructor
 @Table(name = "notifications")
 public class Notification {

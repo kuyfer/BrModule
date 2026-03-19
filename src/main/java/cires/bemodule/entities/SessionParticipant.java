@@ -4,10 +4,12 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
+
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Audited @Entity
 @Data @NoArgsConstructor @AllArgsConstructor
 @Table(name = "session_participants")
 public class SessionParticipant {

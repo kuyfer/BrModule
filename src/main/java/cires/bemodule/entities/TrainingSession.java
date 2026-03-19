@@ -1,15 +1,17 @@
 package cires.bemodule.entities;
 
+import cires.bemodule.enums.TrainingSessionMode;
 import cires.bemodule.enums.TrainingSessionStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Audited @Entity
 @Data @NoArgsConstructor @AllArgsConstructor
 @Table(name = "Session")
 public class TrainingSession {
@@ -21,7 +23,13 @@ public class TrainingSession {
     private String title;
 
     @Column(nullable = false)
+    private String description;
+
+    @Column(nullable = false)
     private String location;
+
+    @Column(nullable = false)
+    private String onSite;
 
     @Column(nullable = false)
     private LocalDateTime startDate;
@@ -32,6 +40,10 @@ public class TrainingSession {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TrainingSessionStatus status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TrainingSessionMode mode;
 
     @ManyToOne
     @JoinColumn(name = "trainer_id")
