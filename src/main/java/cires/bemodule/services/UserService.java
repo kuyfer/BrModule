@@ -7,15 +7,12 @@ import cires.bemodule.enums.AccountStatus;
 import cires.bemodule.mappers.UserMapper;
 import cires.bemodule.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -29,7 +26,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
-    private final ModelMapper modelMapper;
+
+    //UsersMapper mapper = Mappers.getMapper(UsersMapper.class);
 
 
     public User registerUser(RegisterRequest request) {
@@ -53,12 +51,13 @@ public class UserService {
 
     public UserDTO getUser(Long id) {
         User user = userRepository.findById(id).orElseThrow();
-        return userMapper.convertUserToUserDTO(user);
+        return userMapper.toDto(user);
     }
 
     public List<UserDTO> getAllUsers() {
         return userRepository.findAll()
-                .stream().map((element) -> modelMapper.map(element, UserDTO.class))
+                .stream()
+                .map(userMapper::toDto)
                 .collect(Collectors.toList());
     }
 

@@ -14,7 +14,7 @@ public class ParticipantService {
 
     public ParticipantService(ParticipantRepository participantRepository) {this.participantRepository = participantRepository;}
 
-    public Participant CreateParticipant(CreateParticipantRequest request) {
+    public Participant createParticipant(CreateParticipantRequest request) {
 
         Participant participant = new Participant();
         participant.setFirstName(request.getFirstName());
@@ -28,7 +28,8 @@ public class ParticipantService {
     }
 
     public Participant getParticipantById(Long id) {
-        return participantRepository.findById(id).orElseThrow();
+        return participantRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("Participant not found with id " + id));
     }
 
     public List<Participant> allParticipants() {

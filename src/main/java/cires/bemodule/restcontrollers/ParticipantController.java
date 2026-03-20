@@ -32,7 +32,7 @@ public class ParticipantController {
 
     @PostMapping
     public void createParticipant(@RequestBody CreateParticipantRequest request) {
-        Participant participant = participantService.CreateParticipant(request);
+        Participant participant = participantService.createParticipant(request);
     }
 
     @PostMapping("/import/session/{sessionId}")

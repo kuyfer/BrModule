@@ -1,19 +1,30 @@
 package cires.bemodule.mappers;
 
+
 import cires.bemodule.dtos.UserDTO;
 import cires.bemodule.entities.User;
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Component
-public class UserMapper {
+@Mapper(componentModel = "spring")
+public interface UserMapper {
 
-    private final ModelMapper modelMapper;
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "username", target = "username")
+    @Mapping(source = "email", target = "email")
+    @Mapping(source = "firstName", target = "firstName")
+    @Mapping(source = "lastName", target = "lastName")
+    @Mapping(source = "accountStatus", target = "accountStatus")
+    @Mapping(source = "roles", target = "roles")
+    UserDTO toDto(User user);
 
-    public UserMapper(ModelMapper modelMapper) {this.modelMapper = modelMapper;}
-
-    public UserDTO convertUserToUserDTO(User user) {return modelMapper.map(user, UserDTO.class);}
-
-    public User convertUserDTOToUser(UserDTO userDTO) {return modelMapper.map(userDTO, User.class);}
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "username", target = "username")
+    @Mapping(source = "email", target = "email")
+    @Mapping(source = "firstName", target = "firstName")
+    @Mapping(source = "lastName", target = "lastName")
+    @Mapping(source = "accountStatus", target = "accountStatus")
+    @Mapping(source = "roles", target = "roles")
+    User toUser(UserDTO userDTO);
 
 }
