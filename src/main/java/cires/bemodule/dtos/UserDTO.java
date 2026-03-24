@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.Collection;
 
-// TODO : add roles and status
 @Data @AllArgsConstructor @NoArgsConstructor
 public class UserDTO {
 

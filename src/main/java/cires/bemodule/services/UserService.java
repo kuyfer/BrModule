@@ -27,8 +27,6 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
-    //UsersMapper mapper = Mappers.getMapper(UsersMapper.class);
-
 
     public User registerUser(RegisterRequest request) {
         logger.info("registerUser");
