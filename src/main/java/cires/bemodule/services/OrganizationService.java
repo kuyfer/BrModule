@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+// TODO: fix this doesnt make any sense...
 @Service
 public class OrganizationService {
 
@@ -14,10 +15,9 @@ public class OrganizationService {
 
     public OrganizationService(OrganizationRepository organizationRepository) {this.organizationRepository = organizationRepository;}
 
-    public void CreateOrganization(String name) {
+    public void createOrganization(String name) {
         Organization organization = new Organization();
         organization.setName(name);
-        addSubsidiary(new Subsidiary(), organization);
         organizationRepository.save(organization);
     }
 
@@ -35,6 +35,10 @@ public class OrganizationService {
     public void deleteSubsidiary(Subsidiary subsidiary, Organization organization){
         organization.getSubsidiaries().remove(subsidiary);
         organizationRepository.save(organization);
+    }
+
+    public Long countOrganizations() {
+       return organizationRepository.count();
     }
 
 }

@@ -1,19 +1,27 @@
 package cires.bemodule.services;
 
+import cires.bemodule.entities.Organization;
 import cires.bemodule.entities.Subsidiary;
+import cires.bemodule.repositories.OrganizationRepository;
 import cires.bemodule.repositories.SubsidiaryRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SubsidiaryService {
 
     private final SubsidiaryRepository subsidiaryRepository;
+    private final OrganizationRepository organizationRepository;
 
-    public SubsidiaryService(SubsidiaryRepository subsidiaryRepository) {this.subsidiaryRepository = subsidiaryRepository;}
+    public SubsidiaryService(SubsidiaryRepository subsidiaryRepository, OrganizationRepository organizationRepository) {this.subsidiaryRepository = subsidiaryRepository;
+        this.organizationRepository = organizationRepository;
+    }
 
-    public  Subsidiary createSubsidiary(String name){
+
+    public  Subsidiary createSubsidiary(String name, String address){
         Subsidiary subsidiary = new Subsidiary();
         subsidiary.setName(name);
+        subsidiary.setAddress(address);
         return subsidiaryRepository.save(subsidiary);
     }
 
@@ -22,6 +30,4 @@ public class SubsidiaryService {
     }
 
     public Subsidiary findSubsidiaryById(Long id){return subsidiaryRepository.findById(id).orElseThrow();}
-
-
 }
