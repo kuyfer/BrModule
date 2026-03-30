@@ -7,6 +7,7 @@ public class CurrentUser {
 
     private static final ThreadLocal<String> storage = new ThreadLocal<>();
 
+    private static final ThreadLocal<String> addrStorage = new ThreadLocal<>();
     public void logIn(String user) {
         storage.set(user);
     }
@@ -17,5 +18,17 @@ public class CurrentUser {
 
     public String get() {
         return storage.get();
+    }
+
+    public void setIpAddress(String ip) { addrStorage.set(ip); }
+
+    public String getIpAddress() { return addrStorage.get(); }
+
+    public void clearIpAddress() { addrStorage.remove(); }
+
+    public void clear() {
+        storage.remove();
+        addrStorage.remove();
+
     }
 }

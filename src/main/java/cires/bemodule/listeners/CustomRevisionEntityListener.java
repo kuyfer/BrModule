@@ -15,5 +15,8 @@ public class CustomRevisionEntityListener implements RevisionListener {
         customRevisionEntity.setUsername(
                 CurrentUser.INSTANCE.get()
         );
+        customRevisionEntity.setIpAddress(
+                CurrentUser.INSTANCE.getIpAddress()
+        );
     }
 }

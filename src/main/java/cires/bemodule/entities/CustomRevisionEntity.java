@@ -20,5 +20,7 @@ import jakarta.persistence.EntityListeners;
 public class CustomRevisionEntity extends RevisionMapping {
 
     private String username;
+    private String ipAddress;
+
 
 }

@@ -29,17 +29,17 @@ public class DataSeeder implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
 
-            Organization test = new Organization();
-            test.setName("test");
-            organizationRepository.save(test);
-
-
-        Subsidiary sub1 = new Subsidiary();
-        sub1.setName("yawyaw alpha");
-        sub1.setAddress("123 Main St");
-        subsidiaryRepository.save(sub1);
-
-        organizationService.addSubsidiary(sub1, test);
+//            Organization test = new Organization();
+//            test.setName("test");
+//            organizationRepository.save(test);
+//
+//
+//        Subsidiary sub1 = new Subsidiary();
+//        sub1.setName("yawyaw alpha");
+//        sub1.setAddress("123 Main St");
+//        subsidiaryRepository.save(sub1);
+//
+//        organizationService.addSubsidiary(sub1, test);
 
     }
 }
