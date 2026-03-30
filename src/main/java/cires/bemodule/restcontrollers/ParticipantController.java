@@ -1,6 +1,7 @@
 package cires.bemodule.restcontrollers;
 
 import cires.bemodule.dtos.CreateParticipantRequest;
+import cires.bemodule.dtos.ParticipantDTO;
 import cires.bemodule.entities.Participant;
 import cires.bemodule.services.ParticipantService;
 import org.springframework.http.ResponseEntity;
@@ -14,20 +15,18 @@ public class ParticipantController {
 
     private final ParticipantService participantService;
 
-    public ParticipantController(ParticipantService participantService) {
-        this.participantService = participantService;
-    }
+    public ParticipantController(ParticipantService participantService) {this.participantService = participantService;}
+
     @GetMapping("/{id}")
-    public ResponseEntity<Participant> getParticipantById(@PathVariable Long id) {
-        Participant participant = participantService.getParticipantById(id);
+    public ResponseEntity<ParticipantDTO> getParticipantById(@PathVariable Long id) {
+        ParticipantDTO participant = participantService.getParticipantById(id);
         return ResponseEntity.ok(participant);
-}
+    }
 
     @GetMapping
-    public ResponseEntity<List<Participant>> getAllParticipants() {
-        List<Participant> participants = participantService.allParticipants();
+    public ResponseEntity<List<ParticipantDTO>> getAllParticipants() {
+        List<ParticipantDTO> participants = participantService.allParticipants();
         return ResponseEntity.ok(participants);
-
     }
 
     @PostMapping

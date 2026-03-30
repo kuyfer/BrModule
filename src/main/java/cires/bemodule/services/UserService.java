@@ -48,14 +48,14 @@ public class UserService {
     }
 
     public UserDTO getUser(Long id) {
-        User user = userRepository.findById(id).orElseThrow();
-        return userMapper.toDto(user);
+        User user = userRepository.findById(id).orElseThrow( () -> new RuntimeException("User not found with id " + id));
+        return userMapper.toUserDto(user);
     }
 
     public List<UserDTO> getAllUsers() {
         return userRepository.findAll()
                 .stream()
-                .map(userMapper::toDto)
+                .map(userMapper::toUserDto)
                 .collect(Collectors.toList());
     }
 
