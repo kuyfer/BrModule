@@ -12,11 +12,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class ParticipantService {
 
     private final ParticipantRepository participantRepository;
     private final ParticipantMapper participantMapper;
+
+    public ParticipantService(ParticipantRepository participantRepository, ParticipantMapper participantMapper) {
+        this.participantRepository = participantRepository;
+        this.participantMapper = participantMapper;
+    }
 
     public Participant createParticipant(CreateParticipantRequest request) {
 

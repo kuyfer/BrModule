@@ -1,5 +1,6 @@
 package cires.bemodule.utilities;
 
+// Code provided from : https://docs.hibernate.org/orm/current/userguide/html_single/#envers-tracking-modified-entities-revchanges
 public class CurrentUser {
 
     public static final CurrentUser INSTANCE = new CurrentUser();
