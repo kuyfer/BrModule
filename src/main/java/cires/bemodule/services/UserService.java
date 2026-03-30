@@ -42,7 +42,7 @@ public class UserService {
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setEmail(request.getEmail());
-        user.setAccountStatus(AccountStatus.PENDING);
+        user.setAccountStatus(AccountStatus.ACTIVE);
        // publisher.publishEvent(new UserRegisteredEvent(this, user.getEmail()));
         return userRepository.save(user);
     }

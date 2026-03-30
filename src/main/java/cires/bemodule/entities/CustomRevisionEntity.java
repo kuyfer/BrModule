@@ -1,7 +1,9 @@
 package cires.bemodule.entities;
 
 //import cires.bemodule.listeners.CustomRevisionListener;
+import cires.bemodule.listeners.CustomRevisionEntityListener;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,12 +12,13 @@ import org.hibernate.envers.RevisionEntity;
 import org.hibernate.envers.RevisionMapping;
 import jakarta.persistence.EntityListeners;
 
-@Entity
+
 @Data @NoArgsConstructor @AllArgsConstructor
-//@RevisionEntity(CustomRevisionListener.class)
+@Entity(name = "CustomRevisionEntity")
+@Table(name = "CUSTOM_REV_INFO")
+@RevisionEntity(CustomRevisionEntityListener.class)
 public class CustomRevisionEntity extends RevisionMapping {
 
-    private String remoteHost;
-    private String remoteUser;
+    private String username;
 
 }

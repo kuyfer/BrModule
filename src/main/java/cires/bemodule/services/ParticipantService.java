@@ -2,9 +2,7 @@ package cires.bemodule.services;
 
 import cires.bemodule.dtos.CreateParticipantRequest;
 import cires.bemodule.dtos.ParticipantDTO;
-import cires.bemodule.dtos.UserDTO;
 import cires.bemodule.entities.Participant;
-import cires.bemodule.entities.User;
 import cires.bemodule.mappers.ParticipantMapper;
 import cires.bemodule.repositories.ParticipantRepository;
 import lombok.RequiredArgsConstructor;
