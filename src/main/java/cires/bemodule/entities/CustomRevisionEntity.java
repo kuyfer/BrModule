@@ -7,10 +7,8 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.envers.DefaultRevisionEntity;
 import org.hibernate.envers.RevisionEntity;
 import org.hibernate.envers.RevisionMapping;
-import jakarta.persistence.EntityListeners;
 
 
 @Data @NoArgsConstructor @AllArgsConstructor
@@ -21,6 +19,5 @@ public class CustomRevisionEntity extends RevisionMapping {
 
     private String username;
     private String ipAddress;
-
 
 }

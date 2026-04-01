@@ -47,4 +47,8 @@ public class ParticipantService {
                 .collect(Collectors.toList());
     }
 
+    public void deleteParticipant(Long id) {
+        participantRepository.deleteById(id);
+    }
+
 }

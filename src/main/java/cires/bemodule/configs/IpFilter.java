@@ -11,6 +11,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 // TODO: Maybe switch to IPv4
+// TODO: change it ContextFilter ?? add ProcessTime
+// might not work if there is a reverse proxy, firewall, gateway or loadbalancer in between
 @Component
 public class IpFilter extends OncePerRequestFilter {
     @Override
@@ -18,13 +20,13 @@ public class IpFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
+
         String header = request.getHeader("X-Forwarded-For");
         String clientIp = header != null && !header.isBlank()
                 ? header.split(",")[0].trim()
                 : request.getRemoteAddr();
 
         request.setAttribute("realClientIp", clientIp);
-        System.out.println("Client IP: " + clientIp);
         try{
             CurrentUser.INSTANCE.setIpAddress(clientIp);
             filterChain.doFilter(request, response);

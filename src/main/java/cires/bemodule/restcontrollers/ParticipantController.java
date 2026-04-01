@@ -36,4 +36,11 @@ public class ParticipantController {
 
     @PostMapping("/import/session/{sessionId}")
     public void importParticipantsFromSession(@PathVariable Long sessionId, @RequestBody Object importRequest) {}
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteParticipant(@PathVariable Long id) {
+        participantService.deleteParticipant(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }
