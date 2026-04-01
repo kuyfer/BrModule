@@ -3,6 +3,7 @@ package cires.bemodule.services;
 import cires.bemodule.dtos.AuthResponse;
 import cires.bemodule.dtos.LoginRequest;
 import cires.bemodule.dtos.RefreshTokenRequest;
+import cires.bemodule.models.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,42 +26,31 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final UserDetailsServiceImpl userDetailsServiceImpl;
 
-    public AuthService(AuthenticationManager authenticationManager, JwtService jwtService, UserDetailsService userDetailsService) {
+    public AuthService(AuthenticationManager authenticationManager, JwtService jwtService, UserDetailsService userDetailsService, UserDetailsServiceImpl userDetailsServiceImpl) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
+        this.userDetailsServiceImpl = userDetailsServiceImpl;
     }
 
     @Value("${jwt.expiration}")
     private long jwtExpiration;
 
     public AuthResponse login(LoginRequest request) {
-        logger.info("Login attempt initiated for username: {}", request.getUsername());
         
         try {
-            // Authenticate user
-            logger.debug("Authenticating user credentials for: {}", request.getUsername());
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.getUsername(),
                             request.getPassword()
                     )
             );
-            logger.debug("User authentication successful for: {}", request.getUsername());
-            
-            // Load user details
-            logger.debug("Loading user details for: {}", request.getUsername());
-            var userDetails = userDetailsService.loadUserByUsername(request.getUsername());
-            
-            // Generate tokens
-            logger.debug("Generating JWT tokens for user: {}", userDetails.getUsername());
-            var jwtToken = jwtService.generateToken(userDetails);
-            var refreshToken = jwtService.generateRefreshToken(userDetails);
-            
-            logger.info("Login completed successfully for user: {} with roles: {}", 
-                       userDetails.getUsername(), userDetails.getAuthorities());
-            
+            var userPrincipal = userDetailsService.loadUserByUsername(request.getUsername());
+            var jwtToken = jwtService.generateToken((UserPrincipal) userPrincipal);
+            var refreshToken = jwtService.generateRefreshToken((UserPrincipal) userPrincipal);
+
             return new AuthResponse(jwtToken, refreshToken, "Bearer", jwtExpiration);
             
         } catch (BadCredentialsException e) {
@@ -97,15 +87,15 @@ public class AuthService {
             
             // Load user details
             logger.debug("Loading user details for token refresh: {}", userEmail);
-            var userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+            var userPrincipal = this.userDetailsService.loadUserByUsername(userEmail);
             
             // Validate refresh token
             logger.debug("Validating refresh token for user: {}", userEmail);
-            if (jwtService.isTokenValid(refreshToken, userDetails)) {
+            if (jwtService.isTokenValid(refreshToken, userPrincipal)) {
                 logger.debug("Refresh token valid, generating new tokens for user: {}", userEmail);
                 
-                var accessToken = jwtService.generateToken(userDetails);
-                var newRefreshToken = jwtService.generateRefreshToken(userDetails);
+                var accessToken = jwtService.generateToken((UserPrincipal) userPrincipal);
+                var newRefreshToken = jwtService.generateRefreshToken((UserPrincipal) userPrincipal);
                 
                 logger.info("Token refresh completed successfully for user: {}", userEmail);
                 return new AuthResponse(accessToken, newRefreshToken, "Bearer", jwtExpiration);
