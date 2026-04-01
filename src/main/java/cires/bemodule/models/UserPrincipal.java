@@ -18,6 +18,10 @@ public class UserPrincipal implements UserDetails {
 
     private User user;
 
+    public User getUser() {
+        return user;
+    }
+
     public UserPrincipal(User user) {this.user = user;}
 
     // TODO : return list.of() or collection of roles
@@ -26,14 +30,10 @@ public class UserPrincipal implements UserDetails {
         Set<GrantedAuthority> authorities = new HashSet<>();
         for (Role role : user.getRoles()) {
             authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getRoleName()));
+            for (Permission permission : role.getPermissions()) {
+                  authorities.add(new SimpleGrantedAuthority(permission.getName()));
+            }
         }
-        // TODO : add permissions
-//                for (Role role : user.getRoles()) {
-//            for (Permission permission : role.getPermissions()) {
-//                authorities.add(new SimpleGrantedAuthority(permission.getName()));
-//            }
-//            authorities.add(new SimpleGrantedAuthority("Role" + role.getRoleName()));
-//        }
         return authorities;
     }
 

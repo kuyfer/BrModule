@@ -5,6 +5,7 @@ import cires.bemodule.dtos.ParticipantDTO;
 import cires.bemodule.entities.Participant;
 import cires.bemodule.services.ParticipantService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,6 +38,7 @@ public class ParticipantController {
     @PostMapping("/import/session/{sessionId}")
     public void importParticipantsFromSession(@PathVariable Long sessionId, @RequestBody Object importRequest) {}
 
+    @PreAuthorize( "hasRole('SUPER_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteParticipant(@PathVariable Long id) {
         participantService.deleteParticipant(id);
