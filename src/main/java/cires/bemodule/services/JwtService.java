@@ -8,6 +8,7 @@ import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
@@ -21,7 +22,7 @@ public class JwtService {
     private static final Logger logger = LoggerFactory.getLogger(JwtService.class);
 
     @Value("${jwt.secret}")
-    private String secretKey;
+    private String jwtKey;
 
     @Value("${jwt.expiration}")
     private long jwtExpiration;
@@ -33,6 +34,11 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
+//    public String getUserNameFromJwtToken(String token) {
+//        return Jwts.parser().setSigningKey(key()).build()
+//                .parseClaimsJws(token).getBody().getSubject();
+//    }
+//
     public List<String> extractRoles(String token) {
         Claims claims = extractAllClaims(token);
         Object rolesObj = claims.get("roles");
@@ -107,6 +113,17 @@ public class JwtService {
                 .signWith(getSignInKey(), Jwts.SIG.HS256)
                 .compact();
     }
+    private String buildToken(Authentication authentication) {
+        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
+        logger.debug("Building token for user: {}, expiration: {}ms", userPrincipal.getUsername(), jwtExpiration);
+
+        return Jwts.builder()
+                .subject(userPrincipal.getUsername())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .signWith(getSignInKey(), Jwts.SIG.HS256)
+                .compact();
+    }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         try {
@@ -132,9 +149,9 @@ public class JwtService {
                 .parseSignedClaims(token)
                 .getPayload();
     }
-
+// TODO: use Key instead or another class type
     private SecretKey getSignInKey() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtKey));
     }
 }
 
