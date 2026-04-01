@@ -1,10 +1,10 @@
-package cires.bemodule.services;
+package cires.bemodule.security.services;
 
 import cires.bemodule.dtos.AuthResponse;
 import cires.bemodule.dtos.LoginRequest;
 import cires.bemodule.dtos.RefreshTokenRequest;
 import cires.bemodule.models.UserPrincipal;
-import cires.bemodule.security.services.UserDetailsServiceImpl;
+import cires.bemodule.security.jwt.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

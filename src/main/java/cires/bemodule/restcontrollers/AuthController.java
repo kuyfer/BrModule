@@ -5,7 +5,7 @@ import cires.bemodule.dtos.LoginRequest;
 import cires.bemodule.dtos.RefreshTokenRequest;
 import cires.bemodule.dtos.RegisterRequest;
 import cires.bemodule.entities.User;
-import cires.bemodule.services.AuthService;
+import cires.bemodule.security.services.AuthService;
 import cires.bemodule.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

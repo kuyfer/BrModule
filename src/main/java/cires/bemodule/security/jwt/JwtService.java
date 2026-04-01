@@ -1,4 +1,4 @@
-package cires.bemodule.services;
+package cires.bemodule.security.jwt;
 
 import cires.bemodule.entities.Permission;
 import cires.bemodule.models.UserPrincipal;
