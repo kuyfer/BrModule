@@ -18,6 +18,7 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
+// TODO : change NonNull due to being deprecated
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;

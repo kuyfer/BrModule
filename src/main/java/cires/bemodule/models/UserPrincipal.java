@@ -4,6 +4,7 @@ import cires.bemodule.entities.Permission;
 import cires.bemodule.entities.Role;
 import cires.bemodule.entities.User;
 import cires.bemodule.enums.AccountStatus;
+import lombok.Getter;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,13 +15,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 // TODO : implement boolean methods
+@Getter
 public class UserPrincipal implements UserDetails {
 
     private User user;
-
-    public User getUser() {
-        return user;
-    }
 
     public UserPrincipal(User user) {this.user = user;}
 

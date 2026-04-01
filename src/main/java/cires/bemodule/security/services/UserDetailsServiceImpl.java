@@ -1,4 +1,4 @@
-package cires.bemodule.services;
+package cires.bemodule.security.services;
 
 import cires.bemodule.entities.User;
 import cires.bemodule.models.UserPrincipal;

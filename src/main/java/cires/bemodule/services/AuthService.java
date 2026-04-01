@@ -4,7 +4,7 @@ import cires.bemodule.dtos.AuthResponse;
 import cires.bemodule.dtos.LoginRequest;
 import cires.bemodule.dtos.RefreshTokenRequest;
 import cires.bemodule.models.UserPrincipal;
-import lombok.RequiredArgsConstructor;
+import cires.bemodule.security.services.UserDetailsServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
