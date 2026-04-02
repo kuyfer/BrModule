@@ -5,6 +5,7 @@ import cires.bemodule.entities.Role;
 import cires.bemodule.entities.User;
 import cires.bemodule.enums.AccountStatus;
 import lombok.Getter;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,6 +25,7 @@ public class UserPrincipal implements UserDetails {
 
     // TODO : return list.of() or collection of roles
     @Override
+    @NonNull
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> authorities = new HashSet<>();
         for (Role role : user.getRoles()) {
@@ -41,6 +43,7 @@ public class UserPrincipal implements UserDetails {
     }
 
     @Override
+    @NonNull
     public String getUsername() {
         return user.getUsername();
     }

@@ -16,6 +16,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+
 @Service
 public class JwtService {
 
@@ -124,7 +125,22 @@ public class JwtService {
                 .signWith(getSignInKey(), Jwts.SIG.HS256)
                 .compact();
     }
+    public boolean validateJwtToken(String authToken) {
+        try {
+            Jwts.parser().setSigningKey(SecretKey()).build().parse(authToken);
+            return true;
+        } catch (MalformedJwtException e) {
+            logger.error("Invalid JWT token: {}", e.getMessage());
+        } catch (ExpiredJwtException e) {
+            logger.error("JWT token is expired: {}", e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            logger.error("JWT token is unsupported: {}", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            logger.error("JWT claims string is empty: {}", e.getMessage());
+        }
 
+        return false;
+    }
     public boolean isTokenValid(String token, UserDetails userDetails) {
         try {
             final String username = extractUsername(token);
