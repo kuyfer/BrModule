@@ -1,9 +1,6 @@
 package cires.bemodule.restcontrollers;
 
-import cires.bemodule.dtos.AuthResponse;
-import cires.bemodule.dtos.LoginRequest;
-import cires.bemodule.dtos.RefreshTokenRequest;
-import cires.bemodule.dtos.RegisterRequest;
+import cires.bemodule.dtos.*;
 import cires.bemodule.entities.User;
 import cires.bemodule.security.services.AuthService;
 import cires.bemodule.services.UserService;
@@ -23,20 +20,14 @@ public class AuthController {
     private final AuthService authService;
     private final UserService userService;
 
+    // TODO: add exception handling
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest) {
-        try {
+    public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
             User user = userService.registerUser(registerRequest);
+            RegisterResponse response = new RegisterResponse(user.getId(), user.getUsername(), "Login successful!");
             return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(Map.of(
-                            "message", "User registered successfully",
-                            "userId", user.getId(),
-                            "username", user.getUsername()
-                    ));
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("error", e.getMessage()));
-        }
+                    .body(response);
+
     }
 
     @PostMapping("/login")
