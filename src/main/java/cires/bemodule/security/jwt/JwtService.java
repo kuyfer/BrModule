@@ -66,13 +66,6 @@ public class JwtService {
         return claimsResolver.apply(extractAllClaims(token));
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return buildToken(new HashMap<>(), userDetails, jwtExpiration);
-    }
-
-    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return buildToken(extraClaims, userDetails, jwtExpiration);
-    }
     public String generateToken(UserPrincipal userPrincipal) {
         Map<String, Object> claims = new HashMap<>();
 
@@ -88,11 +81,6 @@ public class JwtService {
         claims.put("permissions", permissions);
 
         return buildToken(claims, userPrincipal, jwtExpiration);
-    }
-
-
-    public String generateRefreshToken(UserDetails userDetails) {
-        return buildToken(new HashMap<>(), userDetails, refreshExpiration);
     }
 
     public String generateRefreshToken(UserPrincipal userPrincipal) {
@@ -127,7 +115,7 @@ public class JwtService {
     }
     public boolean validateJwtToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(SecretKey()).build().parse(authToken);
+            Jwts.parser().verifyWith(getSignInKey()).build().parse(authToken);
             return true;
         } catch (MalformedJwtException e) {
             logger.error("Invalid JWT token: {}", e.getMessage());
