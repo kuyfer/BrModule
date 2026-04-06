@@ -13,7 +13,7 @@ public class TrainerService {
         this.trainerRepository = trainerRepository;
     }
 
-    public Trainer CreateTrainer(Trainer trainer) {
+    public Trainer createTrainer(Trainer trainer) {
         return trainerRepository.save(trainer);
     }
 }

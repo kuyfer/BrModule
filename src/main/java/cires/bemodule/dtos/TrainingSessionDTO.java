@@ -5,7 +5,6 @@ import cires.bemodule.entities.Subsidiary;
 import cires.bemodule.entities.Trainer;
 import cires.bemodule.enums.TrainingSessionMode;
 import cires.bemodule.enums.TrainingSessionStatus;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

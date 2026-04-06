@@ -6,7 +6,6 @@ import cires.bemodule.entities.User;
 import cires.bemodule.enums.AccountStatus;
 import cires.bemodule.mappers.UserMapper;
 import cires.bemodule.repositories.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;

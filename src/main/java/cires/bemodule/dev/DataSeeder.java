@@ -1,8 +1,5 @@
 package cires.bemodule.dev;
 
-
-import cires.bemodule.entities.Organization;
-import cires.bemodule.entities.Subsidiary;
 import cires.bemodule.repositories.OrganizationRepository;
 import cires.bemodule.repositories.SubsidiaryRepository;
 import cires.bemodule.services.OrganizationService;

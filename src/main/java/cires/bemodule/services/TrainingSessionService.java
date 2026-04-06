@@ -17,7 +17,7 @@ public class TrainingSessionService {
         this.participantService = participantService;
 
     }
-    public TrainingSession CreateTrainingSession(TrainingSession trainingSession) {
+    public TrainingSession createTrainingSession(TrainingSession trainingSession) {
         return trainingSessionRepository.save(trainingSession);
     }
 }

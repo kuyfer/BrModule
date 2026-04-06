@@ -1,10 +1,9 @@
 package cires.bemodule.services;
 
-import cires.bemodule.entities.Organization;
+
 import cires.bemodule.entities.Subsidiary;
 import cires.bemodule.repositories.OrganizationRepository;
 import cires.bemodule.repositories.SubsidiaryRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service

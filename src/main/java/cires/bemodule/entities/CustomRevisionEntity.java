@@ -1,6 +1,5 @@
 package cires.bemodule.entities;
 
-//import cires.bemodule.listeners.CustomRevisionListener;
 import cires.bemodule.listeners.CustomRevisionEntityListener;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

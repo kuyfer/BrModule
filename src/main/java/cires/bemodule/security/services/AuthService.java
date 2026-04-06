@@ -91,7 +91,7 @@ public class AuthService {
             
             // Validate refresh token
             logger.debug("Validating refresh token for user: {}", userEmail);
-            if (jwtService.isTokenValid(refreshToken, userPrincipal)) {
+            if (jwtService.validateJwtToken(refreshToken)) {
                 logger.debug("Refresh token valid, generating new tokens for user: {}", userEmail);
                 
                 var accessToken = jwtService.generateToken((UserPrincipal) userPrincipal);

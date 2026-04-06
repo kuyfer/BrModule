@@ -5,7 +5,6 @@ import cires.bemodule.dtos.ParticipantDTO;
 import cires.bemodule.entities.Participant;
 import cires.bemodule.mappers.ParticipantMapper;
 import cires.bemodule.repositories.ParticipantRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
