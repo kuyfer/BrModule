@@ -4,6 +4,7 @@ import cires.bemodule.dtos.RegisterRequest;
 import cires.bemodule.dtos.UserDTO;
 import cires.bemodule.entities.User;
 import cires.bemodule.enums.AccountStatus;
+import cires.bemodule.exceptions.UserNotFoundException;
 import cires.bemodule.mappers.UserMapper;
 import cires.bemodule.repositories.UserRepository;
 import org.slf4j.Logger;
@@ -52,7 +53,7 @@ public class UserService {
     }
 
     public UserDTO getUser(Long id) {
-        User user = userRepository.findById(id).orElseThrow( () -> new RuntimeException("User not found with id " + id));
+        User user = userRepository.findById(id).orElseThrow( () -> new UserNotFoundException(id));
         return userMapper.toUserDto(user);
     }
 
