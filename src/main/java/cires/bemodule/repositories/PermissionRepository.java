@@ -11,8 +11,10 @@ public interface PermissionRepository extends JpaRepository<Permission, Long> {
     @Override
     Optional<Permission> findById(Long aLong);
 
-    Optional<Permission> findByName(String name);
+    Permission findByName(String name);
 
     Optional<Permission> findByAction(String action);
+    boolean existsByName(String name);
+
 
 }
