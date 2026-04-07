@@ -27,7 +27,9 @@ public class UserController {
     }
 
     @PostMapping
-    public void createUser(@RequestBody Object user) {}
+    public void createUser(@RequestBody Object user) {
+
+    }
 
     @PutMapping("/{id}")
     public void updateUser(@PathVariable Long id, @RequestBody Object user) {}

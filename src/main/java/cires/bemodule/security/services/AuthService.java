@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,90 +27,64 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
-    private final UserDetailsServiceImpl userDetailsServiceImpl;
 
-    public AuthService(AuthenticationManager authenticationManager, JwtService jwtService, UserDetailsService userDetailsService, UserDetailsServiceImpl userDetailsServiceImpl) {
+
+    public AuthService(AuthenticationManager authenticationManager, JwtService jwtService, UserDetailsService userDetailsService) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
-        this.userDetailsServiceImpl = userDetailsServiceImpl;
     }
 
     @Value("${jwt.expiration}")
     private long jwtExpiration;
 
+    private static final String TOKEN_TYPE_CLAIM = "token_type";
+    private static final String REFRESH_TOKEN_TYPE = "refresh";
+
     public AuthResponse login(LoginRequest request) {
-        
+
         try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getUsername(),
-                            request.getPassword()
-                    )
+            Authentication auth = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
             );
-            var userPrincipal = userDetailsService.loadUserByUsername(request.getUsername());
-            var jwtToken = jwtService.generateToken((UserPrincipal) userPrincipal);
-            var refreshToken = jwtService.generateRefreshToken((UserPrincipal) userPrincipal);
+
+            UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();
+            String jwtToken = jwtService.generateJwtToken(userPrincipal);
+            String refreshToken = jwtService.generateRefreshJwtToken(userPrincipal);
 
             return new AuthResponse(jwtToken, refreshToken, "Bearer", jwtExpiration);
-            
-        } catch (BadCredentialsException e) {
-            logger.warn("Login failed - Invalid credentials for username: {}", request.getUsername());
-            throw e;
-        } catch (UsernameNotFoundException e) {
-            logger.warn("Login failed - User not found: {}", request.getUsername());
+
+        } catch (BadCredentialsException | UsernameNotFoundException e) {
+            logger.warn("Login failed for user: {}", request.getUsername());
             throw e;
         } catch (AuthenticationException e) {
-            logger.error("Authentication error for username: {} - {}", request.getUsername(), e.getMessage());
+            logger.error("Authentication error for user: {}", request.getUsername(), e);
             throw e;
         } catch (Exception e) {
-            logger.error("Unexpected error during login for username: {} - {}", 
-                        request.getUsername(), e.getMessage(), e);
+            logger.error("Unexpected login error", e);
             throw new RuntimeException("Login failed due to internal error", e);
         }
     }
 
     public AuthResponse refreshToken(RefreshTokenRequest request) {
-        logger.info("Token refresh attempt initiated");
-        
-        try {
-            final String refreshToken = request.getRefreshToken();
-            logger.debug("Extracting username from refresh token");
-            
-            final String userEmail = jwtService.extractUsername(refreshToken);
-            
-            if (userEmail == null) {
-                logger.warn("Token refresh failed - Unable to extract username from token");
-                throw new RuntimeException("Invalid refresh token - no username found");
-            }
-            
-            logger.debug("Token refresh requested for user: {}", userEmail);
-            
-            // Load user details
-            logger.debug("Loading user details for token refresh: {}", userEmail);
-            var userPrincipal = this.userDetailsService.loadUserByUsername(userEmail);
-            
-            // Validate refresh token
-            logger.debug("Validating refresh token for user: {}", userEmail);
-            if (jwtService.validateJwtToken(refreshToken)) {
-                logger.debug("Refresh token valid, generating new tokens for user: {}", userEmail);
-                
-                var accessToken = jwtService.generateToken((UserPrincipal) userPrincipal);
-                var newRefreshToken = jwtService.generateRefreshToken((UserPrincipal) userPrincipal);
-                
-                logger.info("Token refresh completed successfully for user: {}", userEmail);
-                return new AuthResponse(accessToken, newRefreshToken, "Bearer", jwtExpiration);
-            } else {
-                logger.warn("Token refresh failed - Invalid or expired refresh token for user: {}", userEmail);
-                throw new RuntimeException("Invalid or expired refresh token");
-            }
-            
-        } catch (UsernameNotFoundException e) {
-            logger.warn("Token refresh failed - User not found during refresh token validation");
-            throw new RuntimeException("Invalid refresh token - user not found", e);
-        } catch (Exception e) {
-            logger.error("Unexpected error during token refresh: {}", e.getMessage(), e);
-            throw new RuntimeException("Token refresh failed due to internal error", e);
+        final String refreshToken = request.getRefreshToken();
+        final String userEmail = jwtService.extractUsername(refreshToken);
+
+//        // 1. Validate token type
+//        if (!REFRESH_TOKEN_TYPE.equals(jwtService.extractTokenType(refreshToken))) {
+//            throw new RuntimeException("Invalid token type");
+//        }
+
+        // 2. Load user & validate token
+        UserPrincipal userPrincipal = (UserPrincipal) userDetailsService.loadUserByUsername(userEmail);
+        if (!jwtService.validateJwtToken(refreshToken)) {
+            throw new RuntimeException("Invalid or expired refresh token");
         }
+
+        // 3. Issue new tokens
+        String newAccessToken = jwtService.generateJwtToken(userPrincipal);
+        String newRefreshToken = jwtService.generateRefreshJwtToken(userPrincipal);
+
+        return new AuthResponse(newAccessToken, newRefreshToken, "Bearer", jwtExpiration);
     }
 }
