@@ -19,9 +19,7 @@ public class DebugController {
     @GetMapping("/debug/endpoints")
     public Map<String, String> getEndpoints() {
         Map<String, String> endpoints = new HashMap<>();
-        requestMappingHandlerMapping.getHandlerMethods().forEach((key, value) -> {
-            endpoints.put(key.toString(), value.getMethod().getName());
-        });
+        requestMappingHandlerMapping.getHandlerMethods().forEach((key, value) -> {endpoints.put(key.toString(), value.getMethod().getName());});
         return endpoints;
     }
 }

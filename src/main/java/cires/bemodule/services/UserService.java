@@ -2,10 +2,13 @@ package cires.bemodule.services;
 
 import cires.bemodule.dtos.RegisterRequest;
 import cires.bemodule.dtos.UserDTO;
+import cires.bemodule.entities.Role;
 import cires.bemodule.entities.User;
 import cires.bemodule.enums.AccountStatus;
+import cires.bemodule.enums.RoleType;
 import cires.bemodule.exceptions.UserNotFoundException;
 import cires.bemodule.mappers.UserMapper;
+import cires.bemodule.repositories.RoleRepository;
 import cires.bemodule.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,11 +29,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final RoleRepository roleRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
+        this.roleRepository = roleRepository;
     }
 
     public User registerUser(RegisterRequest request) {
@@ -44,6 +49,9 @@ public class UserService {
         User user = new User();
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        Role adminRole = roleRepository.findByroleName(RoleType.SUPER_ADMIN)
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+        user.setRoles(List.of(adminRole));
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setEmail(request.getEmail());
