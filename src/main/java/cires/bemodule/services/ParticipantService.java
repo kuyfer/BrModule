@@ -3,6 +3,7 @@ package cires.bemodule.services;
 import cires.bemodule.dtos.CreateParticipantRequest;
 import cires.bemodule.dtos.ParticipantDTO;
 import cires.bemodule.entities.Participant;
+import cires.bemodule.exceptions.ParticipantNotFoundException;
 import cires.bemodule.mappers.ParticipantMapper;
 import cires.bemodule.repositories.ParticipantRepository;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ public class ParticipantService {
     }
 
     public ParticipantDTO getParticipantById(Long id) {
-        Participant participant = participantRepository.findById(id).orElseThrow(() -> new RuntimeException("Participant not found with id " + id));
+        Participant participant = participantRepository.findById(id).orElseThrow(() -> new ParticipantNotFoundException(id));
         return participantMapper.toParticipantDto(participant);
     }
 

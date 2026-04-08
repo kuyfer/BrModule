@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Data @AllArgsConstructor @NoArgsConstructor
 public class RegisterResponse {
 
-    public Long userId;
-    public String userName;
-    public String message;
+    private Long userId;
+    private String userName;
+    private String message;
 
 }

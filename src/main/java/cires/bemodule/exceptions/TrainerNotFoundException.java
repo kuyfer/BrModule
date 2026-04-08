@@ -1,7 +1,8 @@
 package cires.bemodule.exceptions;
 
 public class TrainerNotFoundException extends RuntimeException{
-    public TrainerNotFoundException(Long id) {
+
+        public TrainerNotFoundException(Long id) {
         super("Trainer not found with id: " + id);
     }
 }

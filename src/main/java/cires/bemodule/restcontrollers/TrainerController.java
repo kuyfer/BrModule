@@ -30,9 +30,9 @@ public class TrainerController {
     }
 
 @PostMapping("/{userId}")
-public  ResponseEntity<Void> createTrainer(@RequestBody Trainer trainer, @PathVariable Long userId){
+public  ResponseEntity<Trainer> createTrainer(@RequestBody Trainer trainer, @PathVariable Long userId){
         trainerService.createTrainer(trainer, userId);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(trainer);
 }
 
 @DeleteMapping("/{id}")
