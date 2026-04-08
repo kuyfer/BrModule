@@ -73,18 +73,19 @@ public class UserService {
     }
 
     public void activateAccount(Long id){
-        User user = userRepository.findById(id).orElseThrow();
+        User user = userRepository.findById(id).orElseThrow(()-> new UserNotFoundException(id));
         user.setAccountStatus(AccountStatus.ACTIVE);
         userRepository.save(user);
     }
 
     public void deactivateAccount(Long id){
-        User user = userRepository.findById(id).orElseThrow();
+        User user = userRepository.findById(id).orElseThrow(()-> new UserNotFoundException(id));
         user.setAccountStatus(AccountStatus.INACTIVE);
         userRepository.save(user);
     }
 
     public void deleteUser(Long id){
-        userRepository.deleteById(id);
+        User user = userRepository.findById(id).orElseThrow(()-> new UserNotFoundException(id));
+        userRepository.delete(user);
     }
 }

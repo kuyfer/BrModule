@@ -31,6 +31,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
 
     }
+
+    @ExceptionHandler(TrainerNotFoundException.class)
+    public ResponseEntity<ErrorEntity> trainerNotFoundHandler(TrainerNotFoundException exception){
+        ErrorEntity error = ErrorEntity.builder()
+                .timeStamp(LocalDateTime.now())
+                .message(exception.getMessage())
+                .httpStatus(HttpStatus.NOT_FOUND.value())
+                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorEntity> runtimeExceptionHandler(RuntimeException exception){
         ErrorEntity error = ErrorEntity.builder()
@@ -41,4 +52,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
 
     }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ErrorEntity> conflictExceptionHamdler(ConflictException exception){
+        ErrorEntity error = ErrorEntity.builder()
+                .timeStamp(LocalDateTime.now())
+                .message(exception.getMessage())
+                .httpStatus(HttpStatus.CONFLICT.value())
+                .build();
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
 }
