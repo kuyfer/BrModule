@@ -8,6 +8,7 @@ import cires.bemodule.enums.AccountStatus;
 import cires.bemodule.enums.RoleType;
 import cires.bemodule.exceptions.UserNotFoundException;
 import cires.bemodule.mappers.UserMapper;
+import cires.bemodule.models.EmailPayload;
 import cires.bemodule.repositories.RoleRepository;
 import cires.bemodule.repositories.UserRepository;
 import org.slf4j.Logger;
@@ -25,17 +26,18 @@ public class UserService {
 
     Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    //private final ApplicationEventPublisher publisher;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
     private final RoleRepository roleRepository;
+    private final EmailQueueProducer emailQueueProducer;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, RoleRepository roleRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, RoleRepository roleRepository, EmailQueueProducer emailQueueProducer) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
         this.roleRepository = roleRepository;
+        this.emailQueueProducer = emailQueueProducer;
     }
 
     public User registerUser(RegisterRequest request) {
@@ -56,8 +58,17 @@ public class UserService {
         user.setLastName(request.getLastName());
         user.setEmail(request.getEmail());
         user.setAccountStatus(AccountStatus.ACTIVE);
-       // publisher.publishEvent(new UserRegisteredEvent(this, user.getEmail()));
+
+        String subject = " welcome" + request.getUsername();
+        String body =
+                "\n\nhope you are doing well.";
+        EmailPayload payload = new EmailPayload(request.getEmail(), subject, body);
+
+        emailQueueProducer.queueEmail(payload);
+
         return userRepository.save(user);
+
+
     }
 
     public UserDTO getUser(Long id) {
