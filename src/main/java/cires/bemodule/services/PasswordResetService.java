@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -49,7 +51,7 @@ public class PasswordResetService {
         ResetToken resetTokenEntity = new ResetToken();
         resetTokenEntity.setToken(token);
         resetTokenEntity.setUser(user);
-        resetTokenEntity.setExpiresAt(LocalDateTime.now().plusMinutes(30));
+        resetTokenEntity.setExpiresAt(LocalDateTime.now().plusMinutes(60));
 
         resetTokenRepository.save(resetTokenEntity);
 
@@ -57,11 +59,16 @@ public class PasswordResetService {
     }
 
     public void sendResetEmail(String email, String token) {
-        String subject = "Password Reset Request";
-        String body = token +
-                "\n\nThis token expires in 1 hour.\nIf you didn't request this, ignore this email.";
+        Map<String, Object> model = new HashMap<>();
+        model.put("token", token);
+        model.put("email", email);
 
-        EmailPayload payload = new EmailPayload(email, subject, body);
+        EmailPayload payload = new EmailPayload(
+                email,
+                "Password Reset Request",
+                "password-reset",
+                model
+        );
 
         emailQueueProducer.queueEmail(payload);
     }

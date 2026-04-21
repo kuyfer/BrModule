@@ -1,4 +1,4 @@
-package cires.bemodule.configs;
+package cires.bemodule.filters;
 // Code provided from https://medium.com/@AlexanderObregon/client-ip-address-tracking-in-spring-boot-apis-358bde38296f
 
 import cires.bemodule.utilities.CurrentUser;

@@ -18,7 +18,8 @@ public class EmailQueueProducer {
     public void queueEmail(EmailPayload payload) {
         rabbitTemplate.convertAndSend(
                 RabbitMQConfig.EXCHANGE_NAME,
-                RabbitMQConfig.ROUTING_KEY, payload
+                RabbitMQConfig.ROUTING_KEY,
+                payload
         );
     }
 }

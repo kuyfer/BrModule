@@ -1,6 +1,6 @@
 package cires.bemodule.configs;
 
-import cires.bemodule.security.JwtAuthenticationFilter;
+import cires.bemodule.security.jwt.JwtAuthenticationFilter;
 import cires.bemodule.security.jwt.AuthEntryPointJwt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

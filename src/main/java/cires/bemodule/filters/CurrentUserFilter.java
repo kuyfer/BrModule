@@ -1,4 +1,4 @@
-package cires.bemodule.configs;
+package cires.bemodule.filters;
 
 import cires.bemodule.utilities.CurrentUser;
 import jakarta.servlet.*;

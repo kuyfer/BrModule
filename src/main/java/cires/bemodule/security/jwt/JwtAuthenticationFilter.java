@@ -1,6 +1,5 @@
-package cires.bemodule.security;
+package cires.bemodule.security.jwt;
 
-import cires.bemodule.security.jwt.JwtService;
 import cires.bemodule.security.services.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

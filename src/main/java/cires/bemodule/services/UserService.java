@@ -6,7 +6,9 @@ import cires.bemodule.entities.Role;
 import cires.bemodule.entities.User;
 import cires.bemodule.enums.AccountStatus;
 import cires.bemodule.enums.RoleType;
+import cires.bemodule.exceptions.EmailAlreadyExistsException;
 import cires.bemodule.exceptions.UserNotFoundException;
+import cires.bemodule.exceptions.UsernameAlreadyExistsException;
 import cires.bemodule.mappers.UserMapper;
 import cires.bemodule.models.EmailPayload;
 import cires.bemodule.repositories.RoleRepository;
@@ -16,7 +18,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -43,10 +47,10 @@ public class UserService {
     public User registerUser(RegisterRequest request) {
         logger.info("registerUser");
         if (userRepository.findByUsername(request.getUsername()) != null)
-            throw new RuntimeException("Username already exists");
+            throw new UsernameAlreadyExistsException("Username already exists");
 
         if (userRepository.findByEmail(request.getEmail()).isPresent())
-            throw new RuntimeException("Email already exists");
+            throw new EmailAlreadyExistsException("Email already exists");
 
         User user = new User();
         user.setUsername(request.getUsername());
@@ -59,16 +63,25 @@ public class UserService {
         user.setEmail(request.getEmail());
         user.setAccountStatus(AccountStatus.ACTIVE);
 
-        String subject = " welcome" + request.getUsername();
-        String body =
-                "\n\nhope you are doing well.";
-        EmailPayload payload = new EmailPayload(request.getEmail(), subject, body);
-
-        emailQueueProducer.queueEmail(payload);
+        sendRegistrationEmail(request);
 
         return userRepository.save(user);
+    }
 
+    public void sendRegistrationEmail(RegisterRequest request) {
+        Map<String, Object> model = new HashMap<>();
+        model.put("recipientName", request.getFirstName());
+        model.put("username", request.getUsername());
+        model.put("body", "Hope you are doing well.");
 
+        EmailPayload payload = new EmailPayload(
+                request.getEmail(),
+                "Welcome " + request.getUsername(),
+                "welcome",
+                model
+        );
+
+        emailQueueProducer.queueEmail(payload);
     }
 
     public UserDTO getUser(Long id) {

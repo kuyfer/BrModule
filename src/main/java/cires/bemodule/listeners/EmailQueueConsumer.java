@@ -4,27 +4,64 @@ package cires.bemodule.listeners;
 
 import cires.bemodule.configs.RabbitMQConfig;
 import cires.bemodule.models.EmailPayload;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
+
+import java.util.Map;
+
 
 @Component
 public class EmailQueueConsumer {
-    private final JavaMailSender mailSender;
 
-    public EmailQueueConsumer(JavaMailSender mailSender) {
+    private static final Logger log = LoggerFactory.getLogger(EmailQueueConsumer.class);
+
+    private final JavaMailSender mailSender;
+    private final SpringTemplateEngine templateEngine;
+
+    public EmailQueueConsumer(
+            JavaMailSender mailSender,
+            SpringTemplateEngine templateEngine) {
         this.mailSender = mailSender;
+        this.templateEngine = templateEngine;
     }
 
     @RabbitListener(queues = RabbitMQConfig.QUEUE_NAME)
     public void handleEmailMessage(EmailPayload payload) {
-        SimpleMailMessage message =  new SimpleMailMessage();
-        message.setTo(payload.getTo());
-        message.setFrom("mmhimer0@gmail.com");
-        message.setSubject(payload.getSubject());
-        message.setText(payload.getBody());
+        try {
+            Context context = new Context();
+            context.setVariables(payload.getTemplateModel());
 
+            String htmlBody = templateEngine.process(
+                    payload.getTemplateName(), context
+            );
+
+            sendHtmlMessage(payload.getTo(), payload.getSubject(), htmlBody);
+
+        } catch (Exception e) {
+            log.error("Failed to process email for {}: {}", payload.getTo(), e.getMessage(), e);
+        }
+    }
+
+    private void sendHtmlMessage(String to, String subject, String htmlBody)
+            throws MessagingException {
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        helper.setTo(to);
+        helper.setSubject(subject);
+        helper.setText(htmlBody, true);
+        helper.setFrom("mmhimer0@gmail.com");
         mailSender.send(message);
     }
+
 }
