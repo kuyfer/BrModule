@@ -38,6 +38,7 @@ public class WebSecurityConfig {
                 .exceptionHandling(exceptions -> exceptions.authenticationEntryPoint(unauthorizedHandler))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll() // Allow registration and login
+                        .requestMatchers("/**").permitAll() // for now
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->
