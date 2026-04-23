@@ -24,4 +24,12 @@ public class Notification {
     @Column(nullable = false)
     private NotificationStatus notificationStatus;
 
+    @Column(nullable = false)
+    private String toEmail;
+
+    @Column(nullable = false)
+    private String subject;
+
+    private String failureReason;
+
 }

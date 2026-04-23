@@ -10,22 +10,22 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/sessions")
 public class TrainingSessionController {
 
-    private final TrainingSessionService TrainingSessionService;
+    private final TrainingSessionService trainingSessionService;
 
-    public TrainingSessionController(TrainingSessionService TrainingSessionService) {this.TrainingSessionService = TrainingSessionService;}
+    public TrainingSessionController(TrainingSessionService trainingSessionService) {this.trainingSessionService = trainingSessionService;}
 
     @GetMapping
     public void getAllSessions() {}
 
     @PostMapping
     public ResponseEntity<TrainingSession> createSession(@RequestBody TrainingSession session) {
-        TrainingSession trainingSession = TrainingSessionService.createTrainingSession(session);
+        TrainingSession trainingSession = trainingSessionService.createTrainingSession(session);
         return ResponseEntity.ok(trainingSession);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<TrainingSessionDTO> getSessionById(@PathVariable Long id) {
-        TrainingSessionDTO session = TrainingSessionService.getTrainingSessionById(id);
+        TrainingSessionDTO session = trainingSessionService.getTrainingSessionById(id);
         return ResponseEntity.ok(session);
     }
 

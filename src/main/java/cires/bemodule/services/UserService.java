@@ -5,10 +5,11 @@ import cires.bemodule.dtos.UserDTO;
 import cires.bemodule.entities.Role;
 import cires.bemodule.entities.User;
 import cires.bemodule.enums.AccountStatus;
+import cires.bemodule.enums.NotificationType;
 import cires.bemodule.enums.RoleType;
-import cires.bemodule.exceptions.EmailAlreadyExistsException;
-import cires.bemodule.exceptions.UserNotFoundException;
-import cires.bemodule.exceptions.UsernameAlreadyExistsException;
+import cires.bemodule.exceptions.validationexceptions.EmailAlreadyExistsException;
+import cires.bemodule.exceptions.controllerexceptions.UserNotFoundException;
+import cires.bemodule.exceptions.validationexceptions.UsernameAlreadyExistsException;
 import cires.bemodule.mappers.UserMapper;
 import cires.bemodule.models.EmailPayload;
 import cires.bemodule.repositories.RoleRepository;
@@ -81,7 +82,7 @@ public class UserService {
                 model
         );
 
-        emailQueueProducer.queueEmail(payload);
+        emailQueueProducer.queueEmail(payload, NotificationType.ACCOUNT_CREATION);
     }
 
     public UserDTO getUser(Long id) {

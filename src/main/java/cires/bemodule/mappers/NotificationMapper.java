@@ -11,11 +11,13 @@ public interface NotificationMapper {
     @Mapping(source = "id", target = "id")
     @Mapping(source = "notificationType", target = "notificationType")
     @Mapping(source = "notificationStatus", target = "notificationStatus")
+    @Mapping(source = "toEmail", target = "toEmail")
     NotificationDTO toNotificationDto(Notification notification);
 
     @Mapping(source = "id", target = "id")
     @Mapping(source = "notificationType", target = "notificationType")
     @Mapping(source = "notificationStatus", target = "notificationStatus")
+    @Mapping(source = "toEmail", target = "toEmail")
     Notification toNotification(NotificationDTO notificationDTO);
 
 }

@@ -3,7 +3,7 @@ package cires.bemodule.services;
 import cires.bemodule.dtos.TrainingSessionDTO;
 import cires.bemodule.entities.Participant;
 import cires.bemodule.entities.TrainingSession;
-import cires.bemodule.exceptions.TrainingSessionNotFoundException;
+import cires.bemodule.exceptions.controllerexceptions.TrainingSessionNotFoundException;
 import cires.bemodule.mappers.TrainingSessionMapper;
 import cires.bemodule.repositories.ParticipantRepository;
 import cires.bemodule.repositories.TrainingSessionRepository;

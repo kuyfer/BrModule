@@ -1,5 +1,6 @@
 package cires.bemodule.dev;
 
+import cires.bemodule.enums.NotificationType;
 import cires.bemodule.models.EmailPayload;
 import cires.bemodule.services.EmailQueueProducer;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +19,7 @@ public class EmailController {
 
     @PostMapping("/send")
     public String sendEmail(@RequestBody EmailPayload payload) {
-        emailQueueProducer.queueEmail(payload);
+        emailQueueProducer.queueEmail(payload, NotificationType.SESSION_CANCELLATION);
         return "Email job queued successfully!";
     }
 }

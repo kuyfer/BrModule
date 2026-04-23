@@ -1,4 +1,4 @@
-package cires.bemodule.exceptions;
+package cires.bemodule.exceptions.controllerexceptions;
 
 import lombok.Builder;
 import java.beans.Transient;

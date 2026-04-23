@@ -1,4 +1,4 @@
-package cires.bemodule.exceptions;
+package cires.bemodule.exceptions.controllerexceptions;
 
 public class BadRequestException extends RuntimeException{
 

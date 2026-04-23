@@ -13,12 +13,12 @@ public class EmailPayload {
     private String subject;
     private String templateName;
     private Map<String, Object> templateModel;
+    private Long notificationId;
 
-    public EmailPayload(String to, String subject, String body) {
-        this.to = to;
-        this.subject = subject;
-        this.templateName = "welcome";
-        this.templateModel = Map.of("body", body);
+    public EmailPayload(String email, String subject, String s, Map<String, Object> model) {
+            this.to = email;
+            this.subject = subject;
+            this.templateName = s;
+            this.templateModel = model;
     }
-
 }

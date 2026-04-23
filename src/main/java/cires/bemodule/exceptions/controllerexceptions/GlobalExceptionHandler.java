@@ -1,5 +1,6 @@
-package cires.bemodule.exceptions;
+package cires.bemodule.exceptions.controllerexceptions;
 
+import cires.bemodule.exceptions.validationexceptions.ConflictException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -75,6 +76,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ParticipantNotFoundException.class)
     public ResponseEntity<ErrorEntity> participantNOtFoundHandler(ParticipantNotFoundException exception){
+        ErrorEntity error = ErrorEntity.builder()
+                .timeStamp(LocalDateTime.now())
+                .message(exception.getMessage())
+                .httpStatus(HttpStatus.NOT_FOUND.value())
+                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(NotificationNotFoundException.class)
+    public ResponseEntity<ErrorEntity> notificationNotFoundHandler(NotificationNotFoundException exception){
         ErrorEntity error = ErrorEntity.builder()
                 .timeStamp(LocalDateTime.now())
                 .message(exception.getMessage())

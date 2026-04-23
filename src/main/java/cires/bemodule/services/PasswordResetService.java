@@ -2,6 +2,7 @@ package cires.bemodule.services;
 
 import cires.bemodule.entities.ResetToken;
 import cires.bemodule.entities.User;
+import cires.bemodule.enums.NotificationType;
 import cires.bemodule.models.EmailPayload;
 import cires.bemodule.repositories.ResetTokenRepository;
 import cires.bemodule.repositories.UserRepository;
@@ -18,6 +19,7 @@ import java.util.Optional;
 
 @Service
 public class PasswordResetService {
+// FIXME : this blocks from deleting users for sql constraints
 
     private final UserRepository userRepository;
     private final ResetTokenRepository resetTokenRepository;
@@ -70,7 +72,7 @@ public class PasswordResetService {
                 model
         );
 
-        emailQueueProducer.queueEmail(payload);
+        emailQueueProducer.queueEmail(payload, NotificationType.PASSWORD_RESET);
     }
 
 }

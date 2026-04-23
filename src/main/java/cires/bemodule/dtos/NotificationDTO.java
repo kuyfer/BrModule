@@ -12,5 +12,6 @@ public class NotificationDTO {
     private Long id;
     private NotificationType notificationType;
     private NotificationStatus notificationStatus;
+    private String toEmail;
 
 }

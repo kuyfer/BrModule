@@ -1,4 +1,4 @@
-package cires.bemodule.exceptions;
+package cires.bemodule.exceptions.validationexceptions;
 
 public class EmailAlreadyExistsException extends RuntimeException{
 

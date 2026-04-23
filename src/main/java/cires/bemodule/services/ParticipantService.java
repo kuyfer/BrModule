@@ -3,7 +3,7 @@ package cires.bemodule.services;
 import cires.bemodule.dtos.CreateParticipantRequest;
 import cires.bemodule.dtos.ParticipantDTO;
 import cires.bemodule.entities.Participant;
-import cires.bemodule.exceptions.ParticipantNotFoundException;
+import cires.bemodule.exceptions.controllerexceptions.ParticipantNotFoundException;
 import cires.bemodule.mappers.ParticipantMapper;
 import cires.bemodule.repositories.ParticipantRepository;
 import org.springframework.stereotype.Service;
