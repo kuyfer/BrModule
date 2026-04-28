@@ -25,7 +25,7 @@ public class TrainingSessionDTO {
     private TrainingSessionStatus status;
     private TrainingSessionMode mode;
     private Trainer trainer;
-    private Subsidiary subsidiary;
+   // private Subsidiary subsidiary;
     private List<SessionParticipant> sessionParticipants;
 
 }

@@ -23,17 +23,15 @@ public class PasswordResetService {
 
     private final UserRepository userRepository;
     private final ResetTokenRepository resetTokenRepository;
-    private final JavaMailSender javaMailSender;
     private final EmailQueueProducer emailQueueProducer;
 
     private static final SecureRandom secureRandom = new SecureRandom();
     private static final Base64.Encoder base64Encoder =
             Base64.getUrlEncoder().withoutPadding();
 
-    public PasswordResetService(UserRepository userRepository, ResetTokenRepository resetTokenRepository, JavaMailSender javaMailSender, EmailQueueProducer emailQueueProducer) {
+    public PasswordResetService(UserRepository userRepository, ResetTokenRepository resetTokenRepository, EmailQueueProducer emailQueueProducer) {
         this.userRepository = userRepository;
         this.resetTokenRepository = resetTokenRepository;
-        this.javaMailSender = javaMailSender;
         this.emailQueueProducer = emailQueueProducer;
     }
 

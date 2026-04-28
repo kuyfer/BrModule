@@ -13,7 +13,7 @@ public interface TrainingSessionRepository extends JpaRepository<TrainingSession
     @Override
     Optional<TrainingSession> findById(Long aLong);
 
-    Optional<TrainingSession> findBySubsidiary(Subsidiary subsidiary);
+    //Optional<TrainingSession> findBySubsidiary(Subsidiary subsidiary);
 
     Optional<TrainingSession> findByTrainer(Trainer trainer);
 

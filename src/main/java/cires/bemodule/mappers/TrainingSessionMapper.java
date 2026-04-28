@@ -13,13 +13,12 @@ public interface TrainingSessionMapper {
     @Mapping(source = "title", target = "title")
     @Mapping(source = "description", target = "description")
     @Mapping(source = "location", target = "location")
-    @Mapping(source = "onSite", target = "onSite")
     @Mapping(source = "startDate", target = "startDate")
     @Mapping(source = "endDate", target = "endDate")
     @Mapping(source = "status", target = "status")
     @Mapping(source = "mode", target = "mode")
     @Mapping(source = "trainer", target = "trainer")
-    @Mapping(source = "subsidiary", target = "subsidiary")
+   // @Mapping(source = "subsidiary", target = "subsidiary")
     @Mapping(source = "sessionParticipants", target = "sessionParticipants")
     TrainingSessionDTO toDto(TrainingSession trainingSession);
 
@@ -27,13 +26,12 @@ public interface TrainingSessionMapper {
     @Mapping(source = "title", target = "title")
     @Mapping(source = "description", target = "description")
     @Mapping(source = "location", target = "location")
-    @Mapping(source = "onSite", target = "onSite")
     @Mapping(source = "startDate", target = "startDate")
     @Mapping(source = "endDate", target = "endDate")
     @Mapping(source = "status", target = "status")
     @Mapping(source = "mode", target = "mode")
     @Mapping(source = "trainer", target = "trainer")
-    @Mapping(source = "subsidiary", target = "subsidiary")
+    //@Mapping(source = "subsidiary", target = "subsidiary")
     @Mapping(source = "sessionParticipants", target = "sessionParticipants")
     TrainingSession toTrainingSession(TrainingSessionDTO trainingSessionDTO);
 

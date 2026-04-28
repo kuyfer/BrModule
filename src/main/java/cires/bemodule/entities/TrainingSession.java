@@ -29,9 +29,6 @@ public class TrainingSession {
     private String location;
 
     @Column(nullable = false)
-    private String onSite;
-
-    @Column(nullable = false)
     private LocalDateTime startDate;
 
     @Column(nullable = false)
@@ -49,9 +46,9 @@ public class TrainingSession {
     @JoinColumn(name = "trainer_id")
     private Trainer trainer;
 
-    @ManyToOne
-    @JoinColumn(name = "subsidiary_id")
-    private Subsidiary subsidiary;
+//    @ManyToOne
+//    @JoinColumn(name = "subsidiary_id")
+//    private Subsidiary subsidiary;
 
     @OneToMany(mappedBy = "trainingSession")
     private List<SessionParticipant> sessionParticipants = new ArrayList<>();

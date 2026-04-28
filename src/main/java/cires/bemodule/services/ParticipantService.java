@@ -3,7 +3,9 @@ package cires.bemodule.services;
 import cires.bemodule.dtos.CreateParticipantRequest;
 import cires.bemodule.dtos.ParticipantDTO;
 import cires.bemodule.entities.Participant;
+import cires.bemodule.entities.Trainer;
 import cires.bemodule.exceptions.controllerexceptions.ParticipantNotFoundException;
+import cires.bemodule.exceptions.controllerexceptions.TrainerNotFoundException;
 import cires.bemodule.mappers.ParticipantMapper;
 import cires.bemodule.repositories.ParticipantRepository;
 import org.springframework.stereotype.Service;
@@ -48,7 +50,8 @@ public class ParticipantService {
     }
 
     public void deleteParticipant(Long id) {
-        participantRepository.deleteById(id);
+        Participant participant = participantRepository.findById(id).orElseThrow(() -> new ParticipantNotFoundException(id));
+        participantRepository.delete(participant);
     }
 
 }

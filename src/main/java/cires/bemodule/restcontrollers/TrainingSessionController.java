@@ -1,5 +1,6 @@
 package cires.bemodule.restcontrollers;
 
+import cires.bemodule.dtos.CreateTrainingSessionRequest;
 import cires.bemodule.dtos.TrainingSessionDTO;
 import cires.bemodule.entities.TrainingSession;
 import cires.bemodule.services.TrainingSessionService;
@@ -18,8 +19,8 @@ public class TrainingSessionController {
     public void getAllSessions() {}
 
     @PostMapping
-    public ResponseEntity<TrainingSession> createSession(@RequestBody TrainingSession session) {
-        TrainingSession trainingSession = trainingSessionService.createTrainingSession(session);
+    public ResponseEntity<TrainingSessionDTO> createSession(@RequestBody CreateTrainingSessionRequest session) {
+        TrainingSessionDTO trainingSession = trainingSessionService.createTrainingSession(session);
         return ResponseEntity.ok(trainingSession);
     }
 
