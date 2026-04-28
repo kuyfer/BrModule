@@ -17,7 +17,7 @@ spring:
     host: smtp-relay.brevo.com
     port: 587
     username: a81169001@smtp-brevo.com
-    password:
+    password: xsmtpsib-9e255abbe5e1ba1044c13834971fceeec263985083207230173466bd17bfca52-WFoPEl71zvI5n5YN
     properties:
       mail:
         smtp:
@@ -33,3 +33,10 @@ jwt:
   secret: mySecretKey1234567890123456789012345678901234567890
   expiration: 86400000 # 24 h
   refresh-expiration: 604800000 # 7 days in milliseconds
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: [ "prometheus" ]

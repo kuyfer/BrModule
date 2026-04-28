@@ -37,7 +37,8 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exceptions -> exceptions.authenticationEntryPoint(unauthorizedHandler))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // Allow registration and login
+                        .requestMatchers("/api/auth/**").permitAll()// Allow registration and login
+                        .requestMatchers("/actuator/**").permitAll() // for now allow actuator
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->
