@@ -1,6 +1,7 @@
 package cires.bemodule.services;
 
-import cires.bemodule.dtos.CreateTrainingSessionRequest;
+import cires.bemodule.dtos2.CreateTrainingSessionRequest;
+import cires.bemodule.dtos2.CreateTrainingSessionResponse;
 import cires.bemodule.dtos.TrainingSessionDTO;
 import cires.bemodule.entities.Participant;
 import cires.bemodule.entities.Trainer;
@@ -30,7 +31,10 @@ public class TrainingSessionService {
     private final ParticipantRepository participantRepository;
     private final EmailQueueProducer emailQueueProducer;
 
-    public TrainingSessionDTO createTrainingSession(CreateTrainingSessionRequest request) {
+
+    // ################################# CREATE ######################################
+
+    public CreateTrainingSessionResponse createTrainingSession(CreateTrainingSessionRequest request) {
         Trainer trainer = trainerRepository.findById(request.getTrainerId()).orElseThrow(()-> new TrainerNotFoundException(request.getTrainerId()));
 
         TrainingSession session = new TrainingSession();
@@ -42,22 +46,47 @@ public class TrainingSessionService {
         session.setLocation(request.getLocation());
         session.setMode(request.getMode());
         session.setDescription(request.getDescription());
-
-        assignTrainerAndNotify(session, trainer);
-
-        trainingSessionRepository.save(session);
-
-        return trainingSessionMapper.toDto(session);
-
-    }
-
-    private void assignTrainerAndNotify(TrainingSession session, Trainer trainer) {
         session.setTrainer(trainer);
-        trainingSessionRepository.save(session);
+
         sendTrainerAssignmentEmail(session, trainer);
+
+        trainingSessionRepository.save(session);
+
+        return new CreateTrainingSessionResponse("done");
+    }
+    // ################################# READ ######################################
+
+    public TrainingSessionDTO findTrainingSessionById(Long id) {
+        TrainingSession trainingSession = getSessionIdOrThrow(id);
+        return trainingSessionMapper.toDto(trainingSession);
     }
 
-    public void sendTrainerAssignmentEmail(TrainingSession session, Trainer trainer) {
+    // TODO : add filters maybe
+    public List<TrainingSessionDTO> findALlTrainungSessions(){
+        return trainingSessionRepository.findAll().stream().map(trainingSessionMapper::toDto).toList();
+    }
+
+    public void addParticipants(){
+        TrainingSession session = getSessionIdOrThrow(1L);
+    }
+
+    public void addParticipants(Long trainingSessionId, List<Long> participantIds) {
+        TrainingSession trainingSession = getSessionIdOrThrow(trainingSessionId);
+        List<Participant> participants = participantRepository.findAllById(participantIds);
+    }
+
+// ################################# DELETE ######################################
+
+    public void deleteTrainingSession(Long id) {
+        trainingSessionRepository.deleteById(id);
+    }
+// ################################# UTILS ######################################
+
+    private TrainingSession getSessionIdOrThrow(Long id){
+        return trainingSessionRepository.findById(id).orElseThrow( () -> new TrainingSessionNotFoundException(id));
+    }
+
+    private void sendTrainerAssignmentEmail(TrainingSession session, Trainer trainer) {
         Map<String, Object> model = new HashMap<>();
         model.put("trainerName", trainer.getUser().getFirstName());
         model.put("sessionTitle", session.getTitle());
@@ -79,31 +108,4 @@ public class TrainingSessionService {
 
     }
 
-    public TrainingSessionDTO getTrainingSessionById(Long id) {
-        TrainingSession trainingSession = getSessionIdOrThrow(id);
-        return trainingSessionMapper.toDto(trainingSession);
-    }
-
-    public void addParticipants(){
-        TrainingSession session = getSessionIdOrThrow(1L);
-
-
-    }
-    public void addParticipants(Long trainingSessionId, List<Long> participantIds) {
-        TrainingSession trainingSession = getSessionIdOrThrow(trainingSessionId);
-        List<Participant> participants = participantRepository.findAllById(participantIds);
-    }
-
-    // TODO : add filters maybe
-    public List<TrainingSessionDTO> findALl(){
-        return trainingSessionRepository.findAll().stream().map(trainingSessionMapper::toDto).toList();
-    }
-
-    public void deleteTrainingSession(Long id) {
-        trainingSessionRepository.deleteById(id);
-    }
-
-    private TrainingSession getSessionIdOrThrow(Long id){
-        return trainingSessionRepository.findById(id).orElseThrow( () -> new TrainingSessionNotFoundException(id));
-    }
 }

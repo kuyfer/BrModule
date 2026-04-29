@@ -16,7 +16,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<List<UserDTO>> getAllUsers() {
-        List<UserDTO> users = userService.getAllUsers();
+        List<UserDTO> users = userService.findAllUsers();
         return ResponseEntity.ok(users);
     }
 
@@ -28,7 +28,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
-        UserDTO user = userService.getUser(id);
+        UserDTO user = userService.findUserById(id);
         return ResponseEntity.ok(user);
     }
 

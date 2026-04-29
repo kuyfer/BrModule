@@ -1,6 +1,6 @@
 package cires.bemodule.restcontrollers;
 
-import cires.bemodule.dtos.CreateParticipantRequest;
+import cires.bemodule.dtos2.CreateParticipantRequest;
 import cires.bemodule.dtos.ParticipantDTO;
 import cires.bemodule.entities.Participant;
 import cires.bemodule.services.ParticipantService;
@@ -20,13 +20,13 @@ public class ParticipantController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ParticipantDTO> getParticipantById(@PathVariable Long id) {
-        ParticipantDTO participant = participantService.getParticipantById(id);
+        ParticipantDTO participant = participantService.findParticipantById(id);
         return ResponseEntity.ok(participant);
     }
 
     @GetMapping
     public ResponseEntity<List<ParticipantDTO>> getAllParticipants() {
-        List<ParticipantDTO> participants = participantService.allParticipants();
+        List<ParticipantDTO> participants = participantService.findAllParticipants();
         return ResponseEntity.ok(participants);
     }
 

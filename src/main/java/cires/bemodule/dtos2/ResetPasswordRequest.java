@@ -1,4 +1,4 @@
-package cires.bemodule.dtos;
+package cires.bemodule.dtos2;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package cires.bemodule.restcontrollers;
 
-import cires.bemodule.dtos.ResetRequest;
+import cires.bemodule.dtos2.ResetRequest;
 import cires.bemodule.repositories.ResetTokenRepository;
 import cires.bemodule.repositories.UserRepository;
 import cires.bemodule.services.PasswordResetService;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.Optional;
-import cires.bemodule.dtos.ResetPasswordRequest;
+import cires.bemodule.dtos2.ResetPasswordRequest;
 import cires.bemodule.entities.ResetToken;
 import cires.bemodule.entities.User;
 import org.springframework.http.HttpStatus;

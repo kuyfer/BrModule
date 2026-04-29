@@ -1,11 +1,9 @@
 package cires.bemodule.services;
 
-import cires.bemodule.dtos.CreateParticipantRequest;
+import cires.bemodule.dtos2.CreateParticipantRequest;
 import cires.bemodule.dtos.ParticipantDTO;
 import cires.bemodule.entities.Participant;
-import cires.bemodule.entities.Trainer;
 import cires.bemodule.exceptions.controllerexceptions.ParticipantNotFoundException;
-import cires.bemodule.exceptions.controllerexceptions.TrainerNotFoundException;
 import cires.bemodule.mappers.ParticipantMapper;
 import cires.bemodule.repositories.ParticipantRepository;
 import org.springframework.stereotype.Service;
@@ -24,6 +22,10 @@ public class ParticipantService {
         this.participantMapper = participantMapper;
     }
 
+    // ################################# CREATE ######################################
+    // ################################# UPDATE ######################################
+
+
     public Participant createParticipant(CreateParticipantRequest request) {
 
         Participant participant = new Participant();
@@ -37,17 +39,21 @@ public class ParticipantService {
         return participantRepository.save(participant);
     }
 
-    public ParticipantDTO getParticipantById(Long id) {
+    // ################################# READ ########################################
+
+    public ParticipantDTO findParticipantById(Long id) {
         Participant participant = participantRepository.findById(id).orElseThrow(() -> new ParticipantNotFoundException(id));
         return participantMapper.toParticipantDto(participant);
     }
 
-    public List<ParticipantDTO> allParticipants() {
+    public List<ParticipantDTO> findAllParticipants() {
         return participantRepository.findAll()
                 .stream()
                 .map(participantMapper::toParticipantDto)
                 .collect(Collectors.toList());
     }
+
+    // ################################# DELETE ######################################
 
     public void deleteParticipant(Long id) {
         Participant participant = participantRepository.findById(id).orElseThrow(() -> new ParticipantNotFoundException(id));

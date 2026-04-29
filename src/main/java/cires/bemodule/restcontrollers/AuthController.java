@@ -1,6 +1,6 @@
 package cires.bemodule.restcontrollers;
 
-import cires.bemodule.dtos.*;
+import cires.bemodule.dtos2.*;
 import cires.bemodule.entities.User;
 import cires.bemodule.security.services.AuthService;
 import cires.bemodule.services.UserService;

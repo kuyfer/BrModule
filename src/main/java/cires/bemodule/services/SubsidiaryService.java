@@ -16,7 +16,10 @@ public class SubsidiaryService {
         this.organizationRepository = organizationRepository;
     }
 
-
+    // ################################# READ ########################################
+    // ################################# CREATE ######################################
+    // ################################# UPDATE ######################################
+    // ################################# DELETE ######################################
     public  Subsidiary createSubsidiary(String name, String address){
         Subsidiary subsidiary = new Subsidiary();
         subsidiary.setName(name);

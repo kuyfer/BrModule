@@ -15,6 +15,10 @@ public class OrganizationService {
 
     public OrganizationService(OrganizationRepository organizationRepository) {this.organizationRepository = organizationRepository;}
 
+    // ################################# READ ########################################
+    // ################################# CREATE ######################################
+    // ################################# UPDATE ######################################
+    // ################################# DELETE ######################################
     public void createOrganization(String name) {
         Organization organization = new Organization();
         organization.setName(name);

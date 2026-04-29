@@ -27,6 +27,8 @@ public class TrainerService {
         this.userRepository = userRepository;
     }
 
+    // ################################# CREATE ######################################
+
     public Trainer createTrainer(Trainer trainer, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
 
@@ -40,19 +42,30 @@ public class TrainerService {
         return trainerRepository.save(newTrainer);
     }
 
+    // ################################# READ ########################################
     @Transactional(readOnly = true)
-     public List<TrainerDTO> findAll() {
+    public TrainerDTO findTrainerById(Long id) {
+        return trainerMapper.toTrainerDTO(trainerRepository.findById(id).orElseThrow(() -> new TrainerNotFoundException( id)));
+    }
+
+    // TODO : maybe Transactional(readOnly = true) not needed
+    @Transactional(readOnly = true)
+     public List<TrainerDTO> findAllTrainers() {
 
         return trainerRepository.findAll()
                 .stream()
                 .map(trainerMapper::toTrainerDTO)
                 .collect(Collectors.toList());
      }
-     @Transactional(readOnly = true)
-     public TrainerDTO findById(Long id) {
-        return trainerMapper.toTrainerDTO(trainerRepository.findById(id).orElseThrow(() -> new TrainerNotFoundException( id)));
-     }
 
+    // ################################# UPDATE ######################################
+    public Trainer updateTrainer(Long id, Trainer trainer) {
+        Trainer existingTrainer = trainerRepository.findById(id).orElseThrow(() -> new TrainerNotFoundException(id));
+        existingTrainer.setSpecialty(trainer.getSpecialty());
+        return trainerRepository.save(existingTrainer);
+    }
+
+    // ################################# DELETE ######################################
      public void deleteTrainer(Long id) {
         Trainer trainer = trainerRepository.findById(id).orElseThrow(() -> new TrainerNotFoundException(id));
         trainerRepository.delete(trainer);

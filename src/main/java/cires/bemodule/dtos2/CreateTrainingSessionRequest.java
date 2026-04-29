@@ -1,6 +1,5 @@
-package cires.bemodule.dtos;
+package cires.bemodule.dtos2;
 
-import cires.bemodule.entities.Subsidiary;
 import cires.bemodule.enums.TrainingSessionMode;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

@@ -1,6 +1,6 @@
 package cires.bemodule.services;
 
-import cires.bemodule.dtos.RegisterRequest;
+import cires.bemodule.dtos2.RegisterRequest;
 import cires.bemodule.dtos.UserDTO;
 import cires.bemodule.entities.Role;
 import cires.bemodule.entities.User;
@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
-
 @Service
 public class UserService {
 
@@ -44,6 +42,8 @@ public class UserService {
         this.roleRepository = roleRepository;
         this.emailQueueProducer = emailQueueProducer;
     }
+
+    // ################################# CREATE ######################################
 
     public User registerUser(RegisterRequest request) {
         logger.info("registerUser");
@@ -69,7 +69,40 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void sendRegistrationEmail(RegisterRequest request) {
+    // ################################# READ ######################################
+
+    public UserDTO findUserById(Long id) {
+        User user = userRepository.findById(id).orElseThrow( () -> new UserNotFoundException(id));
+        return userMapper.toUserDto(user);
+    }
+
+    public List<UserDTO> findAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::toUserDto)
+                .collect(Collectors.toList());
+    }
+
+// ################################# UPDATE ######################################
+
+    public User updateUser(Long id, User user) {
+        User existingUser = userRepository.findById(id).orElseThrow(()-> new UserNotFoundException(id));
+        existingUser.setFirstName(user.getFirstName());
+        existingUser.setLastName(user.getLastName());
+        existingUser.setEmail(user.getEmail());
+        return userRepository.save(existingUser);
+    }
+
+    // ################################# DELETE ######################################
+
+    public void deleteUser(Long id){
+        User user = userRepository.findById(id).orElseThrow(()-> new UserNotFoundException(id));
+        userRepository.delete(user);
+    }
+
+    // ################################# UTILS ######################################
+
+    private void sendRegistrationEmail(RegisterRequest request) {
         Map<String, Object> model = new HashMap<>();
         model.put("recipientName", request.getFirstName());
         model.put("username", request.getUsername());
@@ -85,18 +118,6 @@ public class UserService {
         emailQueueProducer.queueEmail(payload, NotificationType.ACCOUNT_CREATION);
     }
 
-    public UserDTO getUser(Long id) {
-        User user = userRepository.findById(id).orElseThrow( () -> new UserNotFoundException(id));
-        return userMapper.toUserDto(user);
-    }
-
-    public List<UserDTO> getAllUsers() {
-        return userRepository.findAll()
-                .stream()
-                .map(userMapper::toUserDto)
-                .collect(Collectors.toList());
-    }
-
     public void activateAccount(Long id){
         User user = userRepository.findById(id).orElseThrow(()-> new UserNotFoundException(id));
         user.setAccountStatus(AccountStatus.ACTIVE);
@@ -109,8 +130,5 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void deleteUser(Long id){
-        User user = userRepository.findById(id).orElseThrow(()-> new UserNotFoundException(id));
-        userRepository.delete(user);
-    }
+
 }
