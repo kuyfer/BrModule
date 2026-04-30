@@ -4,6 +4,7 @@ import cires.bemodule.dtos.TrainerDTO;
 import cires.bemodule.entities.Trainer;
 import cires.bemodule.mappers.TrainerMapper;
 import cires.bemodule.services.TrainerService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,7 @@ public class TrainerController {
     }
 
 @PostMapping("/{userId}")
-public  ResponseEntity<TrainerDTO> createTrainer(@RequestBody Trainer trainer, @PathVariable Long userId){
+public  ResponseEntity<TrainerDTO> createTrainer(@Valid @RequestBody Trainer trainer, @PathVariable Long userId){
        Trainer trainerNew = trainerService.createTrainer(trainer, userId);
         TrainerDTO trainerDTO = trainerMapper.toTrainerDTO(trainerNew);
         return ResponseEntity.status(HttpStatus.CREATED).body(trainerDTO);

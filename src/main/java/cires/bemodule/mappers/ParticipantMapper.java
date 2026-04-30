@@ -1,9 +1,10 @@
 package cires.bemodule.mappers;
 
 import cires.bemodule.dtos.ParticipantDTO;
+import cires.bemodule.dtos2.CreateParticipantResponse;
+import cires.bemodule.dtos2.PatchParticipantRequest;
 import cires.bemodule.entities.Participant;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface ParticipantMapper {
@@ -25,6 +26,18 @@ public interface ParticipantMapper {
     @Mapping(source = "address", target = "address")
     @Mapping(source = "registrationSource", target = "registrationSource")
     Participant toParticipant(ParticipantDTO participantDTO);
+
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "firstName", target = "firstName")
+    @Mapping(source = "lastName", target = "lastName")
+    @Mapping(source = "email", target = "email")
+    @Mapping(source = "phone", target = "phoneNumber")
+    @Mapping(source = "address", target = "address")
+    @Mapping(source = "registrationSource", target = "registrationSource")
+    CreateParticipantResponse toCreateParticipantResponse(Participant participant);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void patchParticipantFromRequest(PatchParticipantRequest request, @MappingTarget Participant participant);
 
 }
 

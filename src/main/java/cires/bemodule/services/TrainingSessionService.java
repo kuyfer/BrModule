@@ -54,6 +54,14 @@ public class TrainingSessionService {
 
         return new CreateTrainingSessionResponse("done");
     }
+    public void addParticipants(){
+        TrainingSession session = getSessionIdOrThrow(1L);
+    }
+
+    public void addParticipants(Long trainingSessionId, List<Long> participantIds) {
+        TrainingSession trainingSession = getSessionIdOrThrow(trainingSessionId);
+        List<Participant> participants = participantRepository.findAllById(participantIds);
+    }
     // ################################# READ ######################################
 
     public TrainingSessionDTO findTrainingSessionById(Long id) {
@@ -62,17 +70,8 @@ public class TrainingSessionService {
     }
 
     // TODO : add filters maybe
-    public List<TrainingSessionDTO> findALlTrainungSessions(){
+    public List<TrainingSessionDTO> findALlTrainingSessions(){
         return trainingSessionRepository.findAll().stream().map(trainingSessionMapper::toDto).toList();
-    }
-
-    public void addParticipants(){
-        TrainingSession session = getSessionIdOrThrow(1L);
-    }
-
-    public void addParticipants(Long trainingSessionId, List<Long> participantIds) {
-        TrainingSession trainingSession = getSessionIdOrThrow(trainingSessionId);
-        List<Participant> participants = participantRepository.findAllById(participantIds);
     }
 
 // ################################# DELETE ######################################

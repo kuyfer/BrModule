@@ -2,18 +2,20 @@ package cires.bemodule.dtos2;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data @NoArgsConstructor
-@AllArgsConstructor
+@Data @NoArgsConstructor @AllArgsConstructor
 public class CreateParticipantRequest {
 
     @NotBlank(message = "First name is required")
+    @Size(min = 2, max = 50)
     private String firstName;
 
     @NotBlank(message = "Last name is required")
+    @Size(min = 2, max = 50)
     private String lastName;
 
     @NotBlank(message = "Email is required")
