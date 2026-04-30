@@ -1,6 +1,7 @@
 package cires.bemodule.dtos2;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,8 +9,10 @@ import lombok.NoArgsConstructor;
 @Data @NoArgsConstructor @AllArgsConstructor
 public class PatchParticipantRequest {
 
+    @Size(min = 2, max = 50)
     private String firstName;
 
+    @Size(min = 2, max = 50)
     private String lastName;
 
     @Email(message = "Email should be valid")

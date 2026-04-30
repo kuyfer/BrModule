@@ -4,6 +4,7 @@ import cires.bemodule.dtos2.ResetRequest;
 import cires.bemodule.repositories.ResetTokenRepository;
 import cires.bemodule.repositories.UserRepository;
 import cires.bemodule.services.PasswordResetService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,7 +40,7 @@ public class PasswordResetController {
     }
 
     @PostMapping("/reset-password/confirm")
-    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest request) {
+    public ResponseEntity<String> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
         Optional<ResetToken> tokenOpt = resetTokenRepository.findByToken(request.getToken());
 
         if (tokenOpt.isEmpty() || tokenOpt.get().isExpired()) {
