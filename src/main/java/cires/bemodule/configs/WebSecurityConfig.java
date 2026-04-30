@@ -39,6 +39,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()// Allow registration and login
                         .requestMatchers("/actuator/**").permitAll() // for now allow actuator
+                        .requestMatchers("/api/passwd/**").permitAll() // Allow password reset
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->

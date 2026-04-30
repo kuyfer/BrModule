@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-// TODO: Maybe switch to IPv4
+
 // TODO: change it ContextFilter ?? add ProcessTime
 // might not work if there is a reverse proxy, firewall, gateway or loadbalancer in between
 @Component

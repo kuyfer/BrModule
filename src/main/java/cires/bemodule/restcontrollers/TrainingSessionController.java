@@ -4,6 +4,7 @@ import cires.bemodule.dtos2.CreateTrainingSessionRequest;
 import cires.bemodule.dtos2.CreateTrainingSessionResponse;
 import cires.bemodule.dtos.TrainingSessionDTO;
 import cires.bemodule.services.TrainingSessionService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ public class TrainingSessionController {
     public void getAllSessions() {}
 
     @PostMapping
-    public ResponseEntity<CreateTrainingSessionResponse> createSession(@RequestBody CreateTrainingSessionRequest session) {
+    public ResponseEntity<CreateTrainingSessionResponse> createSession(@Valid @RequestBody CreateTrainingSessionRequest session) {
         trainingSessionService.createTrainingSession(session);
         CreateTrainingSessionResponse response = new CreateTrainingSessionResponse("created");
         return ResponseEntity.ok(response);

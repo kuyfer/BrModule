@@ -34,7 +34,7 @@ public class PasswordResetController {
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<String> requestReset(@RequestBody ResetRequest request) {
+    public ResponseEntity<String> requestReset(@Valid @RequestBody ResetRequest request) {
         resetService.processRequest(request.getEmail());
         return ResponseEntity.ok("If the email is registered, you'll get a reset link");
     }
@@ -50,7 +50,7 @@ public class PasswordResetController {
         ResetToken tokenRecord = tokenOpt.get();
         User user = tokenRecord.getUser();
 
-        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         userRepository.save(user);
         resetTokenRepository.delete(tokenRecord);
 
