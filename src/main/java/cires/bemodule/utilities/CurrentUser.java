@@ -1,6 +1,6 @@
 package cires.bemodule.utilities;
 
-// Code provided from : https://docs.hibernate.org/orm/current/userguide/html_single/#envers-tracking-modified-entities-revchanges
+// Code provided from: https://docs.hibernate.org/orm/current/userguide/html_single/#envers-tracking-modified-entities-revchanges
 // Current User is used in the CustomRevisionEntityListener to get the user who made the change
 public class CurrentUser {
 

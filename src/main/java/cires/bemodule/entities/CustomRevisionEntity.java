@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.envers.RevisionEntity;
 import org.hibernate.envers.RevisionMapping;
 
-
 @Data @NoArgsConstructor @AllArgsConstructor
 @Entity(name = "CustomRevisionEntity")
 @Table(name = "CUSTOM_REV_INFO")
@@ -17,6 +16,7 @@ import org.hibernate.envers.RevisionMapping;
 public class CustomRevisionEntity extends RevisionMapping {
 
     private String username;
+
     private String ipAddress;
 
 }

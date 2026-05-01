@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 public class RegisterResponse {
 
     private Long userId;
+
     private String userName;
+
     private String message;
 
 }
