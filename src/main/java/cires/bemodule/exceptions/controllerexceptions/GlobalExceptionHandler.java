@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErrorEntity> badRequestHandler(BadRequestException exception){
         ErrorEntity error = ErrorEntity.builder()
@@ -32,7 +33,6 @@ public class GlobalExceptionHandler {
                 .build();
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-
     }
 
     @ExceptionHandler(TrainerNotFoundException.class)
@@ -42,6 +42,7 @@ public class GlobalExceptionHandler {
                 .message(exception.getMessage())
                 .httpStatus(HttpStatus.NOT_FOUND.value())
                 .build();
+
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
@@ -52,8 +53,8 @@ public class GlobalExceptionHandler {
                 .message(exception.getMessage())
                 .httpStatus(HttpStatus.FORBIDDEN.value())
                 .build();
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
 
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
 
     @ExceptionHandler(ConflictException.class)
@@ -63,6 +64,7 @@ public class GlobalExceptionHandler {
                 .message(exception.getMessage())
                 .httpStatus(HttpStatus.CONFLICT.value())
                 .build();
+
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
@@ -73,6 +75,7 @@ public class GlobalExceptionHandler {
                 .message(exception.getMessage())
                 .httpStatus(HttpStatus.NOT_FOUND.value())
                 .build();
+
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
@@ -83,6 +86,7 @@ public class GlobalExceptionHandler {
                 .message(exception.getMessage())
                 .httpStatus(HttpStatus.NOT_FOUND.value())
                 .build();
+
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
@@ -93,16 +97,24 @@ public class GlobalExceptionHandler {
                 .message(exception.getMessage())
                 .httpStatus(HttpStatus.NOT_FOUND.value())
                 .build();
+
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleValidationException(MethodArgumentNotValidException exception){
+    public ResponseEntity<ErrorEntity> handleValidationException(MethodArgumentNotValidException exception){
         String errorMessage = exception.getBindingResult().getAllErrors().stream()
                 .findFirst()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .orElse("Validation error");
-        return ResponseEntity.badRequest().body(errorMessage);
+
+        ErrorEntity error = ErrorEntity.builder()
+                .timeStamp(LocalDateTime.now())
+                .message(errorMessage)
+                .httpStatus(HttpStatus.BAD_REQUEST.value())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
 }
