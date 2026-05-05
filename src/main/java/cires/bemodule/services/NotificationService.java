@@ -35,6 +35,6 @@ public class NotificationService {
         return  notificationRepository.findByToEmail(email)
                 .stream()
                 .map(notificationMapper::toNotificationDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 }
