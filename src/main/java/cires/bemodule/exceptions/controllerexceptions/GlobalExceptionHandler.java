@@ -1,120 +1,80 @@
 package cires.bemodule.exceptions.controllerexceptions;
 
 import cires.bemodule.exceptions.validationexceptions.ConflictException;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import jakarta.servlet.http.HttpServletRequest;
+import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.http.*;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.time.LocalDateTime;
+import java.net.URI;
+import java.time.Instant;;
+import java.util.Arrays;
+import java.util.Optional;
 
 @ControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler({
+                UserNotFoundException.class,
+                TrainerNotFoundException.class,
+                TrainingSessionNotFoundException.class,
+                ParticipantNotFoundException.class,
+                NotificationNotFoundException.class})
+    public ProblemDetail handleNotFound(RuntimeException exception, HttpServletRequest request){
+        return build(HttpStatus.NOT_FOUND, "not-found", exception.getMessage(), request);
+    }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ErrorEntity> badRequestHandler(BadRequestException exception){
-        ErrorEntity error = ErrorEntity.builder()
-                .timeStamp(LocalDateTime.now())
-                .message(exception.getMessage())
-                .httpStatus(HttpStatus.BAD_REQUEST.value())
-                .build();
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
-    }
-
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorEntity> userNotFoundHandler(UserNotFoundException exception){
-        ErrorEntity error = ErrorEntity.builder()
-                .timeStamp(LocalDateTime.now())
-                .message(exception.getMessage())
-                .httpStatus(HttpStatus.NOT_FOUND.value())
-                .build();
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-    }
-
-    @ExceptionHandler(TrainerNotFoundException.class)
-    public ResponseEntity<ErrorEntity> trainerNotFoundHandler(TrainerNotFoundException exception){
-        ErrorEntity error = ErrorEntity.builder()
-                .timeStamp(LocalDateTime.now())
-                .message(exception.getMessage())
-                .httpStatus(HttpStatus.NOT_FOUND.value())
-                .build();
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-    }
-
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorEntity> runtimeExceptionHandler(RuntimeException exception){
-        ErrorEntity error = ErrorEntity.builder()
-                .timeStamp(LocalDateTime.now())
-                .message(exception.getMessage())
-                .httpStatus(HttpStatus.FORBIDDEN.value())
-                .build();
-
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+    public ProblemDetail badRequestHandler(BadRequestException exception, HttpServletRequest request){
+        return build(HttpStatus.BAD_REQUEST, "bad-request", exception.getMessage(), request);
     }
 
     @ExceptionHandler(ConflictException.class)
-    public ResponseEntity<ErrorEntity> conflictExceptionHamdler(ConflictException exception){
-        ErrorEntity error = ErrorEntity.builder()
-                .timeStamp(LocalDateTime.now())
-                .message(exception.getMessage())
-                .httpStatus(HttpStatus.CONFLICT.value())
-                .build();
-
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    public ProblemDetail conflictExceptionHamdler(ConflictException exception, HttpServletRequest request){
+        return build(HttpStatus.CONFLICT, "conflict", exception.getMessage(), request);
     }
 
-    @ExceptionHandler(TrainingSessionNotFoundException.class)
-    public ResponseEntity<ErrorEntity> trainingSesssionNotFoundHandler(TrainingSessionNotFoundException exception){
-        ErrorEntity error = ErrorEntity.builder()
-                .timeStamp(LocalDateTime.now())
-                .message(exception.getMessage())
-                .httpStatus(HttpStatus.NOT_FOUND.value())
-                .build();
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        ProblemDetail problemDetail = handleValidationException(ex);
+        return ResponseEntity.status(status.value()).body(problemDetail);
     }
 
-    @ExceptionHandler(ParticipantNotFoundException.class)
-    public ResponseEntity<ErrorEntity> participantNOtFoundHandler(ParticipantNotFoundException exception){
-        ErrorEntity error = ErrorEntity.builder()
-                .timeStamp(LocalDateTime.now())
-                .message(exception.getMessage())
-                .httpStatus(HttpStatus.NOT_FOUND.value())
-                .build();
+    private ProblemDetail build(HttpStatus status, String errorSlug,
+                                                String detail, HttpServletRequest request) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(status, detail);
+        problem.setType(URI.create("/errors/" + errorSlug));
+        problem.setTitle(status.getReasonPhrase());
+        problem.setInstance(URI.create(request.getRequestURI()));
+        problem.setProperty("timestamp", Instant.now());
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        return problem;
     }
 
-    @ExceptionHandler(NotificationNotFoundException.class)
-    public ResponseEntity<ErrorEntity> notificationNotFoundHandler(NotificationNotFoundException exception){
-        ErrorEntity error = ErrorEntity.builder()
-                .timeStamp(LocalDateTime.now())
-                .message(exception.getMessage())
-                .httpStatus(HttpStatus.NOT_FOUND.value())
-                .build();
+    private ProblemDetail handleValidationException(MethodArgumentNotValidException ex) {
+        String details = getErrorsDetails(ex);
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(ex.getStatusCode(), details);
+        problem.setType(URI.create("/errors/bad-request"));
+        problem.setTitle("Bad request");
+        problem.setInstance(ex.getBody().getInstance());
+        problem.setProperty("timestamp", Instant.now());
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        return problem;
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorEntity> handleValidationException(MethodArgumentNotValidException exception){
-        String errorMessage = exception.getBindingResult().getAllErrors().stream()
-                .findFirst()
-                .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .orElse("Validation error");
-
-        ErrorEntity error = ErrorEntity.builder()
-                .timeStamp(LocalDateTime.now())
-                .message(errorMessage)
-                .httpStatus(HttpStatus.BAD_REQUEST.value())
-                .build();
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    // idk how it works but it works
+    // alteratively use Binding Results and Field Errors
+    // source: https://medium.com/@RoussiAbdelghani/error-handling-in-spring-web-using-rfc-9457-specification-f2cc8398e285
+    private String getErrorsDetails(MethodArgumentNotValidException ex) {
+        return Optional.of(ex.getDetailMessageArguments())
+                .map(args -> Arrays.stream(args)
+                        .filter(msg -> !ObjectUtils.isEmpty(msg))
+                        .reduce("Please make sure to provide a valid request, ", (a, b) -> a + " " + b)
+                )
+                .orElse("").toString();
     }
-
 }

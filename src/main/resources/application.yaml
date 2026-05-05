@@ -1,6 +1,9 @@
 spring:
   application:
     name: BeModule
+  mvc:
+    problemdetails:
+      enabled: true
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: myuser
