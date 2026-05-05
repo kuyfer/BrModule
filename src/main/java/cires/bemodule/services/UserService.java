@@ -80,7 +80,7 @@ public class UserService {
         return userRepository.findAll()
                 .stream()
                 .map(userMapper::toUserDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
 // ################################# UPDATE ######################################

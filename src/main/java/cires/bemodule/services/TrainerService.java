@@ -43,9 +43,10 @@ public class TrainerService {
     }
 
     // ################################# READ ########################################
+
     @Transactional(readOnly = true)
     public TrainerDTO findTrainerById(Long id) {
-        return trainerMapper.toTrainerDTO(trainerRepository.findById(id).orElseThrow(() -> new TrainerNotFoundException( id)));
+        return trainerMapper.toTrainerDTO(getTrainerIdOrThrow(id));
     }
 
     // TODO : maybe Transactional(readOnly = true) not needed
@@ -55,19 +56,27 @@ public class TrainerService {
         return trainerRepository.findAll()
                 .stream()
                 .map(trainerMapper::toTrainerDTO)
-                .collect(Collectors.toList());
+                .toList();
      }
 
     // ################################# UPDATE ######################################
+
     public Trainer updateTrainer(Long id, Trainer trainer) {
-        Trainer existingTrainer = trainerRepository.findById(id).orElseThrow(() -> new TrainerNotFoundException(id));
+        Trainer existingTrainer = getTrainerIdOrThrow(id);
         existingTrainer.setSpecialty(trainer.getSpecialty());
         return trainerRepository.save(existingTrainer);
     }
 
     // ################################# DELETE ######################################
+
      public void deleteTrainer(Long id) {
-        Trainer trainer = trainerRepository.findById(id).orElseThrow(() -> new TrainerNotFoundException(id));
+        Trainer trainer = getTrainerIdOrThrow(id);
         trainerRepository.delete(trainer);
      }
+
+     // ################################# UTILS ######################################
+
+    private Trainer getTrainerIdOrThrow(Long id){
+        return trainerRepository.findById(id).orElseThrow( () -> new TrainerNotFoundException(id));
+    }
 }
