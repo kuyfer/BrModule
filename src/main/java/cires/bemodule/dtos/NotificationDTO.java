@@ -13,5 +13,6 @@ public class NotificationDTO {
     private NotificationType notificationType;
     private NotificationStatus notificationStatus;
     private String toEmail;
+    private String subject;
 
 }

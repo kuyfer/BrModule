@@ -1,7 +1,6 @@
 package cires.bemodule.services;
 
 import cires.bemodule.dtos.NotificationDTO;
-import cires.bemodule.entities.Notification;
 import cires.bemodule.exceptions.controllerexceptions.NotificationNotFoundException;
 import cires.bemodule.mappers.NotificationMapper;
 import cires.bemodule.repositories.NotificationRepository;
@@ -29,7 +28,7 @@ public class NotificationService {
         return notificationRepository.findAll()
                 .stream()
                 .map(notificationMapper::toNotificationDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<NotificationDTO> findByRecipiant(String email){
