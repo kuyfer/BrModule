@@ -2,11 +2,15 @@ package cires.bemodule.services;
 
 import cires.bemodule.dtos2.CreateParticipantRequest;
 import cires.bemodule.dtos.ParticipantDTO;
+import cires.bemodule.dtos2.CreateParticipantResponse;
 import cires.bemodule.dtos2.PatchParticipantRequest;
 import cires.bemodule.entities.Participant;
+import cires.bemodule.enums.RegistrationSource;
 import cires.bemodule.exceptions.controllerexceptions.ParticipantNotFoundException;
 import cires.bemodule.mappers.ParticipantMapper;
 import cires.bemodule.repositories.ParticipantRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,20 +26,17 @@ public class ParticipantService {
         this.participantRepository = participantRepository;
         this.participantMapper = participantMapper;
     }
+    Logger log = LoggerFactory.getLogger(ParticipantService.class);
 
     // ################################# CREATE ######################################
 
-    public Participant createParticipant(CreateParticipantRequest request) {
+    public CreateParticipantResponse createParticipant(CreateParticipantRequest request) {
+        Participant participant = participantMapper.toParticipant(request);
+        participant.setRegistrationSource(RegistrationSource.MANUAL);
+        Participant saved = participantRepository.save(participant);
 
-        Participant participant = new Participant();
-        participant.setFirstName(request.getFirstName());
-        participant.setLastName(request.getLastName());
-        participant.setEmail(request.getEmail());
-        participant.setPhone(request.getPhoneNumber());
-        participant.setAddress(request.getAddress());
-        participant.setRegistrationSource(request.getRegistrationSource());
-
-        return participantRepository.save(participant);
+        log.info("Participant created [id={}, email={}]", saved.getId(), saved.getEmail());
+        return participantMapper.toCreateParticipantResponse(saved);
     }
 
     // ################################# READ ########################################
@@ -49,7 +50,7 @@ public class ParticipantService {
         return participantRepository.findAll()
                 .stream()
                 .map(participantMapper::toParticipantDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     // ################################# UPDATE ######################################
@@ -61,7 +62,6 @@ public class ParticipantService {
         existingParticipant.setEmail(request.getEmail());
         existingParticipant.setPhone(request.getPhoneNumber());
         existingParticipant.setAddress(request.getAddress());
-        existingParticipant.setRegistrationSource(request.getRegistrationSource());
         return participantRepository.save(existingParticipant);
     }
 

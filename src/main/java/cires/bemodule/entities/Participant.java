@@ -1,5 +1,6 @@
 package cires.bemodule.entities;
 
+import cires.bemodule.enums.RegistrationSource;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,7 +30,8 @@ public class Participant {
     @Column(nullable = false)
     private String address;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String registrationSource;
+    private RegistrationSource registrationSource;
 
 }

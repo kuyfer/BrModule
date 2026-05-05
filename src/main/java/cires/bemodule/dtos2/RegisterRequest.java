@@ -3,6 +3,8 @@ package cires.bemodule.dtos2;
 import cires.bemodule.annotations.PasswordMatches;
 import cires.bemodule.annotations.ValidPassword;
 import cires.bemodule.interfaces.PasswordConfirmable;
+import cires.bemodule.utilities.EmailNormalizer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -33,6 +35,7 @@ public class RegisterRequest implements PasswordConfirmable {
     
     @NotBlank(message = "Email is required")
     @Email(message = "Email should be valid")
+    @JsonDeserialize(using = EmailNormalizer.class)
     private String email;
 
 }

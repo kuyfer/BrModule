@@ -46,14 +46,13 @@ public class ParticipantController {
                                                 @RequestBody @Valid PatchParticipantRequest request) {
         return ResponseEntity.ok(participantService.patchParticipant(id, request));
     }
-
     @PostMapping
-    public ResponseEntity<CreateParticipantResponse> createParticipant(@Valid @RequestBody CreateParticipantRequest request) {
-        Participant participant = participantService.createParticipant(request);
-        CreateParticipantResponse response = participantMapper.toCreateParticipantResponse(participant);
-        response.setMessage("Participant created successfully");
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<CreateParticipantResponse> createParticipant(
+            @Valid @RequestBody CreateParticipantRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(participantService.createParticipant(request));
     }
+
 
     @PostMapping("/import/session/{sessionId}")
     public void importParticipantsFromSession(@PathVariable Long sessionId, @RequestBody Object importRequest) {}
