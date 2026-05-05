@@ -3,13 +3,12 @@ package cires.bemodule.entities;
 import cires.bemodule.enums.NotificationStatus;
 import cires.bemodule.enums.NotificationType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.envers.Audited;
 
 @Audited @Entity
-@Data @NoArgsConstructor @AllArgsConstructor
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
 @Table(name = "notifications")
 public class Notification {
 

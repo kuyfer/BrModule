@@ -3,16 +3,15 @@ package cires.bemodule.entities;
 import cires.bemodule.enums.TrainingSessionMode;
 import cires.bemodule.enums.TrainingSessionStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.envers.Audited;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Audited @Entity
-@Data @NoArgsConstructor @AllArgsConstructor
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
 @Table(name = "Session")
 public class TrainingSession {
 

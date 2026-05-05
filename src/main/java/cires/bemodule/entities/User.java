@@ -2,14 +2,13 @@ package cires.bemodule.entities;
 
 import cires.bemodule.enums.AccountStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.envers.Audited;
 import java.util.Collection;
 
 @Audited @Entity
-@Data @NoArgsConstructor @AllArgsConstructor
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
 @Table(name = "users")
 public class User {
 

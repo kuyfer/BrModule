@@ -1,13 +1,11 @@
 package cires.bemodule.dtos;
 
 import cires.bemodule.enums.AccountStatus;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Collection;
 
-@Data @AllArgsConstructor @NoArgsConstructor
+@Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class UserDTO {
 
     private Long id;

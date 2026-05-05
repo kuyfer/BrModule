@@ -1,16 +1,16 @@
 package cires.bemodule.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.envers.Audited;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Audited @Entity
-@Data @NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor @AllArgsConstructor
 @Table(name = "session_participants")
 public class SessionParticipant {
 

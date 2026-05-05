@@ -2,12 +2,11 @@ package cires.bemodule.dtos;
 
 import cires.bemodule.entities.SessionParticipant;
 import cires.bemodule.enums.AttendanceStatus;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import java.time.LocalDateTime;
 
-@Data @AllArgsConstructor @NoArgsConstructor
+@Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class AttendanceDTO {
 
     private Long id;

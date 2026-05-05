@@ -2,15 +2,14 @@ package cires.bemodule.entities;
 
 import cires.bemodule.enums.AttendanceStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.envers.Audited;
 
 import java.time.LocalDateTime;
 
 @Audited @Entity
-@Data @NoArgsConstructor @AllArgsConstructor
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
 @Table(name = "attendance")
 public class Attendance {
 
