@@ -2,6 +2,7 @@ package cires.bemodule.restcontrollers;
 
 import cires.bemodule.dtos.UserDTO;
 import cires.bemodule.entities.User;
+import cires.bemodule.enums.AccountStatus;
 import cires.bemodule.mappers.UserMapper;
 import cires.bemodule.repositories.UserRepository;
 import cires.bemodule.services.UserService;
@@ -26,8 +27,10 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
-        List<UserDTO> users = userService.findAllUsers();
+    public ResponseEntity<List<UserDTO>> getAllUsers(
+            @RequestParam(required = false) String role,
+            @RequestParam(required = false) AccountStatus status) {
+        List<UserDTO> users = userService.findALL(role, status);
         return ResponseEntity.ok(users);
     }
 

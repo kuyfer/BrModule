@@ -23,11 +23,6 @@ public class NotificationController {
         this.notificationService = notificationService;
     }
 
-//    @GetMapping
-//    public ResponseEntity<List<NotificationDTO>> getAllNotifications() {
-//            List<NotificationDTO> notifications = notificationService.findAll();
-//            return ResponseEntity.ok(notifications);
-//    }
     @GetMapping
     public ResponseEntity<List<NotificationDTO>> getAllNotifications(
             @RequestParam(required = false) NotificationType type,
