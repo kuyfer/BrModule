@@ -1,6 +1,8 @@
 package cires.bemodule.restcontrollers;
 
 import cires.bemodule.dtos.NotificationDTO;
+import cires.bemodule.enums.NotificationStatus;
+import cires.bemodule.enums.NotificationType;
 import cires.bemodule.services.NotificationService;
 import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,10 +23,19 @@ public class NotificationController {
         this.notificationService = notificationService;
     }
 
+//    @GetMapping
+//    public ResponseEntity<List<NotificationDTO>> getAllNotifications() {
+//            List<NotificationDTO> notifications = notificationService.findAll();
+//            return ResponseEntity.ok(notifications);
+//    }
     @GetMapping
-    public ResponseEntity<List<NotificationDTO>> getAllNotifications() {
-            List<NotificationDTO> notifications = notificationService.findAll();
-            return ResponseEntity.ok(notifications);
+    public ResponseEntity<List<NotificationDTO>> getAllNotifications(
+            @RequestParam(required = false) NotificationType type,
+            @RequestParam(required = false) NotificationStatus status,
+            @RequestParam(required = false) String email
+    ) {
+        List<NotificationDTO> notifications = notificationService.findAll(type, status, email);
+        return ResponseEntity.ok(notifications);
     }
 
     @GetMapping("/export")
