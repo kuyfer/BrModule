@@ -24,7 +24,7 @@ public class Participant {
     private String email;
 
     @Column(nullable = false)
-    private String phone;
+    private String phoneNumber;
 
     @Column(nullable = false)
     private String address;

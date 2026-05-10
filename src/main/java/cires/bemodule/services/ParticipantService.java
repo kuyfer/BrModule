@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ParticipantService {
@@ -60,7 +59,7 @@ public class ParticipantService {
         existingParticipant.setFirstName(request.getFirstName());
         existingParticipant.setLastName(request.getLastName());
         existingParticipant.setEmail(request.getEmail());
-        existingParticipant.setPhone(request.getPhoneNumber());
+        existingParticipant.setPhoneNumber(request.getPhoneNumber());
         existingParticipant.setAddress(request.getAddress());
         return participantRepository.save(existingParticipant);
     }

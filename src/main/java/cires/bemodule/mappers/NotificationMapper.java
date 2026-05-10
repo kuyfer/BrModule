@@ -7,9 +7,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface NotificationMapper {
 
-
     NotificationDTO toNotificationDto(Notification notification);
-
 
     Notification toNotification(NotificationDTO notificationDTO);
 
