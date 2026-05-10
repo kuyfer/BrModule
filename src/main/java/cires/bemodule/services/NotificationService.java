@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class NotificationService {
@@ -41,17 +40,4 @@ public class NotificationService {
                 .toList();
     }
 
-    public List<NotificationDTO> findAll(){
-        return notificationRepository.findAll()
-                .stream()
-                .map(notificationMapper::toNotificationDto)
-                .toList();
-    }
-
-    public List<NotificationDTO> findByRecipiant(String email){
-        return  notificationRepository.findByToEmail(email)
-                .stream()
-                .map(notificationMapper::toNotificationDto)
-                .toList();
-    }
 }

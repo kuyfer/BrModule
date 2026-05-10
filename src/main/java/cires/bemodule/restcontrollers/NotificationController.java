@@ -4,11 +4,11 @@ import cires.bemodule.dtos.NotificationDTO;
 import cires.bemodule.enums.NotificationStatus;
 import cires.bemodule.enums.NotificationType;
 import cires.bemodule.services.NotificationService;
-import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Locale;
@@ -39,14 +39,19 @@ public class NotificationController {
     }
 
     @GetMapping("/export")
-    public void exportNotifications(HttpServletResponse response) throws java.io.IOException {
+    public void exportNotifications(HttpServletResponse response,
+                                    @RequestParam(required = false) NotificationType type,
+                                    @RequestParam(required = false) NotificationStatus status,
+                                    @RequestParam(required = false) String email
+
+    ) throws IOException {
         response.setContentType("text/csv; charset=UTF-8");
         response.setHeader("Content-Disposition", "attachment; filename=\"notification.csv\"");
 
         try (PrintWriter writer = response.getWriter()) {
             writer.println("Id,Subject,To,Status,Type");
 
-            List<NotificationDTO> notifications = notificationService.findAll();
+            List<NotificationDTO> notifications = notificationService.findAll(type, status, email);
             for (NotificationDTO notification : notifications) {
                 String row = String.format(Locale.ROOT, "%d,%s,%s, %s, %s",
                         notification.getId(),
