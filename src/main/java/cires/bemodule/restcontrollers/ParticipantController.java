@@ -4,7 +4,7 @@ import cires.bemodule.dtos2.CreateParticipantRequest;
 import cires.bemodule.dtos.ParticipantDTO;
 import cires.bemodule.dtos2.CreateParticipantResponse;
 import cires.bemodule.dtos2.PatchParticipantRequest;
-import cires.bemodule.entities.Participant;
+import cires.bemodule.enums.RegistrationSource;
 import cires.bemodule.mappers.ParticipantMapper;
 import cires.bemodule.services.ParticipantService;
 import jakarta.validation.Valid;
@@ -35,10 +35,11 @@ public class ParticipantController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ParticipantDTO>> getAllParticipants() {
-        List<ParticipantDTO> participants = participantService.findAllParticipants();
+    public ResponseEntity<List<ParticipantDTO>> getAllParticipants(
+            @RequestParam(required = false) RegistrationSource source)
+          {
+        List<ParticipantDTO> participants = participantService.findAll(source);
         return ResponseEntity.ok(participants);
-
     }
 
     @PatchMapping("/{id}")

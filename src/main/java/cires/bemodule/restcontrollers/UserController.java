@@ -34,16 +34,6 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/admins")
-    public ResponseEntity<List<UserDTO>> getAllAdmins() {
-        // Correct usage: call the static method
-        List<User> adminUsers = userRepository.findAll(isAdmin());
-        // Convert entities to DTOs (use your mapper)
-        List<UserDTO> adminDTOs = adminUsers.stream().map(userMapper::toUserDto)  // or inject UserMapper
-                .toList();
-        return ResponseEntity.ok(adminDTOs);
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);

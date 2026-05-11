@@ -23,14 +23,12 @@ public class Participant {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
     private String phoneNumber;
 
-    @Column(nullable = false)
     private String address;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private RegistrationSource registrationSource;
 
 }

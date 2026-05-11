@@ -9,8 +9,10 @@ import cires.bemodule.enums.RegistrationSource;
 import cires.bemodule.exceptions.controllerexceptions.ParticipantNotFoundException;
 import cires.bemodule.mappers.ParticipantMapper;
 import cires.bemodule.repositories.ParticipantRepository;
+import cires.bemodule.specifications.ParticipantsSpecifications;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,13 +47,14 @@ public class ParticipantService {
         return participantMapper.toParticipantDto(participant);
     }
 
-    public List<ParticipantDTO> findAllParticipants() {
-        return participantRepository.findAll()
+    public List<ParticipantDTO> findAll(RegistrationSource source){
+        Specification<Participant> spec = Specification
+                .where(ParticipantsSpecifications.hasRegistration(source));
+        return participantRepository.findAll(spec)
                 .stream()
                 .map(participantMapper::toParticipantDto)
                 .toList();
     }
-
     // ################################# UPDATE ######################################
 
     public Participant updateParticipant(Long id,PatchParticipantRequest request) {
