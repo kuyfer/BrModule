@@ -1,13 +1,10 @@
 package cires.bemodule.services;
 
-import cires.bemodule.dtos.NotificationDTO;
 import cires.bemodule.dtos2.RegisterRequest;
 import cires.bemodule.dtos.UserDTO;
-import cires.bemodule.entities.Notification;
 import cires.bemodule.entities.Role;
 import cires.bemodule.entities.User;
 import cires.bemodule.enums.AccountStatus;
-import cires.bemodule.enums.NotificationStatus;
 import cires.bemodule.enums.NotificationType;
 import cires.bemodule.enums.RoleType;
 import cires.bemodule.exceptions.validationexceptions.EmailAlreadyExistsException;
@@ -17,7 +14,6 @@ import cires.bemodule.mappers.UserMapper;
 import cires.bemodule.models.EmailPayload;
 import cires.bemodule.repositories.RoleRepository;
 import cires.bemodule.repositories.UserRepository;
-import cires.bemodule.specifications.NotificationSpecifications;
 import cires.bemodule.specifications.UserSpecifications;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +24,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -82,7 +77,7 @@ public class UserService {
         return userMapper.toUserDto(user);
     }
 
-    public List<UserDTO> findALL(String role, AccountStatus status) {
+    public List<UserDTO> findAll(String role, AccountStatus status) {
         Specification<User> spec = Specification
                 .where(UserSpecifications.hasRole(role))
                 .and(UserSpecifications.hasStatus(status));

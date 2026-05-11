@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface TrainingSessionMapper {
 
-    TrainingSessionDTO toDto(TrainingSession trainingSession);
+    TrainingSessionDTO toTrainingSessionDto(TrainingSession trainingSession);
 
     //@Mapping(ignore = true, target = "subsidiary")
     // TODO: add later when subsidiary is implemented to training session

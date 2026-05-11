@@ -7,6 +7,7 @@ import cires.bemodule.entities.Participant;
 import cires.bemodule.entities.Trainer;
 import cires.bemodule.entities.TrainingSession;
 import cires.bemodule.enums.NotificationType;
+import cires.bemodule.enums.TrainingSessionMode;
 import cires.bemodule.enums.TrainingSessionStatus;
 import cires.bemodule.exceptions.controllerexceptions.TrainerNotFoundException;
 import cires.bemodule.exceptions.controllerexceptions.TrainingSessionNotFoundException;
@@ -15,7 +16,9 @@ import cires.bemodule.models.EmailPayload;
 import cires.bemodule.repositories.ParticipantRepository;
 import cires.bemodule.repositories.TrainerRepository;
 import cires.bemodule.repositories.TrainingSessionRepository;
+import cires.bemodule.specifications.TrainingSessionSpecifications;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -66,12 +69,17 @@ public class TrainingSessionService {
 
     public TrainingSessionDTO findTrainingSessionById(Long id) {
         TrainingSession trainingSession = getSessionIdOrThrow(id);
-        return trainingSessionMapper.toDto(trainingSession);
+        return trainingSessionMapper.toTrainingSessionDto(trainingSession);
     }
 
-    // TODO : add filters maybe
-    public List<TrainingSessionDTO> findALlTrainingSessions(){
-        return trainingSessionRepository.findAll().stream().map(trainingSessionMapper::toDto).toList();
+    public List<TrainingSessionDTO> findAll(TrainingSessionStatus status, TrainingSessionMode mode){
+        Specification<TrainingSession> spec = Specification
+                .where(TrainingSessionSpecifications.hasMode(mode))
+                .and(TrainingSessionSpecifications.hasStatus(status));
+        List<TrainingSession> sessions = trainingSessionRepository.findAll(spec);
+        return sessions.stream()
+                .map(trainingSessionMapper::toTrainingSessionDto)
+                .toList();
     }
 
 // ################################# DELETE ######################################
