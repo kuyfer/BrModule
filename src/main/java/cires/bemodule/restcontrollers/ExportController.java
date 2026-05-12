@@ -36,12 +36,12 @@ public class ExportController {
                                     @RequestParam(required = false) NotificationType type,
                                     @RequestParam(required = false) NotificationStatus status,
                                     @RequestParam(required = false) String email,
-                                    @RequestParam(defaultValue = "csv") String format) throws IOException {
+                                    @RequestParam(defaultValue = "CSV") ExportFormat format) throws IOException {
 
         List<NotificationDTO> notifications = notificationService.findAll(type, status, email);
 
         String[] headers = {"Id", "Subject", "To Email", "Status", "Type"};
-        if ("excel".equalsIgnoreCase(format)) {
+        if (format == ExportFormat.EXCEL) {
             exportService.exportToExcel(response, "notifications.xlsx", "Notifications", headers, notifications,
                     n -> new String[]{
                             String.valueOf(n.getId()),
@@ -63,12 +63,12 @@ public class ExportController {
     @GetMapping("/participants")
     public void exportParticipants(HttpServletResponse response,
                                    @RequestParam(required = false) RegistrationSource source,
-                                   @RequestParam(defaultValue = "csv") String format) throws IOException {
+                                   @RequestParam(defaultValue = "CSV") ExportFormat format) throws IOException {
 
         List<ParticipantDTO> participants = participantService.findAll(source);
 
         String[] headers = {"Id", "First Name", "Last Name", "Email", "Registration Source"};
-        if ("excel".equalsIgnoreCase(format)) {
+        if (format == ExportFormat.EXCEL) {
             exportService.exportToExcel(response, "participants.xlsx", "Participants", headers, participants,
                     participant -> new String[]{
                             String.valueOf(participant.getId()),
@@ -93,12 +93,12 @@ public class ExportController {
     public void exportSessions(HttpServletResponse response,
                                @RequestParam(required = false) TrainingSessionStatus status,
                                @RequestParam(required = false) TrainingSessionMode mode,
-                               @RequestParam(defaultValue = "csv") String format) throws IOException {
+                               @RequestParam(defaultValue = "CSV") ExportFormat format) throws IOException {
 
         List<TrainingSessionDTO> sessions = trainingSessionService.findAll(status, mode);
 
         String[] headers = {"Id", "Name", "Start Date", "End Date", "Status", "Mode"};
-        if ("excel".equalsIgnoreCase(format)) {
+        if (format == ExportFormat.EXCEL) {
             exportService.exportToExcel(response, "sessions.xlsx", "Training Sessions", headers, sessions,
                     session -> new String[]{
                             String.valueOf(session.getId()),
@@ -125,12 +125,12 @@ public class ExportController {
     public void exportUsers(HttpServletResponse response,
                             @RequestParam(required = false) AccountStatus status,
                             @RequestParam(required = false) String role,
-                            @RequestParam(defaultValue = "csv") String format) throws IOException {
+                            @RequestParam(defaultValue = "CSV") ExportFormat format) throws IOException {
 
         List<UserDTO> users = userService.findAll(role, status);
 
         String[] headers = {"Id", "Username", "First name", "Last name", "Email", "Role", "Status"};
-        if ("excel".equalsIgnoreCase(format)) {
+        if (format == ExportFormat.EXCEL) {
             exportService.exportToExcel(response, "users.xlsx", "Users", headers, users,
                     user -> new String[]{
                             String.valueOf(user.getId()),
@@ -157,7 +157,8 @@ public class ExportController {
 
     @GetMapping("/trainers")
     public void exportTrainers(HttpServletResponse response,
-                               @RequestParam(required = false) String speciality) throws IOException {
+                               @RequestParam(required = false) String speciality,
+                               @RequestParam(defaultValue = "CSV") ExportFormat format) throws IOException {
         List<TrainerDTO> trainers = trainerService.findAll(speciality);
 
         String[] headers ={};
