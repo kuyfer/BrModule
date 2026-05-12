@@ -12,6 +12,6 @@ public class ParticipantDTO {
     private String email;
     private String phoneNumber;
     private String address;
-    private String registrationSource;
+    private RegistrationSource registrationSource;
 
 }

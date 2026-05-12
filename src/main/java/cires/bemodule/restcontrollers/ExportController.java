@@ -75,7 +75,7 @@ public class ExportController {
                             participant.getFirstName(),
                             participant.getLastName(),
                             participant.getEmail(),
-                            participant.getRegistrationSource()
+                            participant.getRegistrationSource().toString()
                     });
         } else {
             exportService.exportToCsv(response, "participants.csv", headers, participants,
@@ -84,7 +84,7 @@ public class ExportController {
                             participant.getFirstName(),
                             participant.getLastName(),
                             participant.getEmail(),
-                            participant.getRegistrationSource()
+                            participant.getRegistrationSource().toString()
                     });
         }
     }
