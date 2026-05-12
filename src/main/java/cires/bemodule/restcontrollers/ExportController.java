@@ -161,7 +161,32 @@ public class ExportController {
                                @RequestParam(defaultValue = "CSV") ExportFormat format) throws IOException {
         List<TrainerDTO> trainers = trainerService.findAll(speciality);
 
-        String[] headers ={};
+        String[] headers ={"Id", "User Name", "First Name", "Last Name", "Email", "Speciality", "Status"};
+        if (format == ExportFormat.EXCEL) {
+            exportService.exportToExcel(response, "trainers.xlsx", "Trainers", headers, trainers,
+                    trainer -> new String[]{
+            String.valueOf(trainer.getId()),
+                    trainer.getUser().getUsername(),
+                    trainer.getUser().getFirstName(),
+                    trainer.getUser().getLastName(),
+                    trainer.getUser().getEmail(),
+                    trainer.getSpecialty(),
+                    trainer.getUser().getAccountStatus().toString()
+                    });
+        } else {
+            exportService.exportToCsv(response, "trainers.csv", headers, trainers,
+                    trainer -> new String[]{
+            String.valueOf(trainer.getId()),
+                    trainer.getUser().getUsername(),
+                    trainer.getUser().getFirstName(),
+                            trainer.getUser().getLastName(),
+                            trainer.getUser().getEmail(),
+                            trainer.getSpecialty(),
+                            trainer.getUser().getAccountStatus().toString()
+                    });
+        }
     }
+
+
 
 }
