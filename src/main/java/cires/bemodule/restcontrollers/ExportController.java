@@ -43,46 +43,116 @@ public class ExportController {
         String[] headers = {"Id", "Subject", "To Email", "Status", "Type"};
         if ("excel".equalsIgnoreCase(format)) {
             exportService.exportToExcel(response, "notifications.xlsx", "Notifications", headers, notifications,
-                    n -> new String[]{String.valueOf(n.getId()), n.getSubject(), n.getToEmail(), n.getNotificationStatus().toString(), n.getNotificationType().toString()});
+                    n -> new String[]{
+                            String.valueOf(n.getId()),
+                            n.getSubject(),
+                            n.getToEmail(),
+                            n.getNotificationStatus().toString(),
+                            n.getNotificationType().toString()});
         } else {
             exportService.exportToCsv(response, "notifications.csv", headers, notifications,
-                    n -> new String[]{String.valueOf(n.getId()), n.getSubject(), n.getToEmail(), n.getNotificationStatus().toString(), n.getNotificationType().toString()});
+                    n -> new String[]{
+                            String.valueOf(n.getId()),
+                            n.getSubject(),
+                            n.getToEmail(),
+                            n.getNotificationStatus().toString(),
+                            n.getNotificationType().toString()});
         }
     }
 
     @GetMapping("/participants")
     public void exportParticipants(HttpServletResponse response,
-                                    @RequestParam(required = false) RegistrationSource source) throws IOException {
+                                   @RequestParam(required = false) RegistrationSource source,
+                                   @RequestParam(defaultValue = "csv") String format) throws IOException {
+
         List<ParticipantDTO> participants = participantService.findAll(source);
 
         String[] headers = {"Id", "First Name", "Last Name", "Email", "Registration Source"};
-        exportService.exportToCsv(response, "participants.csv", headers, participants,
-                participant -> new String[]{
-                        String.valueOf(participant.getId()),
-                        participant.getFirstName(),
-                        participant.getLastName(),
-                        participant.getEmail(),
-                        participant.getRegistrationSource()
-                });
+        if ("excel".equalsIgnoreCase(format)) {
+            exportService.exportToExcel(response, "participants.xlsx", "Participants", headers, participants,
+                    participant -> new String[]{
+                            String.valueOf(participant.getId()),
+                            participant.getFirstName(),
+                            participant.getLastName(),
+                            participant.getEmail(),
+                            participant.getRegistrationSource()
+                    });
+        } else {
+            exportService.exportToCsv(response, "participants.csv", headers, participants,
+                    participant -> new String[]{
+                            String.valueOf(participant.getId()),
+                            participant.getFirstName(),
+                            participant.getLastName(),
+                            participant.getEmail(),
+                            participant.getRegistrationSource()
+                    });
+        }
     }
 
     @GetMapping("/sessions")
     public void exportSessions(HttpServletResponse response,
                                @RequestParam(required = false) TrainingSessionStatus status,
-                               @RequestParam(required = false) TrainingSessionMode mode) throws IOException {
+                               @RequestParam(required = false) TrainingSessionMode mode,
+                               @RequestParam(defaultValue = "csv") String format) throws IOException {
+
         List<TrainingSessionDTO> sessions = trainingSessionService.findAll(status, mode);
 
-        String[] headers ={"Id", "Name", "Start Date", "End Date", "Status", "Mode"};
-        exportService.exportToCsv(response, "sessions.csv", headers, sessions,
-                session -> new String[]{
-                        String.valueOf(session.getId()),
-                        session.getTitle(),
-                        session.getStartDate().toString(),
-                        session.getEndDate().toString(),
-                        session.getStatus().toString(),
-                        session.getMode().toString()
-                }
-                );
+        String[] headers = {"Id", "Name", "Start Date", "End Date", "Status", "Mode"};
+        if ("excel".equalsIgnoreCase(format)) {
+            exportService.exportToExcel(response, "sessions.xlsx", "Training Sessions", headers, sessions,
+                    session -> new String[]{
+                            String.valueOf(session.getId()),
+                            session.getTitle(),
+                            session.getStartDate().toString(),
+                            session.getEndDate().toString(),
+                            session.getStatus().toString(),
+                            session.getMode().toString()
+                    });
+        } else {
+            exportService.exportToCsv(response, "sessions.csv", headers, sessions,
+                    session -> new String[]{
+                            String.valueOf(session.getId()),
+                            session.getTitle(),
+                            session.getStartDate().toString(),
+                            session.getEndDate().toString(),
+                            session.getStatus().toString(),
+                            session.getMode().toString()
+                    });
+        }
+    }
+
+    @GetMapping("/users")
+    public void exportUsers(HttpServletResponse response,
+                            @RequestParam(required = false) AccountStatus status,
+                            @RequestParam(required = false) String role,
+                            @RequestParam(defaultValue = "csv") String format) throws IOException {
+
+        List<UserDTO> users = userService.findAll(role, status);
+
+        String[] headers = {"Id", "Username", "First name", "Last name", "Email", "Role", "Status"};
+        if ("excel".equalsIgnoreCase(format)) {
+            exportService.exportToExcel(response, "users.xlsx", "Users", headers, users,
+                    user -> new String[]{
+                            String.valueOf(user.getId()),
+                            user.getUsername(),
+                            user.getFirstName(),
+                            user.getLastName(),
+                            user.getEmail(),
+                            user.getRoles().toString(),
+                            user.getAccountStatus().toString()
+                    });
+        } else {
+            exportService.exportToCsv(response, "users.csv", headers, users,
+                    user -> new String[]{
+                            String.valueOf(user.getId()),
+                            user.getUsername(),
+                            user.getFirstName(),
+                            user.getLastName(),
+                            user.getEmail(),
+                            user.getRoles().toString(),
+                            user.getAccountStatus().toString()
+                    });
+        }
     }
 
     @GetMapping("/trainers")
@@ -93,22 +163,4 @@ public class ExportController {
         String[] headers ={};
     }
 
-    @GetMapping("/users")
-    public void exportUsers(HttpServletResponse response,
-                              @RequestParam(required = false) AccountStatus status,
-                              @RequestParam(required = false) String role          ) throws IOException {
-        List<UserDTO> users = userService.findAll(role, status);
-
-        String[] headers ={"Id", "Username", "First name", "Last name", "Email", "Role", "Status"};
-        exportService.exportToCsv(response,"users.csv", headers, users,
-                user -> new String[]{
-                        String.valueOf(user.getId()),
-                        user.getUsername(),
-                        user.getFirstName(),
-                        user.getLastName(),
-                        user.getEmail(),
-                        user.getRoles().toString(),
-                        user.getAccountStatus().toString()
-                });
-    }
 }
