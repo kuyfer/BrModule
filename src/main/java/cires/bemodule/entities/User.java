@@ -10,7 +10,7 @@ import java.util.Collection;
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Table(name = "users")
-public class User {
+public class User extends AuditableEntity{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -9,7 +9,7 @@ import org.hibernate.envers.Audited;
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Table(name = "participants")
-public class Participant {
+public class Participant extends AuditableEntity{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

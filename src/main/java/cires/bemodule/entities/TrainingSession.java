@@ -13,7 +13,7 @@ import java.util.List;
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Table(name = "Session")
-public class TrainingSession {
+public class TrainingSession extends AuditableEntity{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

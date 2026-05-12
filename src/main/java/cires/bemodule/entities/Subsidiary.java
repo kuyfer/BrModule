@@ -8,7 +8,7 @@ import org.hibernate.envers.Audited;
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Table(name = "subsidiaries")
-public class Subsidiary {
+public class Subsidiary extends AuditableEntity{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

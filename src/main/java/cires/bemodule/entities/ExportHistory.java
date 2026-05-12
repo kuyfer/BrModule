@@ -10,7 +10,7 @@ import org.hibernate.envers.Audited;
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Table(name = "export_history")
-public class ExportHistory {
+public class ExportHistory extends AuditableEntity{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

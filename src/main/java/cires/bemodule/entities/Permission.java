@@ -8,7 +8,7 @@ import org.hibernate.envers.Audited;
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Table(name = "permissions")
-public class Permission{
+public class Permission extends AuditableEntity{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
