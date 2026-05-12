@@ -17,6 +17,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = PasswordValidator.class)
 @Documented
 public @interface ValidPassword {
+
     String message() default "Invalid password. Must be 8-20 chars, include uppercase, lowercase, digit, no spaces.";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

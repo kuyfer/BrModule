@@ -19,5 +19,6 @@ public class EmailConfig {
         templateResolver.setCheckExistence(true);
         return templateResolver;
     }
+
 }
 

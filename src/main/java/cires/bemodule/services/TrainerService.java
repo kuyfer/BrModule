@@ -9,10 +9,11 @@ import cires.bemodule.exceptions.controllerexceptions.UserNotFoundException;
 import cires.bemodule.mappers.TrainerMapper;
 import cires.bemodule.repositories.TrainerRepository;
 import cires.bemodule.repositories.UserRepository;
-import org.springframework.transaction.annotation.Transactional;
+import cires.bemodule.specifications.TrainerSpecifications;
+import org.springframework.data.jpa.domain.Specification;
+
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class TrainerService {
@@ -36,7 +37,7 @@ public class TrainerService {
             throw new ConflictException("Trainer already exists for this user");
         }
         Trainer newTrainer = new Trainer();
-        newTrainer.setSpecialty(trainer.getSpecialty());
+        newTrainer.setSpeciality(trainer.getSpeciality());
         newTrainer.setUser(user);
 
         return trainerRepository.save(newTrainer);
@@ -44,17 +45,15 @@ public class TrainerService {
 
     // ################################# READ ########################################
 
-    @Transactional(readOnly = true)
     public TrainerDTO findTrainerById(Long id) {
         return trainerMapper.toTrainerDTO(getTrainerIdOrThrow(id));
     }
 
-    // TODO : maybe Transactional(readOnly = true) not needed
-    @Transactional(readOnly = true)
-     public List<TrainerDTO> findAllTrainers() {
-
-        return trainerRepository.findAll()
-                .stream()
+     public List<TrainerDTO> findAll(String specialty) {
+        Specification<Trainer> spec = Specification
+                .where(TrainerSpecifications.hasSpeciality(specialty));
+        List<Trainer> trainers = trainerRepository.findAll(spec);
+        return trainers.stream()
                 .map(trainerMapper::toTrainerDTO)
                 .toList();
      }
@@ -63,7 +62,7 @@ public class TrainerService {
 
     public Trainer updateTrainer(Long id, Trainer trainer) {
         Trainer existingTrainer = getTrainerIdOrThrow(id);
-        existingTrainer.setSpecialty(trainer.getSpecialty());
+        existingTrainer.setSpeciality(trainer.getSpeciality());
         return trainerRepository.save(existingTrainer);
     }
 

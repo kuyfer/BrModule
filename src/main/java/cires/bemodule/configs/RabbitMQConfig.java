@@ -12,8 +12,8 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
 @EnableRabbit
+@Configuration
 public class RabbitMQConfig {
 
     public static final String QUEUE_NAME = "emailQueue";
@@ -42,4 +42,5 @@ public class RabbitMQConfig {
     public MessageConverter jsonConverter() {
         return new JacksonJsonMessageConverter();
     }
+
 }

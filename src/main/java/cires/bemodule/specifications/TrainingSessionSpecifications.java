@@ -25,3 +25,5 @@ public class TrainingSessionSpecifications {
         };
     }
 }
+
+// TODO: add trainer id specification

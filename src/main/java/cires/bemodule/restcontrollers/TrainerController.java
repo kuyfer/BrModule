@@ -23,10 +23,11 @@ public class TrainerController {
     }
 
 @GetMapping
-    public ResponseEntity<List<TrainerDTO>> getAllTrainers(){
-        List<TrainerDTO> trainers = trainerService.findAllTrainers();
-        return ResponseEntity.ok(trainers);
+public ResponseEntity<List<TrainerDTO>> getAllTrainers(@RequestParam(required = false) String speciality){
+    List<TrainerDTO> trainers = trainerService.findAll(speciality);
+    return ResponseEntity.ok(trainers);
 }
+
 @GetMapping("/{id}")
     public ResponseEntity<TrainerDTO> getTrainerById(@PathVariable Long id){
         TrainerDTO trainer = trainerService.findTrainerById(id);
