@@ -1,9 +1,6 @@
 package cires.bemodule.restcontrollers;
 
-import cires.bemodule.dtos.NotificationDTO;
-import cires.bemodule.dtos.ParticipantDTO;
-import cires.bemodule.dtos.TrainingSessionDTO;
-import cires.bemodule.dtos.UserDTO;
+import cires.bemodule.dtos.*;
 import cires.bemodule.enums.*;
 import cires.bemodule.services.*;
 import jakarta.servlet.http.HttpServletResponse;
@@ -90,27 +87,28 @@ public class ExportController {
 
     @GetMapping("/trainers")
     public void exportTrainers(HttpServletResponse response,
-                               @RequestParam(required = false) String speciality) throws IOException {}
+                               @RequestParam(required = false) String speciality) throws IOException {
+        List<TrainerDTO> trainers = trainerService.findAll(speciality);
 
-//    @GetMapping("/users")
-//    public void exportUsers(HttpServletResponse response,
-//                            @RequestParam(required = false) String role) throws IOException {
-//
-//        List<UserDTO> users = userService.findAllByRole(role); // you'll add this method
-//
-//        String[] headers = {"Id", "Username", "First Name", "Last Name", "Email", "Account Status"};
-//        csvExportService.exportToCsv(response, "users.csv", headers, users,
-//                user -> new String[]{
-//                        String.valueOf(user.getId()),
-//                        user.getUsername(),
-//                        user.getFirstName(),
-//                        user.getLastName(),
-//                        user.getEmail(),
-//                        user.getAccountStatus()
-//                });
-//    }
+        String[] headers ={};
+    }
 
-    // 3. Export Trainers (if you have a TrainerService/DTO)
-    // @GetMapping("/trainers")
-    // public void exportTrainers(...) { ... }
+    @GetMapping("/users")
+    public void exportUsers(HttpServletResponse response,
+                              @RequestParam(required = false) AccountStatus status,
+                              @RequestParam(required = false) String role          ) throws IOException {
+        List<UserDTO> users = userService.findAll(role, status);
+
+        String[] headers ={"Id", "Username", "First name", "Last name", "Email", "Role", "Status"};
+        exportService.exportToCsv(response,"users.csv", headers, users,
+                user -> new String[]{
+                        String.valueOf(user.getId()),
+                        user.getUsername(),
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getEmail(),
+                        user.getRoles().toString(),
+                        user.getAccountStatus().toString()
+                });
+    }
 }
