@@ -35,19 +35,19 @@ public class ExportController {
     public void exportNotifications(HttpServletResponse response,
                                     @RequestParam(required = false) NotificationType type,
                                     @RequestParam(required = false) NotificationStatus status,
-                                    @RequestParam(required = false) String email) throws IOException {
+                                    @RequestParam(required = false) String email,
+                                    @RequestParam(defaultValue = "csv") String format) throws IOException {
 
         List<NotificationDTO> notifications = notificationService.findAll(type, status, email);
 
         String[] headers = {"Id", "Subject", "To Email", "Status", "Type"};
-        exportService.exportToCsv(response, "notifications.csv", headers, notifications,
-                notification -> new String[]{
-                        String.valueOf(notification.getId()),
-                        notification.getSubject(),
-                        notification.getToEmail(),
-                        notification.getNotificationStatus().toString(),
-                        notification.getNotificationType().toString()
-                });
+        if ("excel".equalsIgnoreCase(format)) {
+            exportService.exportToExcel(response, "notifications.xlsx", "Notifications", headers, notifications,
+                    n -> new String[]{String.valueOf(n.getId()), n.getSubject(), n.getToEmail(), n.getNotificationStatus().toString(), n.getNotificationType().toString()});
+        } else {
+            exportService.exportToCsv(response, "notifications.csv", headers, notifications,
+                    n -> new String[]{String.valueOf(n.getId()), n.getSubject(), n.getToEmail(), n.getNotificationStatus().toString(), n.getNotificationType().toString()});
+        }
     }
 
     @GetMapping("/participants")
