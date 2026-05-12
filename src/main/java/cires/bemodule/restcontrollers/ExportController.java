@@ -2,14 +2,10 @@ package cires.bemodule.restcontrollers;
 
 import cires.bemodule.dtos.NotificationDTO;
 import cires.bemodule.dtos.ParticipantDTO;
+import cires.bemodule.dtos.TrainingSessionDTO;
 import cires.bemodule.dtos.UserDTO;
-import cires.bemodule.enums.NotificationStatus;
-import cires.bemodule.enums.NotificationType;
-import cires.bemodule.enums.RegistrationSource;
-import cires.bemodule.services.ExportService;
-import cires.bemodule.services.NotificationService;
-import cires.bemodule.services.ParticipantService;
-import cires.bemodule.services.UserService;
+import cires.bemodule.enums.*;
+import cires.bemodule.services.*;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,15 +20,18 @@ public class ExportController {
     private final NotificationService notificationService;
     private final UserService userService;
     private final ParticipantService participantService;
-    // Add other services (TrainerService, etc.) as needed
+    private final TrainingSessionService trainingSessionService;
+    private final TrainerService trainerService;
 
     public ExportController(ExportService exportService,
                             NotificationService notificationService,
-                            UserService userService, ParticipantService participantService) {
+                            UserService userService, ParticipantService participantService, TrainingSessionService trainingSessionService, TrainerService trainerService) {
         this.exportService = exportService;
         this.notificationService = notificationService;
         this.userService = userService;
         this.participantService = participantService;
+        this.trainingSessionService = trainingSessionService;
+        this.trainerService = trainerService;
     }
 
     @GetMapping("/notifications")
@@ -72,8 +71,22 @@ public class ExportController {
 
     @GetMapping("/sessions")
     public void exportSessions(HttpServletResponse response,
-                               @RequestParam(required = false) String status,
-                               @RequestParam(required = false) String mode) throws IOException {}
+                               @RequestParam(required = false) TrainingSessionStatus status,
+                               @RequestParam(required = false) TrainingSessionMode mode) throws IOException {
+        List<TrainingSessionDTO> sessions = trainingSessionService.findAll(status, mode);
+
+        String[] headers ={"Id", "Name", "Start Date", "End Date", "Status", "Mode"};
+        exportService.exportToCsv(response, "sessions.csv", headers, sessions,
+                session -> new String[]{
+                        String.valueOf(session.getId()),
+                        session.getTitle(),
+                        session.getStartDate().toString(),
+                        session.getEndDate().toString(),
+                        session.getStatus().toString(),
+                        session.getMode().toString()
+                }
+                );
+    }
 
     @GetMapping("/trainers")
     public void exportTrainers(HttpServletResponse response,
