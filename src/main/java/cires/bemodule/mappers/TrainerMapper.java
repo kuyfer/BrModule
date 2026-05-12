@@ -1,6 +1,7 @@
 package cires.bemodule.mappers;
 
 import cires.bemodule.dtos.TrainerDTO;
+import cires.bemodule.dtos2.CreateTrainerRequest;
 import cires.bemodule.entities.Trainer;
 import org.mapstruct.Mapper;
 
@@ -10,5 +11,7 @@ public interface TrainerMapper {
     TrainerDTO toTrainerDTO(Trainer trainer);
 
     Trainer toTrainer(TrainerDTO trainerDTO);
+
+    Trainer toTrainer (CreateTrainerRequest request);
 
 }

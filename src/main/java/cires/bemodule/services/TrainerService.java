@@ -1,6 +1,7 @@
 package cires.bemodule.services;
 
 import cires.bemodule.dtos.TrainerDTO;
+import cires.bemodule.dtos2.CreateTrainerRequest;
 import cires.bemodule.entities.Role;
 import cires.bemodule.entities.Trainer;
 import cires.bemodule.entities.User;
@@ -36,20 +37,20 @@ public class TrainerService {
 
     // ################################# CREATE ######################################
 
-    public Trainer createTrainer(Trainer trainer, Long userId) {
+    public TrainerDTO createTrainer(CreateTrainerRequest request, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
 
         if(trainerRepository.existsByUserId(user.getId())){
             throw new ConflictException("Trainer already exists for this user");
         }
-        Trainer newTrainer = new Trainer();
-        newTrainer.setSpeciality(trainer.getSpeciality());
+        Trainer trainer = trainerMapper.toTrainer(request);
+        trainer.setSpeciality(request.getSpeciality());
         Role trainerRole = roleRepository.findByroleName(RoleType.TRAINER)
                 .orElseThrow(RoleNotFoundException::new);
         user.setRoles(List.of(trainerRole));
-        newTrainer.setUser(user);
-
-        return trainerRepository.save(newTrainer);
+        trainer.setUser(user);
+        Trainer savedTrainer = trainerRepository.save(trainer);
+        return trainerMapper.toTrainerDTO(savedTrainer);
     }
 
     // ################################# READ ########################################

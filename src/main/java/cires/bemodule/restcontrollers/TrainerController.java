@@ -1,6 +1,7 @@
 package cires.bemodule.restcontrollers;
 
 import cires.bemodule.dtos.TrainerDTO;
+import cires.bemodule.dtos2.CreateTrainerRequest;
 import cires.bemodule.entities.Trainer;
 import cires.bemodule.mappers.TrainerMapper;
 import cires.bemodule.services.TrainerService;
@@ -35,10 +36,9 @@ public ResponseEntity<List<TrainerDTO>> getAllTrainers(@RequestParam(required = 
     }
 
 @PostMapping("/{userId}")
-public  ResponseEntity<TrainerDTO> createTrainer(@Valid @RequestBody Trainer trainer, @PathVariable Long userId){
-       Trainer trainerNew = trainerService.createTrainer(trainer, userId);
-        TrainerDTO trainerDTO = trainerMapper.toTrainerDTO(trainerNew);
-        return ResponseEntity.status(HttpStatus.CREATED).body(trainerDTO);
+public  ResponseEntity<TrainerDTO> createTrainer(@Valid @RequestBody CreateTrainerRequest request, @PathVariable Long userId){
+       TrainerDTO trainer = trainerService.createTrainer(request, userId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(trainer);
 }
 
 @DeleteMapping("/{id}")

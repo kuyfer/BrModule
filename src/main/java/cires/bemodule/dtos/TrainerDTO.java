@@ -1,7 +1,6 @@
 package cires.bemodule.dtos;
 
 import cires.bemodule.entities.Organization;
-import cires.bemodule.entities.User;
 import lombok.*;
 
 import java.util.Set;
@@ -11,9 +10,10 @@ public class TrainerDTO {
 
     private Long id;
     private String specialty;
-    private User user;
+    private UserDTO user;
     private Set<Organization> affiliatedOrganizations;
 
 }
+
 
 
