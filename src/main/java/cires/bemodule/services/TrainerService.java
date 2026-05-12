@@ -1,12 +1,16 @@
 package cires.bemodule.services;
 
 import cires.bemodule.dtos.TrainerDTO;
+import cires.bemodule.entities.Role;
 import cires.bemodule.entities.Trainer;
 import cires.bemodule.entities.User;
+import cires.bemodule.enums.RoleType;
+import cires.bemodule.exceptions.controllerexceptions.RoleNotFoundException;
 import cires.bemodule.exceptions.validationexceptions.ConflictException;
 import cires.bemodule.exceptions.controllerexceptions.TrainerNotFoundException;
 import cires.bemodule.exceptions.controllerexceptions.UserNotFoundException;
 import cires.bemodule.mappers.TrainerMapper;
+import cires.bemodule.repositories.RoleRepository;
 import cires.bemodule.repositories.TrainerRepository;
 import cires.bemodule.repositories.UserRepository;
 import cires.bemodule.specifications.TrainerSpecifications;
@@ -21,11 +25,13 @@ public class TrainerService {
     private final TrainerRepository trainerRepository;
     private final TrainerMapper trainerMapper;
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
-    TrainerService(TrainerRepository trainerRepository, TrainerMapper trainerMapper, UserRepository userRepository) {
+    TrainerService(TrainerRepository trainerRepository, TrainerMapper trainerMapper, UserRepository userRepository, RoleRepository roleRepository) {
         this.trainerRepository = trainerRepository;
         this.trainerMapper = trainerMapper;
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     // ################################# CREATE ######################################
@@ -38,6 +44,9 @@ public class TrainerService {
         }
         Trainer newTrainer = new Trainer();
         newTrainer.setSpeciality(trainer.getSpeciality());
+        Role trainerRole = roleRepository.findByroleName(RoleType.TRAINER)
+                .orElseThrow(RoleNotFoundException::new);
+        user.setRoles(List.of(trainerRole));
         newTrainer.setUser(user);
 
         return trainerRepository.save(newTrainer);
