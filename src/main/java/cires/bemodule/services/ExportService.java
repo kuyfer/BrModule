@@ -1,16 +1,10 @@
 package cires.bemodule.services;
 
-import cires.bemodule.entities.Notification;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVPrinter;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 
 import java.io.PrintWriter;
-import java.io.OutputStreamWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.rmi.server.ExportException;
 import java.util.List;
 import java.util.function.Function;
 
@@ -18,31 +12,54 @@ import java.util.function.Function;
 @Service
 public class ExportService {
 
-    private String[] notificationCsvHeaders() {
-        return new String[]{"ID", "Status", "Type", "Failure reason", "Subject", "Recipient"};
-    }
+    /**
+     * Generic method to export any list of objects as CSV.
+     *
+     * @param response HttpServletResponse to write to
+     * @param filename  output filename
+     * @param headers   CSV headers (e.g., ["Id", "Name", "Email"])
+     * @param data      list of objects to export
+     * @param mapper    function that converts an object to a CSV row (array of strings)
+     */
+    public <T> void exportToCsv(HttpServletResponse response,
+                                String filename,
+                                String[] headers,
+                                List<T> data,
+                                Function<T, String[]> mapper) throws IOException {
 
+        response.setContentType("text/csv; charset=UTF-8");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
 
-    private String[] notificationToCsvRow(Notification n) {
-        return new String[]{
-                String.valueOf(n.getId()), n.getNotificationStatus().toString(), n.getNotificationType().toString(),
-                n.getFailureReason(), n.getSubject(), n.getToEmail()
-        };
-    }
+        try (PrintWriter writer = response.getWriter()) {
+            writer.println(String.join(",", headers));
 
-    private <T> byte[] toCsv(List<T> rows, Function<T, String[]> rowMapper, String[] headers) throws ExportException {
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream();
-             PrintWriter writer = new PrintWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8));
-             CSVPrinter printer = new CSVPrinter(writer, CSVFormat.DEFAULT.withHeader(headers))) {
-
-            for (T row : rows) {
-                printer.printRecord((Object[]) rowMapper.apply(row));
+            for (T item : data) {
+                String[] fields = mapper.apply(item);
+                String row = String.join(",", escapeCsvFields(fields));
+                writer.println(row);
             }
-            printer.flush();
-            return out.toByteArray();
-
-        } catch (IOException e) {
-            throw new ExportException("Failed to generate CSV export: " + e.getMessage());
         }
+    }
+
+    /**
+     * Escaping for CSV: wrap fields containing comma, newline, or quotes in double quotes,
+     * and escape existing double quotes by doubling them.
+     */
+    private String[] escapeCsvFields(String[] fields) {
+        String[] escaped = new String[fields.length];
+        for (int i = 0; i < fields.length; i++) {
+            if (fields[i] == null) {
+                escaped[i] = "";
+                continue;
+            }
+            boolean needsQuotes = fields[i].contains(",") || fields[i].contains("\"") || fields[i].contains("\n") || fields[i].contains("\r");
+            if (needsQuotes) {
+                String escapedField = fields[i].replace("\"", "\"\"");
+                escaped[i] = "\"" + escapedField + "\"";
+            } else {
+                escaped[i] = fields[i];
+            }
+        }
+        return escaped;
     }
 }

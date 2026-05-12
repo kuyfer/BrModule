@@ -1,5 +1,6 @@
 package cires.bemodule.dtos;
 
+import cires.bemodule.enums.RegistrationSource;
 import lombok.*;
 
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
