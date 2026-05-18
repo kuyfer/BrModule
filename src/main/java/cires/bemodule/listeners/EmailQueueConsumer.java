@@ -34,7 +34,7 @@ public class EmailQueueConsumer {
         this.notificationRepository = notificationRepository;
     }
 
-    @RabbitListener(queues = RabbitMQConfig.QUEUE_NAME)
+    @RabbitListener(queues = RabbitMQConfig.EMAIL_QUEUE_NAME)
     public void handleEmailMessage(EmailPayload payload) {
         try {
             Context context = new Context();

@@ -11,8 +11,6 @@ import cires.bemodule.repositories.NotificationRepository;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
 public class EmailQueueProducer {
     private final RabbitTemplate rabbitTemplate;
@@ -34,8 +32,8 @@ public class EmailQueueProducer {
         payload.setNotificationId(notification.getId());
 
         rabbitTemplate.convertAndSend(
-                RabbitMQConfig.EXCHANGE_NAME,
-                RabbitMQConfig.ROUTING_KEY,
+                RabbitMQConfig.EMAIL_EXCHANGE_NAME,
+                RabbitMQConfig.EMAIL_ROUTING_KEY,
                 payload
         );
     }
