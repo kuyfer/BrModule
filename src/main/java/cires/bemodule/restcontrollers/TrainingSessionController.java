@@ -29,6 +29,12 @@ public class TrainingSessionController {
 
     }
 
+    @PostMapping("/{id}")
+    public ResponseEntity<Void> cancelSession(@PathVariable Long id,@Valid @RequestBody String reason) {
+        trainingSessionService.cancelSession(id, reason);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<TrainingSessionDTO> getSessionById(@PathVariable Long id) {
         TrainingSessionDTO session = trainingSessionService.findTrainingSessionById(id);

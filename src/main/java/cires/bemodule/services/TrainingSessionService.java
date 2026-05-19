@@ -82,7 +82,20 @@ public class TrainingSessionService {
                 .toList();
     }
 
-// ################################# DELETE ######################################
+    // ################################# UPDATE ######################################
+
+    public void cancelSession(Long id, String reason){
+        TrainingSession session = getSessionIdOrThrow(id);
+
+        session.setStatus(TrainingSessionStatus.CANCELLED);
+        trainingSessionRepository.save(session);
+
+        sendSessionCancelledEmail(session, reason);
+
+    }
+
+
+    // ################################# DELETE ######################################
 
     public void deleteTrainingSession(Long id) {
         trainingSessionRepository.deleteById(id);
@@ -114,5 +127,27 @@ public class TrainingSessionService {
         emailQueueProducer.queueEmail(payload, NotificationType.TRAINER_ASSIGNMENT);
 
     }
+
+    private void sendSessionCancelledEmail(TrainingSession session, String reason){
+        Map<String, Object> model = new HashMap<>();
+        model.put("sessionTitle", session.getTitle());
+        model.put("sessionDescription", session.getDescription());
+        model.put("startDate", session.getStartDate().toString());
+        model.put("endDate", session.getEndDate().toString());
+        model.put("location", session.getLocation());
+        model.put("mode", session.getMode());
+        model.put("Reason for cancellation", reason );
+
+
+        EmailPayload payload = new EmailPayload(
+               session.getTrainer().getUser().getEmail(),
+               "Session Cancelled",
+               "session-cancellation",
+               model
+        );
+
+        emailQueueProducer.queueEmail(payload, NotificationType.SESSION_CANCELLATION);
+    }
+
 
 }

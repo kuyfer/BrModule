@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training Session Cancelled</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .header {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .header-icon {
+            font-size: 26px;
+        }
+        .info-box {
+            background-color: #fef6f6;
+            border-left: 4px solid #d9534f;
+            padding: 16px 20px;
+            border-radius: 4px;
+            margin: 24px 0;
+        }
+        .info-box span:first-child {
+            font-weight: bold;
+            color: #333333;
+            min-width: 100px;
+            display: inline-block;
+        }
+        .detail-row {
+            margin: 8px 0;
+        }
+        .warning {
+            font-size: 13px;
+            color: #888888;
+            margin-top: 24px;
+            background: #fcf8e8;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid #f0ad4e;
+        }
+        .footer {
+            margin-top: 32px;
+            font-size: 12px;
+            color: #aaaaaa;
+            border-top: 1px solid #eeeeee;
+            padding-top: 16px;
+        }
+        .cancelled-badge {
+            display: inline-block;
+            background-color: #d9534f;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 30px;
+            letter-spacing: 0.5px;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 24px;
+                margin: 20px auto;
+            }
+            .info-box span:first-child {
+                min-width: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <span class="header-icon">🚫</span> Training Session Cancelled
+        <span class="cancelled-badge">CANCELLED</span>
+    </div>
+
+    <!-- Greeting with fallback if trainerName is not provided -->
+    <div th:if="${trainerName}">
+        <p>Hi <strong th:text="${trainerName}"></strong>,</p>
+    </div>
+    <div th:unless="${trainerName}">
+        <p>Dear Trainer,</p>
+    </div>
+
+    <p>We regret to inform you that the following training session has been <strong>officially cancelled</strong>. You are receiving this notice because you were assigned as the trainer for this session.</p>
+    <p>This session will <strong>not take place</strong> as originally scheduled. Please disregard any previous calendar invites or preparation reminders.</p>
+
+    <!-- Session details box: identical fields as assigned email, plus optional cancellation reason -->
+    <div class="info-box">
+        <div class="detail-row">
+            <span>📘 Session:</span>
+            <span th:text="${sessionTitle}"></span>
+        </div>
+        <div th:if="${sessionDescription}" class="detail-row">
+            <span>📝 Description:</span>
+            <span th:text="${sessionDescription}"></span>
+        </div>
+        <div class="detail-row">
+            <span>📅 Original Date:</span>
+            <span th:text="${startDate}"></span> – <span th:text="${endDate}"></span>
+        </div>
+        <div th:if="${location}" class="detail-row">
+            <span>📍 Location:</span>
+            <span th:text="${location}"></span>
+        </div>
+        <div th:if="${mode}" class="detail-row">
+            <span>🎥 Mode:</span>
+            <span th:text="${mode}"></span>
+        </div>
+        <div th:if="${subsidiary}" class="detail-row">
+            <span>🏢 Subsidiary:</span>
+            <span th:text="${subsidiary}"></span>
+        </div>
+        <!-- optional cancellation reason field (extendable) -->
+        <div th:if="${cancellationReason}" class="detail-row">
+            <span>⚠️ Reason for cancellation:</span>
+            <span th:text="${cancellationReason}"></span>
+        </div>
+    </div>
+
+    <p><strong>What happens next?</strong> No further action is required from your side. Any calendar invitations or material requests linked to this session are now void.</p>
+    <p>If you had already started preparing materials or allocated time for this training, we sincerely apologize for the inconvenience. Please feel free to archive or reuse your resources for future sessions.</p>
+
+    <div class="warning">
+        🔔 <strong>Important:</strong> If you have any questions about this cancellation, or if the session was linked to travel/expense arrangements, please contact the training coordinator as soon as possible. <br/>
+        <span style="font-size:12px;">Please do not reply directly to this automated message.</span>
+    </div>
+
+    <div class="footer">
+        This is an automated notification — no reply is needed.<br/>
+        &copy; Cires Technology — Training Management System
+    </div>
+
+</div>
+</body>
+</html>
