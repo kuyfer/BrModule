@@ -6,8 +6,6 @@ import cires.bemodule.enums.NotificationType;
 import cires.bemodule.models.EmailPayload;
 import cires.bemodule.repositories.ResetTokenRepository;
 import cires.bemodule.repositories.UserRepository;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -35,12 +33,6 @@ public class PasswordResetService {
         this.emailQueueProducer = emailQueueProducer;
     }
 
-    public String makeResetToken() {
-        byte[] randomBytes = new byte[4];
-        secureRandom.nextBytes(randomBytes);
-        return base64Encoder.encodeToString(randomBytes);
-    }
-
     public void processRequest(String email) {
         Optional<User> userOpt = userRepository.findByEmail(email);
         if (userOpt.isEmpty()) return;
@@ -58,7 +50,9 @@ public class PasswordResetService {
         sendResetEmail(user.getEmail(), token);
     }
 
-    public void sendResetEmail(String email, String token) {
+    // ################################# UTILS ######################################
+
+    private void sendResetEmail(String email, String token) {
         Map<String, Object> model = new HashMap<>();
         model.put("token", token);
         model.put("email", email);
@@ -71,6 +65,12 @@ public class PasswordResetService {
         );
 
         emailQueueProducer.queueEmail(payload, NotificationType.PASSWORD_RESET);
+    }
+
+    private String makeResetToken() {
+        byte[] randomBytes = new byte[4];
+        secureRandom.nextBytes(randomBytes);
+        return base64Encoder.encodeToString(randomBytes);
     }
 
 }
