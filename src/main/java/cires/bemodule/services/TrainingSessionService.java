@@ -11,6 +11,7 @@ import cires.bemodule.enums.TrainingSessionMode;
 import cires.bemodule.enums.TrainingSessionStatus;
 import cires.bemodule.exceptions.controllerexceptions.TrainerNotFoundException;
 import cires.bemodule.exceptions.controllerexceptions.TrainingSessionNotFoundException;
+import cires.bemodule.exceptions.validationexceptions.ConflictException;
 import cires.bemodule.mappers.TrainingSessionMapper;
 import cires.bemodule.models.EmailPayload;
 import cires.bemodule.repositories.ParticipantRepository;
@@ -94,13 +95,22 @@ public class TrainingSessionService {
 
     }
 
+    public void changeStatus(Long id, TrainingSessionStatus newStatus) {
+        TrainingSession session = getSessionIdOrThrow(id);
+        assertValidTransition(session.getStatus(), newStatus);
+
+        session.setStatus(newStatus);
+        trainingSessionRepository.save(session);
+
+    }
 
     // ################################# DELETE ######################################
 
     public void deleteTrainingSession(Long id) {
         trainingSessionRepository.deleteById(id);
     }
-// ################################# UTILS ######################################
+
+    // ################################# UTILS ######################################
 
     private TrainingSession getSessionIdOrThrow(Long id){
         return trainingSessionRepository.findById(id).orElseThrow( () -> new TrainingSessionNotFoundException(id));
@@ -149,5 +159,24 @@ public class TrainingSessionService {
         emailQueueProducer.queueEmail(payload, NotificationType.SESSION_CANCELLATION);
     }
 
+    private void assertValidTransition(TrainingSessionStatus current, TrainingSessionStatus next) {
+        boolean valid = switch (current) {
+            case SCHEDULED, POSTPONED -> next == TrainingSessionStatus.ONGOING  ||
+                    next == TrainingSessionStatus.CANCELLED ||
+                    next == TrainingSessionStatus.POSTPONED;
+
+            case ONGOING   -> next == TrainingSessionStatus.COMPLETED ||
+                    next == TrainingSessionStatus.CANCELLED ||
+                    next == TrainingSessionStatus.POSTPONED;
+
+            case COMPLETED, CANCELLED -> false;
+        };
+
+        if (!valid) {
+            throw new ConflictException(
+                    "Cannot transition session from " + current + " to " + next
+            );
+        }
+    }
 
 }
