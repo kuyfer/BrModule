@@ -1,5 +1,7 @@
 package cires.bemodule.services;
 
+import cires.bemodule.dtos2.CancelTrainingSessionRequest;
+import cires.bemodule.dtos2.CancelTrainingSessionResponse;
 import cires.bemodule.dtos2.CreateTrainingSessionRequest;
 import cires.bemodule.dtos2.CreateTrainingSessionResponse;
 import cires.bemodule.dtos.TrainingSessionDTO;
@@ -21,6 +23,7 @@ import cires.bemodule.specifications.TrainingSessionSpecifications;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 
 import java.util.HashMap;
 import java.util.List;
@@ -85,14 +88,14 @@ public class TrainingSessionService {
 
     // ################################# UPDATE ######################################
 
-    public void cancelSession(Long id, String reason){
+    public CancelTrainingSessionResponse cancelSession(Long id, CancelTrainingSessionRequest request){
         TrainingSession session = getSessionIdOrThrow(id);
 
         session.setStatus(TrainingSessionStatus.CANCELLED);
         trainingSessionRepository.save(session);
 
-        sendSessionCancelledEmail(session, reason);
-
+        sendSessionCancelledEmail(session, request.getReason());
+        return trainingSessionMapper.toCancelTrainingSessionResponse(session);
     }
 
     public void changeStatus(Long id, TrainingSessionStatus newStatus) {
@@ -146,7 +149,7 @@ public class TrainingSessionService {
         model.put("endDate", session.getEndDate().toString());
         model.put("location", session.getLocation());
         model.put("mode", session.getMode());
-        model.put("Reason for cancellation", reason );
+        model.put("cancellationReason", reason );
 
 
         EmailPayload payload = new EmailPayload(
@@ -166,8 +169,8 @@ public class TrainingSessionService {
                     next == TrainingSessionStatus.POSTPONED;
 
             case ONGOING   -> next == TrainingSessionStatus.COMPLETED ||
-                    next == TrainingSessionStatus.CANCELLED ||
-                    next == TrainingSessionStatus.POSTPONED;
+                    next == TrainingSessionStatus.CANCELLED ;
+
 
             case COMPLETED, CANCELLED -> false;
         };

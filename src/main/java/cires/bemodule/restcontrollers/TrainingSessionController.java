@@ -1,6 +1,7 @@
 package cires.bemodule.restcontrollers;
 
 
+import cires.bemodule.dtos2.CancelTrainingSessionRequest;
 import cires.bemodule.dtos2.CreateTrainingSessionRequest;
 import cires.bemodule.dtos2.CreateTrainingSessionResponse;
 import cires.bemodule.dtos.TrainingSessionDTO;
@@ -30,8 +31,8 @@ public class TrainingSessionController {
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<Void> cancelSession(@PathVariable Long id,@Valid @RequestBody String reason) {
-        trainingSessionService.cancelSession(id, reason);
+    public ResponseEntity<Void> cancelSession(@PathVariable Long id,@Valid @RequestBody CancelTrainingSessionRequest request) {
+        trainingSessionService.cancelSession(id, request);
         return ResponseEntity.ok().build();
     }
 

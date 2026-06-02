@@ -17,7 +17,6 @@ public class TrainingSessionDTO {
     private String title;
     private String description;
     private String location;
-    private String onSite;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private TrainingSessionStatus status;

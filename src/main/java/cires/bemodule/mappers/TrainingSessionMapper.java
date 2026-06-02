@@ -1,6 +1,7 @@
 package cires.bemodule.mappers;
 
 import cires.bemodule.dtos.TrainingSessionDTO;
+import cires.bemodule.dtos2.CancelTrainingSessionResponse;
 import cires.bemodule.entities.*;
 import org.mapstruct.Mapper;
 
@@ -13,4 +14,6 @@ public interface TrainingSessionMapper {
     // TODO: add later when subsidiary is implemented to training session
     TrainingSession toTrainingSession(TrainingSessionDTO trainingSessionDTO);
 
+
+    CancelTrainingSessionResponse toCancelTrainingSessionResponse(TrainingSession trainingSession);
 }
