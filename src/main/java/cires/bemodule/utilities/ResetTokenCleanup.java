@@ -24,6 +24,6 @@ public class ResetTokenCleanup {
     @Scheduled(fixedRate = 3_600_000) // runs every hour
     public void clearExpiredTokens() {
         logger.info("Clearing expired reset tokens");
-        resetTokenRepository.deleteAllByExpiresAtBefore(LocalDateTime.now());
+        resetTokenRepository.deleteAll();
     }
 }

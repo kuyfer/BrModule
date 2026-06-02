@@ -21,7 +21,9 @@ import cires.bemodule.repositories.TrainerRepository;
 import cires.bemodule.repositories.TrainingSessionRepository;
 import cires.bemodule.specifications.TrainingSessionSpecifications;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+//import org.slf4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -34,7 +36,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class TrainingSessionService {
 
-    private static final Logger logger = LoggerFactory.getLogger(TrainingSessionService.class);
+    private static final Logger logger = LogManager.getLogger(TrainingSessionService.class);
 
     private final TrainingSessionRepository trainingSessionRepository;
     private final TrainingSessionMapper trainingSessionMapper;

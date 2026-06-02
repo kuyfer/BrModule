@@ -36,3 +36,4 @@ build/
 ### config files ###
 appSecret.yaml
 myFlywayConfig.conf
+*.log
