@@ -6,6 +6,7 @@ import cires.bemodule.mappers.UserMapper;
 import cires.bemodule.repositories.UserRepository;
 import cires.bemodule.services.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+    @PreAuthorize( "hasRole('SUPER_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);

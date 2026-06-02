@@ -18,7 +18,6 @@ public class AuthController {
     private final AuthService authService;
     private final UserService userService;
 
-    // TODO: add exception handling
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
             User user = userService.registerUser(registerRequest);

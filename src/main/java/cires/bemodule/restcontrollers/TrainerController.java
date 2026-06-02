@@ -2,12 +2,11 @@ package cires.bemodule.restcontrollers;
 
 import cires.bemodule.dtos.TrainerDTO;
 import cires.bemodule.dtos2.CreateTrainerRequest;
-import cires.bemodule.entities.Trainer;
-import cires.bemodule.mappers.TrainerMapper;
 import cires.bemodule.services.TrainerService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,11 +15,9 @@ import java.util.List;
 @RequestMapping("/api/trainers")
 public class TrainerController {
     private final TrainerService trainerService;
-    private final TrainerMapper trainerMapper;
 
-    public TrainerController(TrainerService trainerService, TrainerMapper trainerMapper){
+    public TrainerController(TrainerService trainerService){
         this.trainerService = trainerService;
-        this.trainerMapper = trainerMapper;
     }
 
 @GetMapping
@@ -41,6 +38,7 @@ public  ResponseEntity<TrainerDTO> createTrainer(@Valid @RequestBody CreateTrain
         return ResponseEntity.status(HttpStatus.CREATED).body(trainer);
 }
 
+@PreAuthorize( "hasRole('SUPER_ADMIN')")
 @DeleteMapping("/{id}")
     ResponseEntity<Void> deleteTrainer(@PathVariable Long id){
         trainerService.deleteTrainer(id);
