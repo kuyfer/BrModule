@@ -28,7 +28,7 @@ import java.util.Map;
 @Service
 public class UserService {
 
-    Logger logger = LoggerFactory.getLogger(UserService.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -47,18 +47,26 @@ public class UserService {
     // ################################# CREATE ######################################
 
     public User registerUser(RegisterRequest request) {
-        logger.info("registerUser");
-        if (userRepository.findByUsername(request.getUsername()) != null)
-            throw new UsernameAlreadyExistsException("Username already exists");
+        logger.info("Registering new user with username: {}, email: {}", request.getUsername(), request.getEmail());
 
-        if (userRepository.findByEmail(request.getEmail()).isPresent())
+        if (userRepository.findByUsername(request.getUsername()) != null) {
+            logger.warn("Username already exists: {}", request.getUsername());
+            throw new UsernameAlreadyExistsException("Username already exists");
+        }
+
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            logger.warn("Email already exists: {}", request.getEmail());
             throw new EmailAlreadyExistsException("Email already exists");
+        }
 
         User user = new User();
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         Role adminRole = roleRepository.findByroleName(RoleType.SUPER_ADMIN)
-                .orElseThrow(() -> new RuntimeException("Role not found"));
+                .orElseThrow(() -> {
+                    logger.error("Role not found: SUPER_ADMIN");
+                    return new RuntimeException("Role not found");
+                });
         user.setRoles(List.of(adminRole));
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
@@ -67,46 +75,69 @@ public class UserService {
 
         sendRegistrationEmail(request);
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        logger.info("User registered successfully with id: {}", savedUser.getId());
+        return savedUser;
     }
 
     // ################################# READ ######################################
 
     public UserDTO findUserById(Long id) {
-        User user = userRepository.findById(id).orElseThrow( () -> new UserNotFoundException(id));
-        return userMapper.toUserDto(user);
+        logger.info("Finding user by id: {}", id);
+        User user = userRepository.findById(id).orElseThrow(() -> {
+            logger.error("User not found with id: {}", id);
+            return new UserNotFoundException(id);
+        });
+        UserDTO dto = userMapper.toUserDto(user);
+        logger.info("Found user with id: {}", id);
+        return dto;
     }
 
     public List<UserDTO> findAll(String role, AccountStatus status) {
+        logger.info("Finding all users with filters - role: {}, status: {}", role, status);
         Specification<User> spec = Specification
                 .where(UserSpecifications.hasRole(role))
                 .and(UserSpecifications.hasStatus(status));
         List<User> users = userRepository.findAll(spec);
-        return users.stream()
+        List<UserDTO> dtos = users.stream()
                 .map(userMapper::toUserDto)
                 .toList();
+        logger.info("Found {} users matching filters", dtos.size());
+        return dtos;
     }
 
-// ################################# UPDATE ######################################
+    // ################################# UPDATE ######################################
 
     public User updateUser(Long id, User user) {
-        User existingUser = userRepository.findById(id).orElseThrow(()-> new UserNotFoundException(id));
+        logger.info("Updating user with id: {}", id);
+        User existingUser = userRepository.findById(id).orElseThrow(() -> {
+            logger.error("User not found for update with id: {}", id);
+            return new UserNotFoundException(id);
+        });
         existingUser.setFirstName(user.getFirstName());
         existingUser.setLastName(user.getLastName());
         existingUser.setEmail(user.getEmail());
-        return userRepository.save(existingUser);
+        User updated = userRepository.save(existingUser);
+        logger.info("User updated successfully with id: {}", id);
+        return updated;
     }
 
     // ################################# DELETE ######################################
 
-    public void deleteUser(Long id){
-        User user = userRepository.findById(id).orElseThrow(()-> new UserNotFoundException(id));
+    public void deleteUser(Long id) {
+        logger.info("Deleting user with id: {}", id);
+        User user = userRepository.findById(id).orElseThrow(() -> {
+            logger.error("User not found for deletion with id: {}", id);
+            return new UserNotFoundException(id);
+        });
         userRepository.delete(user);
+        logger.info("User deleted successfully with id: {}", id);
     }
 
     // ################################# UTILS ######################################
 
     private void sendRegistrationEmail(RegisterRequest request) {
+        logger.debug("Sending registration email to: {}", request.getEmail());
         Map<String, Object> model = new HashMap<>();
         model.put("recipientName", request.getFirstName());
         model.put("username", request.getUsername());
@@ -120,19 +151,28 @@ public class UserService {
         );
 
         emailQueueProducer.queueEmail(payload, NotificationType.ACCOUNT_CREATION);
+        logger.debug("Registration email queued for: {}", request.getEmail());
     }
 
-    public void activateAccount(Long id){
-        User user = userRepository.findById(id).orElseThrow(()-> new UserNotFoundException(id));
+    public void activateAccount(Long id) {
+        logger.info("Activating account for user id: {}", id);
+        User user = userRepository.findById(id).orElseThrow(() -> {
+            logger.error("User not found for activation with id: {}", id);
+            return new UserNotFoundException(id);
+        });
         user.setAccountStatus(AccountStatus.ACTIVE);
         userRepository.save(user);
+        logger.info("Account activated for user id: {}", id);
     }
 
-    public void deactivateAccount(Long id){
-        User user = userRepository.findById(id).orElseThrow(()-> new UserNotFoundException(id));
+    public void deactivateAccount(Long id) {
+        logger.info("Deactivating account for user id: {}", id);
+        User user = userRepository.findById(id).orElseThrow(() -> {
+            logger.error("User not found for deactivation with id: {}", id);
+            return new UserNotFoundException(id);
+        });
         user.setAccountStatus(AccountStatus.INACTIVE);
         userRepository.save(user);
+        logger.info("Account deactivated for user id: {}", id);
     }
-
-
 }

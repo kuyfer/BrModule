@@ -8,11 +8,15 @@ import cires.bemodule.enums.NotificationStatus;
 import cires.bemodule.enums.NotificationType;
 import cires.bemodule.models.EmailPayload;
 import cires.bemodule.repositories.NotificationRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EmailQueueProducer {
+    private static final Logger logger = LoggerFactory.getLogger(EmailQueueProducer.class);
+
     private final RabbitTemplate rabbitTemplate;
     private final NotificationRepository notificationRepository;
 
@@ -30,6 +34,8 @@ public class EmailQueueProducer {
         notification = notificationRepository.save(notification);
 
         payload.setNotificationId(notification.getId());
+
+        logger.info("Queuing email with notification ID: {}, to: {}", notification.getId(), payload.getTo());
 
         rabbitTemplate.convertAndSend(
                 RabbitMQConfig.EMAIL_EXCHANGE_NAME,
