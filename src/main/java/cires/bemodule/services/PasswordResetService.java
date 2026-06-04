@@ -2,8 +2,6 @@ package cires.bemodule.services;
 
 import cires.bemodule.entities.ResetToken;
 import cires.bemodule.entities.User;
-import cires.bemodule.enums.NotificationType;
-import cires.bemodule.models.EmailPayload;
 import cires.bemodule.repositories.ResetTokenRepository;
 import cires.bemodule.repositories.UserRepository;
 import org.slf4j.Logger;
@@ -13,8 +11,6 @@ import org.springframework.stereotype.Service;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -26,15 +22,17 @@ public class PasswordResetService {
     private final UserRepository userRepository;
     private final ResetTokenRepository resetTokenRepository;
     private final EmailQueueProducer emailQueueProducer;
+    private final NotificationService notificationService;
 
     private static final SecureRandom secureRandom = new SecureRandom();
     private static final Base64.Encoder base64Encoder =
             Base64.getUrlEncoder().withoutPadding();
 
-    public PasswordResetService(UserRepository userRepository, ResetTokenRepository resetTokenRepository, EmailQueueProducer emailQueueProducer) {
+    public PasswordResetService(UserRepository userRepository, ResetTokenRepository resetTokenRepository, EmailQueueProducer emailQueueProducer, NotificationService notificationService) {
         this.userRepository = userRepository;
         this.resetTokenRepository = resetTokenRepository;
         this.emailQueueProducer = emailQueueProducer;
+        this.notificationService = notificationService;
     }
 
     public void processRequest(String email) {
@@ -57,27 +55,10 @@ public class PasswordResetService {
         resetTokenRepository.save(resetTokenEntity);
         logger.info("Reset token saved for user id: {}, expires at: {}", user.getId(), resetTokenEntity.getExpiresAt());
 
-        sendResetEmail(user.getEmail(), token);
+        notificationService.sendResetEmail(user.getEmail(), token);
     }
 
     // ################################# UTILS ######################################
-
-    private void sendResetEmail(String email, String token) {
-        logger.debug("Sending password reset email to: {}", email);
-        Map<String, Object> model = new HashMap<>();
-        model.put("token", token);
-        model.put("email", email);
-
-        EmailPayload payload = new EmailPayload(
-                email,
-                "Password Reset Request",
-                "password-reset",
-                model
-        );
-
-        emailQueueProducer.queueEmail(payload, NotificationType.PASSWORD_RESET);
-        logger.info("Password reset email queued for: {}", email);
-    }
 
     private String makeResetToken() {
         byte[] randomBytes = new byte[4];

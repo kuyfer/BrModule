@@ -1,6 +1,7 @@
 package cires.bemodule.services;
 
 import cires.bemodule.dtos.NotificationDTO;
+import cires.bemodule.dtos2.RegisterRequest;
 import cires.bemodule.entities.Notification;
 import cires.bemodule.entities.Trainer;
 import cires.bemodule.entities.TrainingSession;
@@ -104,4 +105,41 @@ public class NotificationService {
         emailQueueProducer.queueEmail(payload, NotificationType.SESSION_CANCELLATION);
         logger.debug("Session cancellation email queued for: {}", session.getTrainer().getUser().getEmail());
     }
+
+
+    public void sendRegistrationEmail(RegisterRequest request) {
+        logger.debug("Sending registration email to: {}", request.getEmail());
+        Map<String, Object> model = new HashMap<>();
+        model.put("recipientName", request.getFirstName());
+        model.put("username", request.getUsername());
+        model.put("body", "Hope you are doing well.");
+
+        EmailPayload payload = new EmailPayload(
+                request.getEmail(),
+                "Welcome " + request.getUsername(),
+                "welcome",
+                model
+        );
+
+        emailQueueProducer.queueEmail(payload, NotificationType.ACCOUNT_CREATION);
+        logger.debug("Registration email queued for: {}", request.getEmail());
+    }
+
+    public void sendResetEmail(String email, String token) {
+        logger.debug("Sending password reset email to: {}", email);
+        Map<String, Object> model = new HashMap<>();
+        model.put("token", token);
+        model.put("email", email);
+
+        EmailPayload payload = new EmailPayload(
+                email,
+                "Password Reset Request",
+                "password-reset",
+                model
+        );
+
+        emailQueueProducer.queueEmail(payload, NotificationType.PASSWORD_RESET);
+        logger.info("Password reset email queued for: {}", email);
+    }
+
     }

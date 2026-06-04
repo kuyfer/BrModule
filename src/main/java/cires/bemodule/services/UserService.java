@@ -5,13 +5,11 @@ import cires.bemodule.dtos.UserDTO;
 import cires.bemodule.entities.Role;
 import cires.bemodule.entities.User;
 import cires.bemodule.enums.AccountStatus;
-import cires.bemodule.enums.NotificationType;
 import cires.bemodule.enums.RoleType;
 import cires.bemodule.exceptions.validationexceptions.EmailAlreadyExistsException;
 import cires.bemodule.exceptions.controllerexceptions.UserNotFoundException;
 import cires.bemodule.exceptions.validationexceptions.UsernameAlreadyExistsException;
 import cires.bemodule.mappers.UserMapper;
-import cires.bemodule.models.EmailPayload;
 import cires.bemodule.repositories.RoleRepository;
 import cires.bemodule.repositories.UserRepository;
 import cires.bemodule.specifications.UserSpecifications;
@@ -21,9 +19,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class UserService {
@@ -34,14 +30,14 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
     private final RoleRepository roleRepository;
-    private final EmailQueueProducer emailQueueProducer;
+    private final NotificationService notificationService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, RoleRepository roleRepository, EmailQueueProducer emailQueueProducer) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, RoleRepository roleRepository, NotificationService notificationService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
         this.roleRepository = roleRepository;
-        this.emailQueueProducer = emailQueueProducer;
+        this.notificationService = notificationService;
     }
 
     // ################################# CREATE ######################################
@@ -73,7 +69,8 @@ public class UserService {
         user.setEmail(request.getEmail());
         user.setAccountStatus(AccountStatus.ACTIVE);
 
-        sendRegistrationEmail(request);
+        notificationService.sendRegistrationEmail(request);
+        //sendRegistrationEmail(request);
 
         User savedUser = userRepository.save(user);
         logger.info("User registered successfully with id: {}", savedUser.getId());
@@ -135,24 +132,6 @@ public class UserService {
     }
 
     // ################################# UTILS ######################################
-
-    private void sendRegistrationEmail(RegisterRequest request) {
-        logger.debug("Sending registration email to: {}", request.getEmail());
-        Map<String, Object> model = new HashMap<>();
-        model.put("recipientName", request.getFirstName());
-        model.put("username", request.getUsername());
-        model.put("body", "Hope you are doing well.");
-
-        EmailPayload payload = new EmailPayload(
-                request.getEmail(),
-                "Welcome " + request.getUsername(),
-                "welcome",
-                model
-        );
-
-        emailQueueProducer.queueEmail(payload, NotificationType.ACCOUNT_CREATION);
-        logger.debug("Registration email queued for: {}", request.getEmail());
-    }
 
     public void activateAccount(Long id) {
         logger.info("Activating account for user id: {}", id);
