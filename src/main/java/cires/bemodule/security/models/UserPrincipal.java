@@ -1,4 +1,4 @@
-package cires.bemodule.models;
+package cires.bemodule.security.models;
 
 import cires.bemodule.entities.Permission;
 import cires.bemodule.entities.Role;

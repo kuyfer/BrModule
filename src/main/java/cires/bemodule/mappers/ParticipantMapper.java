@@ -1,6 +1,6 @@
 package cires.bemodule.mappers;
 
-import cires.bemodule.dtos.ParticipantDTO;
+import cires.bemodule.dtos.views.ParticipantDTO;
 import cires.bemodule.dtos.requests.CreateParticipantRequest;
 import cires.bemodule.dtos.responses.CreateParticipantResponse;
 import cires.bemodule.dtos.requests.PatchParticipantRequest;

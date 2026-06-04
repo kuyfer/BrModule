@@ -1,4 +1,4 @@
-package cires.bemodule.dtos;
+package cires.bemodule.dtos.views;
 
 import cires.bemodule.entities.Organization;
 import lombok.*;

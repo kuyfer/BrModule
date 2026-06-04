@@ -1,7 +1,7 @@
 package cires.bemodule.security.services;
 
 import cires.bemodule.entities.User;
-import cires.bemodule.models.UserPrincipal;
+import cires.bemodule.security.models.UserPrincipal;
 import cires.bemodule.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,6 +1,6 @@
 package cires.bemodule.services;
 
-import cires.bemodule.dtos.TrainerDTO;
+import cires.bemodule.dtos.views.TrainerDTO;
 import cires.bemodule.dtos.requests.CreateTrainerRequest;
 import cires.bemodule.entities.Role;
 import cires.bemodule.entities.Trainer;

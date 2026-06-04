@@ -1,6 +1,6 @@
 package cires.bemodule.restcontrollers;
 
-import cires.bemodule.dtos.TrainerDTO;
+import cires.bemodule.dtos.views.TrainerDTO;
 import cires.bemodule.dtos.requests.CreateTrainerRequest;
 import cires.bemodule.services.TrainerService;
 import jakarta.validation.Valid;

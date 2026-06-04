@@ -4,7 +4,7 @@ import cires.bemodule.dtos.requests.CancelTrainingSessionRequest;
 import cires.bemodule.dtos.responses.CancelTrainingSessionResponse;
 import cires.bemodule.dtos.requests.CreateTrainingSessionRequest;
 import cires.bemodule.dtos.responses.CreateTrainingSessionResponse;
-import cires.bemodule.dtos.TrainingSessionDTO;
+import cires.bemodule.dtos.views.TrainingSessionDTO;
 import cires.bemodule.entities.Participant;
 import cires.bemodule.entities.Trainer;
 import cires.bemodule.entities.TrainingSession;

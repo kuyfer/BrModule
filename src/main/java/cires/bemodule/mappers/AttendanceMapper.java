@@ -1,6 +1,6 @@
 package cires.bemodule.mappers;
 
-import cires.bemodule.dtos.AttendanceDTO;
+import cires.bemodule.dtos.views.AttendanceDTO;
 import cires.bemodule.entities.Attendance;
 import org.mapstruct.Mapper;
 

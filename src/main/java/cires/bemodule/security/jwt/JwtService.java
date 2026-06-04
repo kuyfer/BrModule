@@ -1,7 +1,7 @@
 package cires.bemodule.security.jwt;
 
 import cires.bemodule.entities.Permission;
-import cires.bemodule.models.UserPrincipal;
+import cires.bemodule.security.models.UserPrincipal;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

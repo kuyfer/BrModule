@@ -1,8 +1,6 @@
-package cires.bemodule.dtos;
+package cires.bemodule.dtos.views;
 
 import cires.bemodule.entities.SessionParticipant;
-import cires.bemodule.entities.Subsidiary;
-import cires.bemodule.entities.Trainer;
 import cires.bemodule.enums.TrainingSessionMode;
 import cires.bemodule.enums.TrainingSessionStatus;
 import lombok.*;
@@ -21,7 +19,7 @@ public class TrainingSessionDTO {
     private LocalDateTime endDate;
     private TrainingSessionStatus status;
     private TrainingSessionMode mode;
-    private Trainer trainer;
+    private TrainerDTO trainer;
    // private Subsidiary subsidiary;
     private List<SessionParticipant> sessionParticipants;
 

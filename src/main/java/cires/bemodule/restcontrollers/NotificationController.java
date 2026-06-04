@@ -1,6 +1,6 @@
 package cires.bemodule.restcontrollers;
 
-import cires.bemodule.dtos.NotificationDTO;
+import cires.bemodule.dtos.views.NotificationDTO;
 import cires.bemodule.enums.NotificationStatus;
 import cires.bemodule.enums.NotificationType;
 import cires.bemodule.services.NotificationService;

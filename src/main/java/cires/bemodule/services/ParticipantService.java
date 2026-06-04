@@ -1,7 +1,7 @@
 package cires.bemodule.services;
 
 import cires.bemodule.dtos.requests.CreateParticipantRequest;
-import cires.bemodule.dtos.ParticipantDTO;
+import cires.bemodule.dtos.views.ParticipantDTO;
 import cires.bemodule.dtos.responses.CreateParticipantResponse;
 import cires.bemodule.dtos.requests.PatchParticipantRequest;
 import cires.bemodule.entities.Participant;

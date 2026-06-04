@@ -1,6 +1,6 @@
 package cires.bemodule.restcontrollers;
 
-import cires.bemodule.dtos.*;
+import cires.bemodule.dtos.views.*;
 import cires.bemodule.enums.*;
 import cires.bemodule.services.*;
 import jakarta.servlet.http.HttpServletResponse;

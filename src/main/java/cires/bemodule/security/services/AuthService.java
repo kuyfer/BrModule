@@ -3,7 +3,7 @@ package cires.bemodule.security.services;
 import cires.bemodule.dtos.responses.AuthResponse;
 import cires.bemodule.dtos.requests.LoginRequest;
 import cires.bemodule.dtos.requests.RefreshTokenRequest;
-import cires.bemodule.models.UserPrincipal;
+import cires.bemodule.security.models.UserPrincipal;
 import cires.bemodule.security.jwt.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

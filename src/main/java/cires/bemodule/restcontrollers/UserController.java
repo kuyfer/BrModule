@@ -1,6 +1,6 @@
 package cires.bemodule.restcontrollers;
 
-import cires.bemodule.dtos.UserDTO;
+import cires.bemodule.dtos.views.UserDTO;
 import cires.bemodule.enums.AccountStatus;
 import cires.bemodule.mappers.UserMapper;
 import cires.bemodule.repositories.UserRepository;

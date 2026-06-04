@@ -6,7 +6,7 @@ import org.hibernate.envers.Audited;
 import java.util.HashSet;
 import java.util.Set;
 
-@Audited @Entity
+@Entity
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Table(name = "organizations")

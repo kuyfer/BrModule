@@ -4,7 +4,7 @@ package cires.bemodule.restcontrollers;
 import cires.bemodule.dtos.requests.CancelTrainingSessionRequest;
 import cires.bemodule.dtos.requests.CreateTrainingSessionRequest;
 import cires.bemodule.dtos.responses.CreateTrainingSessionResponse;
-import cires.bemodule.dtos.TrainingSessionDTO;
+import cires.bemodule.dtos.views.TrainingSessionDTO;
 import cires.bemodule.dtos.requests.UpdateTrainingSessionsRequest;
 import cires.bemodule.enums.TrainingSessionMode;
 import cires.bemodule.enums.TrainingSessionStatus;

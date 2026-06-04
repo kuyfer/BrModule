@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.envers.Audited;
 
-@Audited @Entity
+@Entity
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Table(name = "permissions")

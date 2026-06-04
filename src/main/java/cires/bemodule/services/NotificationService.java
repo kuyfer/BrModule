@@ -1,6 +1,6 @@
 package cires.bemodule.services;
 
-import cires.bemodule.dtos.NotificationDTO;
+import cires.bemodule.dtos.views.NotificationDTO;
 import cires.bemodule.dtos.requests.RegisterRequest;
 import cires.bemodule.entities.Notification;
 import cires.bemodule.entities.Trainer;

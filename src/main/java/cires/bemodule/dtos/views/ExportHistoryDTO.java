@@ -1,4 +1,4 @@
-package cires.bemodule.dtos;
+package cires.bemodule.dtos.views;
 
 import cires.bemodule.enums.ExportFormat;
 import cires.bemodule.enums.ExportStatus;

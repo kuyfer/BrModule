@@ -1,7 +1,7 @@
 package cires.bemodule.restcontrollers;
 
 import cires.bemodule.dtos.requests.CreateParticipantRequest;
-import cires.bemodule.dtos.ParticipantDTO;
+import cires.bemodule.dtos.views.ParticipantDTO;
 import cires.bemodule.dtos.responses.CreateParticipantResponse;
 import cires.bemodule.dtos.requests.PatchParticipantRequest;
 import cires.bemodule.enums.RegistrationSource;

@@ -1,6 +1,6 @@
 package cires.bemodule.mappers;
 
-import cires.bemodule.dtos.NotificationDTO;
+import cires.bemodule.dtos.views.NotificationDTO;
 import cires.bemodule.entities.Notification;
 import org.mapstruct.Mapper;
 

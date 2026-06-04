@@ -1,6 +1,6 @@
 package cires.bemodule.mappers;
 
-import cires.bemodule.dtos.ExportHistoryDTO;
+import cires.bemodule.dtos.views.ExportHistoryDTO;
 import cires.bemodule.entities.ExportHistory;
 import org.mapstruct.Mapper;
 
