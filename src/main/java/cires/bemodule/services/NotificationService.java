@@ -2,10 +2,13 @@ package cires.bemodule.services;
 
 import cires.bemodule.dtos.NotificationDTO;
 import cires.bemodule.entities.Notification;
+import cires.bemodule.entities.Trainer;
+import cires.bemodule.entities.TrainingSession;
 import cires.bemodule.enums.NotificationStatus;
 import cires.bemodule.enums.NotificationType;
 import cires.bemodule.exceptions.controllerexceptions.NotificationNotFoundException;
 import cires.bemodule.mappers.NotificationMapper;
+import cires.bemodule.models.EmailPayload;
 import cires.bemodule.repositories.NotificationRepository;
 import cires.bemodule.specifications.NotificationSpecifications;
 import org.slf4j.Logger;
@@ -13,7 +16,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class NotificationService {
@@ -22,10 +27,12 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final NotificationMapper notificationMapper;
+    private final EmailQueueProducer emailQueueProducer;
 
-    public NotificationService(NotificationRepository notificationRepository, NotificationMapper notificationMapper) {
+    public NotificationService(NotificationRepository notificationRepository, NotificationMapper notificationMapper, EmailQueueProducer emailQueueProducer) {
         this.notificationRepository = notificationRepository;
         this.notificationMapper = notificationMapper;
+        this.emailQueueProducer = emailQueueProducer;
     }
 
     public NotificationDTO findById(Long id) {
@@ -54,4 +61,47 @@ public class NotificationService {
         logger.info("Found {} notifications matching filters", dtos.size());
         return dtos;
     }
-}
+
+    public void sendTrainerAssignmentEmail(TrainingSession session, Trainer trainer) {
+        logger.debug("Sending trainer assignment email to trainer: {} for session: {}", trainer.getUser().getEmail(), session.getTitle());
+        Map<String, Object> model = new HashMap<>();
+        model.put("trainerName", trainer.getUser().getFirstName());
+        model.put("sessionTitle", session.getTitle());
+        model.put("sessionDescription", session.getDescription());
+        model.put("startDate", session.getStartDate().toString());
+        model.put("endDate", session.getEndDate().toString());
+        model.put("location", session.getLocation());
+        model.put("mode", session.getMode());
+        //model.put("subsidiary", session.getSubsidiary());
+
+        EmailPayload payload = new EmailPayload(
+                trainer.getUser().getEmail(),
+                "Trainer Assignment",
+                "trainer-assignement",
+                model
+        );
+        emailQueueProducer.queueEmail(payload, NotificationType.TRAINER_ASSIGNMENT);
+        logger.debug("Trainer assignment email queued for: {}", trainer.getUser().getEmail());
+
+    }
+    public void sendSessionCancelledEmail(TrainingSession session, String reason) {
+        logger.debug("Sending session cancellation email to trainer: {} for session: {}", session.getTrainer().getUser().getEmail(), session.getTitle());
+        Map<String, Object> model = new HashMap<>();
+        model.put("sessionTitle", session.getTitle());
+        model.put("sessionDescription", session.getDescription());
+        model.put("startDate", session.getStartDate().toString());
+        model.put("endDate", session.getEndDate().toString());
+        model.put("location", session.getLocation());
+        model.put("mode", session.getMode());
+        model.put("cancellationReason", reason);
+
+        EmailPayload payload = new EmailPayload(
+                session.getTrainer().getUser().getEmail(),
+                "Session Cancelled",
+                "session-cancellation",
+                model
+        );
+        emailQueueProducer.queueEmail(payload, NotificationType.SESSION_CANCELLATION);
+        logger.debug("Session cancellation email queued for: {}", session.getTrainer().getUser().getEmail());
+    }
+    }

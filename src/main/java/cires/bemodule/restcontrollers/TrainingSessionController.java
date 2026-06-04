@@ -5,6 +5,7 @@ import cires.bemodule.dtos2.CancelTrainingSessionRequest;
 import cires.bemodule.dtos2.CreateTrainingSessionRequest;
 import cires.bemodule.dtos2.CreateTrainingSessionResponse;
 import cires.bemodule.dtos.TrainingSessionDTO;
+import cires.bemodule.dtos2.UpdateTrainingSessionsRequest;
 import cires.bemodule.enums.TrainingSessionMode;
 import cires.bemodule.enums.TrainingSessionStatus;
 import cires.bemodule.services.TrainingSessionService;
@@ -36,11 +37,26 @@ public class TrainingSessionController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/{id}/status")
+    public ResponseEntity<Void> updateSession(@PathVariable Long id, @RequestBody UpdateTrainingSessionsRequest request ) {
+        trainingSessionService.changeStatus(id, request.getStatus());
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<TrainingSessionDTO> getSessionById(@PathVariable Long id) {
         TrainingSessionDTO session = trainingSessionService.findTrainingSessionById(id);
         return ResponseEntity.ok(session);
     }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteSession(@PathVariable Long id){
+
+        trainingSessionService.deleteTrainingSession(id);
+        return ResponseEntity.noContent().build();
+
+}
+
 
     @GetMapping
     public ResponseEntity<List<TrainingSessionDTO>> getAllTrainingSessions(
@@ -51,6 +67,4 @@ public class TrainingSessionController {
         return ResponseEntity.ok(sessions);
     }
 
-    @PatchMapping("/{id}/status")
-    public void updateSessionStatus(@PathVariable Long id, @RequestBody Object statusUpdate) {}
 }

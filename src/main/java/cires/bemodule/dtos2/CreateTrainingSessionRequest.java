@@ -2,7 +2,10 @@ package cires.bemodule.dtos2;
 
 import cires.bemodule.enums.TrainingSessionMode;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,13 +15,15 @@ import java.time.LocalDateTime;
 @Data @NoArgsConstructor @AllArgsConstructor
 public class CreateTrainingSessionRequest {
 
-    @NotBlank(message = "Trainer id is required")
+    @NotNull
     private Long trainerId;
 
-    @NotBlank(message = "Start date is required")
+    @NotNull
+    @FutureOrPresent
     private LocalDateTime startDate;
 
-    @NotBlank(message = "End date is required")
+    @NotNull
+    @Future
     private LocalDateTime endDate;
 
     @NotBlank(message = "title is required")
