@@ -70,7 +70,6 @@ public class UserService {
         user.setAccountStatus(AccountStatus.ACTIVE);
 
         notificationService.sendRegistrationEmail(request);
-        //sendRegistrationEmail(request);
 
         User savedUser = userRepository.save(user);
         logger.info("User registered successfully with id: {}", savedUser.getId());

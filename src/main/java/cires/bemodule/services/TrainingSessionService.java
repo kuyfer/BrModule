@@ -34,7 +34,6 @@ public class TrainingSessionService {
     private final TrainingSessionMapper trainingSessionMapper;
     private final TrainerRepository trainerRepository;
     private final ParticipantRepository participantRepository;
-    private final EmailQueueProducer emailQueueProducer;
     private final NotificationService notificationService;
 
     // ################################# CREATE ######################################

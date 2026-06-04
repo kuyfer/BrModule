@@ -142,4 +142,26 @@ public class NotificationService {
         logger.info("Password reset email queued for: {}", email);
     }
 
+    public void sendReminderEmail(TrainingSession session) {
+        logger.debug("Sending session reminder email to trainer: {} for session: {}", session.getTrainer().getUser().getEmail(), session.getTitle());
+        Map<String, Object> model = new HashMap<>();
+        model.put("sessionTitle", session.getTitle());
+        model.put("sessionDescription", session.getDescription());
+        model.put("startDate", session.getStartDate().toString());
+        model.put("endDate", session.getEndDate().toString());
+        model.put("location", session.getLocation());
+        model.put("mode", session.getMode());
+
+        EmailPayload payload = new EmailPayload(
+                session.getTrainer().getUser().getEmail(),
+                "Session reminder",
+                "session-reminder",
+                model
+        );
+        emailQueueProducer.queueEmail(payload, NotificationType.SESSION_REMINDER);
+        logger.debug("Session reminder email queued for: {}", session.getTrainer().getUser().getEmail());
+    }
+
+
+
     }

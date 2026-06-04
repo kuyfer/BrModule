@@ -3,7 +3,9 @@ package cires.bemodule.utilities;
 import cires.bemodule.entities.TrainingSession;
 import cires.bemodule.enums.TrainingSessionStatus;
 import cires.bemodule.repositories.TrainingSessionRepository;
+import cires.bemodule.services.NotificationService;
 import cires.bemodule.services.TrainingSessionService;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -19,10 +21,12 @@ public class SessionStatusScheduler {
 
     private final TrainingSessionRepository sessionRepository;
     private final TrainingSessionService sessionService;
+    private final NotificationService notificationService;
 
-    public SessionStatusScheduler(TrainingSessionRepository sessionRepository, TrainingSessionService sessionService) {
+    public SessionStatusScheduler(TrainingSessionRepository sessionRepository, TrainingSessionService sessionService, NotificationService notificationService) {
         this.sessionRepository = sessionRepository;
         this.sessionService = sessionService;
+        this.notificationService = notificationService;
     }
 
     @Scheduled(fixedRate = 5 * 60 * 1000) // runs every 5 minutes
@@ -57,6 +61,29 @@ public class SessionStatusScheduler {
                 log.info("Session auto-completed [id={}]", session.getId());
             } catch (Exception e) {
                 log.error("Failed to auto-complete session [id={}]: {}", session.getId(), e.getMessage());
+            }
+        }
+    }
+
+    @Scheduled(cron = "0 0 * * * *") // every hour on the hour
+    @Transactional
+    public void sendSessionReminders() {
+        log.debug("Scheduler running: checking for upcoming session reminders");
+
+        LocalDateTime from = LocalDateTime.now();
+        LocalDateTime to   = LocalDateTime.now().plusHours(24);
+
+        List<TrainingSession> upcoming = sessionRepository
+                .findByStatusAndStartDateBetween(
+                        TrainingSessionStatus.SCHEDULED, from, to
+                );
+
+        for (TrainingSession session : upcoming) {
+            try {
+                notificationService.sendReminderEmail(session);
+                log.info("Reminder sent for session [id={}]", session.getId());
+            } catch (Exception e) {
+                log.error("Failed to send reminder for session [id={}]: {}", session.getId(), e.getMessage());
             }
         }
     }
