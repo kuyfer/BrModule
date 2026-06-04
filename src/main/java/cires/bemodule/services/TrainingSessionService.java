@@ -8,39 +8,27 @@ import cires.bemodule.dtos.TrainingSessionDTO;
 import cires.bemodule.entities.Participant;
 import cires.bemodule.entities.Trainer;
 import cires.bemodule.entities.TrainingSession;
-import cires.bemodule.entities.User;
-import cires.bemodule.enums.NotificationType;
 import cires.bemodule.enums.TrainingSessionMode;
 import cires.bemodule.enums.TrainingSessionStatus;
 import cires.bemodule.exceptions.controllerexceptions.TrainerNotFoundException;
 import cires.bemodule.exceptions.controllerexceptions.TrainingSessionNotFoundException;
-import cires.bemodule.exceptions.controllerexceptions.UserNotFoundException;
 import cires.bemodule.exceptions.validationexceptions.ConflictException;
 import cires.bemodule.mappers.TrainingSessionMapper;
-import cires.bemodule.models.EmailPayload;
 import cires.bemodule.repositories.ParticipantRepository;
 import cires.bemodule.repositories.TrainerRepository;
 import cires.bemodule.repositories.TrainingSessionRepository;
 import cires.bemodule.specifications.TrainingSessionSpecifications;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.LogManager;
-//import org.slf4j.Logger;
-import org.apache.logging.log4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class TrainingSessionService {
-
-   // private static final Logger logger = LogManager.getLogger(TrainingSessionService.class);
 
     private final TrainingSessionRepository trainingSessionRepository;
     private final TrainingSessionMapper trainingSessionMapper;
