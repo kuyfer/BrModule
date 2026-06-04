@@ -1,8 +1,8 @@
 package cires.bemodule.security.services;
 
-import cires.bemodule.dtos2.AuthResponse;
-import cires.bemodule.dtos2.LoginRequest;
-import cires.bemodule.dtos2.RefreshTokenRequest;
+import cires.bemodule.dtos.responses.AuthResponse;
+import cires.bemodule.dtos.requests.LoginRequest;
+import cires.bemodule.dtos.requests.RefreshTokenRequest;
 import cires.bemodule.models.UserPrincipal;
 import cires.bemodule.security.jwt.JwtService;
 import org.slf4j.Logger;

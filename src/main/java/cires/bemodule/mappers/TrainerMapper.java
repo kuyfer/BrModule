@@ -1,7 +1,7 @@
 package cires.bemodule.mappers;
 
 import cires.bemodule.dtos.TrainerDTO;
-import cires.bemodule.dtos2.CreateTrainerRequest;
+import cires.bemodule.dtos.requests.CreateTrainerRequest;
 import cires.bemodule.entities.Trainer;
 import org.mapstruct.Mapper;
 

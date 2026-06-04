@@ -1,4 +1,4 @@
-package cires.bemodule.dtos2;
+package cires.bemodule.dtos.requests;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

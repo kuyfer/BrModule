@@ -1,4 +1,4 @@
-package cires.bemodule.dtos2;
+package cires.bemodule.dtos.requests;
 
 import cires.bemodule.enums.TrainingSessionStatus;
 import lombok.AllArgsConstructor;

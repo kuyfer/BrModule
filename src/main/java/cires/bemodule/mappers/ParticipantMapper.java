@@ -1,15 +1,15 @@
 package cires.bemodule.mappers;
 
 import cires.bemodule.dtos.ParticipantDTO;
-import cires.bemodule.dtos2.CreateParticipantRequest;
-import cires.bemodule.dtos2.CreateParticipantResponse;
-import cires.bemodule.dtos2.PatchParticipantRequest;
+import cires.bemodule.dtos.requests.CreateParticipantRequest;
+import cires.bemodule.dtos.responses.CreateParticipantResponse;
+import cires.bemodule.dtos.requests.PatchParticipantRequest;
 import cires.bemodule.entities.Participant;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface ParticipantMapper {
-    
+
     ParticipantDTO toParticipantDto(Participant participant);
 
     Participant toParticipant(ParticipantDTO participantDTO);

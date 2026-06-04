@@ -1,6 +1,10 @@
 package cires.bemodule.restcontrollers;
 
-import cires.bemodule.dtos2.*;
+import cires.bemodule.dtos.requests.LoginRequest;
+import cires.bemodule.dtos.requests.RefreshTokenRequest;
+import cires.bemodule.dtos.requests.RegisterRequest;
+import cires.bemodule.dtos.responses.AuthResponse;
+import cires.bemodule.dtos.responses.RegisterResponse;
 import cires.bemodule.entities.User;
 import cires.bemodule.security.services.AuthService;
 import cires.bemodule.services.UserService;

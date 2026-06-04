@@ -1,4 +1,4 @@
-package cires.bemodule.dtos2;
+package cires.bemodule.dtos.requests;
 
 import cires.bemodule.annotations.PasswordMatches;
 import cires.bemodule.annotations.ValidPassword;

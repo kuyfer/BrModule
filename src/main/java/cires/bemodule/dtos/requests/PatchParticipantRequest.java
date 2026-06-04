@@ -1,4 +1,4 @@
-package cires.bemodule.dtos2;
+package cires.bemodule.dtos.requests;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;

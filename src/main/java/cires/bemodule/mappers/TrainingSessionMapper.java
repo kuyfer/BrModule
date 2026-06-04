@@ -1,7 +1,7 @@
 package cires.bemodule.mappers;
 
 import cires.bemodule.dtos.TrainingSessionDTO;
-import cires.bemodule.dtos2.CancelTrainingSessionResponse;
+import cires.bemodule.dtos.responses.CancelTrainingSessionResponse;
 import cires.bemodule.entities.*;
 import org.mapstruct.Mapper;
 

@@ -1,9 +1,9 @@
 package cires.bemodule.services;
 
-import cires.bemodule.dtos2.CreateParticipantRequest;
+import cires.bemodule.dtos.requests.CreateParticipantRequest;
 import cires.bemodule.dtos.ParticipantDTO;
-import cires.bemodule.dtos2.CreateParticipantResponse;
-import cires.bemodule.dtos2.PatchParticipantRequest;
+import cires.bemodule.dtos.responses.CreateParticipantResponse;
+import cires.bemodule.dtos.requests.PatchParticipantRequest;
 import cires.bemodule.entities.Participant;
 import cires.bemodule.enums.RegistrationSource;
 import cires.bemodule.exceptions.controllerexceptions.ParticipantNotFoundException;

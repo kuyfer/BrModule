@@ -1,7 +1,7 @@
 package cires.bemodule.restcontrollers;
 
 import cires.bemodule.dtos.TrainerDTO;
-import cires.bemodule.dtos2.CreateTrainerRequest;
+import cires.bemodule.dtos.requests.CreateTrainerRequest;
 import cires.bemodule.services.TrainerService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

@@ -1,11 +1,11 @@
 package cires.bemodule.restcontrollers;
 
 
-import cires.bemodule.dtos2.CancelTrainingSessionRequest;
-import cires.bemodule.dtos2.CreateTrainingSessionRequest;
-import cires.bemodule.dtos2.CreateTrainingSessionResponse;
+import cires.bemodule.dtos.requests.CancelTrainingSessionRequest;
+import cires.bemodule.dtos.requests.CreateTrainingSessionRequest;
+import cires.bemodule.dtos.responses.CreateTrainingSessionResponse;
 import cires.bemodule.dtos.TrainingSessionDTO;
-import cires.bemodule.dtos2.UpdateTrainingSessionsRequest;
+import cires.bemodule.dtos.requests.UpdateTrainingSessionsRequest;
 import cires.bemodule.enums.TrainingSessionMode;
 import cires.bemodule.enums.TrainingSessionStatus;
 import cires.bemodule.services.TrainingSessionService;
