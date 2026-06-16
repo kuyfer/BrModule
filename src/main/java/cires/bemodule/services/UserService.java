@@ -14,19 +14,19 @@ import cires.bemodule.repositories.RoleRepository;
 import cires.bemodule.repositories.UserRepository;
 import cires.bemodule.specifications.UserSpecifications;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @AllArgsConstructor
 @Service
 public class UserService {
-
-    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -37,15 +37,12 @@ public class UserService {
     // ################################# CREATE ######################################
 
     public User registerUser(RegisterRequest request) {
-        logger.info("Registering new user with username: {}, email: {}", request.getUsername(), request.getEmail());
 
         if (userRepository.findByUsername(request.getUsername()) != null) {
-            logger.warn("Username already exists: {}", request.getUsername());
             throw new UsernameAlreadyExistsException("Username already exists");
         }
 
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            logger.warn("Email already exists: {}", request.getEmail());
             throw new EmailAlreadyExistsException("Email already exists");
         }
 
@@ -54,7 +51,6 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         Role adminRole = roleRepository.findByroleName(RoleType.SUPER_ADMIN)
                 .orElseThrow(() -> {
-                    logger.error("Role not found: SUPER_ADMIN");
                     return new RuntimeException("Role not found");
                 });
         user.setRoles(List.of(adminRole));
@@ -66,85 +62,72 @@ public class UserService {
         notificationService.sendRegistrationEmail(request);
 
         User savedUser = userRepository.save(user);
-        logger.info("User registered successfully with id: {}", savedUser.getId());
         return savedUser;
     }
 
     // ################################# READ ######################################
 
     public UserDTO findUserById(Long id) {
-        logger.info("Finding user by id: {}", id);
         User user = userRepository.findById(id).orElseThrow(() -> {
-            logger.error("User not found with id: {}", id);
             return new UserNotFoundException(id);
         });
         UserDTO dto = userMapper.toUserDto(user);
-        logger.info("Found user with id: {}", id);
         return dto;
     }
 
-    public List<UserDTO> findAll(String role, AccountStatus status) {
-        logger.info("Finding all users with filters - role: {}, status: {}", role, status);
+    public Page<UserDTO> findAll(String role, AccountStatus status, Pageable pageable) {
+
         Specification<User> spec = Specification
                 .where(UserSpecifications.hasRole(role))
                 .and(UserSpecifications.hasStatus(status));
-        List<User> users = userRepository.findAll(spec);
-        List<UserDTO> dtos = users.stream()
-                .map(userMapper::toUserDto)
-                .toList();
-        logger.info("Found {} users matching filters", dtos.size());
-        return dtos;
+
+        Page<User> userPage = userRepository.findAll(spec, pageable);
+
+        return userPage.map(userMapper::toUserDto);
+    }
+
+    public List<UserDTO> findAll(String role, AccountStatus status) {
+        Page<UserDTO> page = findAll(role, status, Pageable.unpaged());
+        return page.getContent();
     }
 
     // ################################# UPDATE ######################################
 
     public User updateUser(Long id, User user) {
-        logger.info("Updating user with id: {}", id);
         User existingUser = userRepository.findById(id).orElseThrow(() -> {
-            logger.error("User not found for update with id: {}", id);
             return new UserNotFoundException(id);
         });
         existingUser.setFirstName(user.getFirstName());
         existingUser.setLastName(user.getLastName());
         existingUser.setEmail(user.getEmail());
         User updated = userRepository.save(existingUser);
-        logger.info("User updated successfully with id: {}", id);
         return updated;
     }
 
     // ################################# DELETE ######################################
 
     public void deleteUser(Long id) {
-        logger.info("Deleting user with id: {}", id);
         User user = userRepository.findById(id).orElseThrow(() -> {
-            logger.error("User not found for deletion with id: {}", id);
             return new UserNotFoundException(id);
         });
         userRepository.delete(user);
-        logger.info("User deleted successfully with id: {}", id);
     }
 
     // ################################# UTILS ######################################
 
     public void activateAccount(Long id) {
-        logger.info("Activating account for user id: {}", id);
         User user = userRepository.findById(id).orElseThrow(() -> {
-            logger.error("User not found for activation with id: {}", id);
             return new UserNotFoundException(id);
         });
         user.setAccountStatus(AccountStatus.ACTIVE);
         userRepository.save(user);
-        logger.info("Account activated for user id: {}", id);
     }
 
     public void deactivateAccount(Long id) {
-        logger.info("Deactivating account for user id: {}", id);
         User user = userRepository.findById(id).orElseThrow(() -> {
-            logger.error("User not found for deactivation with id: {}", id);
             return new UserNotFoundException(id);
         });
         user.setAccountStatus(AccountStatus.INACTIVE);
         userRepository.save(user);
-        logger.info("Account deactivated for user id: {}", id);
     }
 }

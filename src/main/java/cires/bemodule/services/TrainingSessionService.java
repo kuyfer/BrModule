@@ -95,8 +95,7 @@ public class TrainingSessionService {
                 .and(TrainingSessionSpecifications.hasStatus(status));
         Page<TrainingSession> sessionPage = trainingSessionRepository.findAll(spec, pageable);
 
-        Page<TrainingSessionDTO> dtoPage = sessionPage.map(trainingSessionMapper::toTrainingSessionDto);
-        return dtoPage;
+        return sessionPage.map(trainingSessionMapper::toTrainingSessionDto);
     }
 
     public List<TrainingSessionDTO> findAll(TrainingSessionStatus status, TrainingSessionMode mode) {
