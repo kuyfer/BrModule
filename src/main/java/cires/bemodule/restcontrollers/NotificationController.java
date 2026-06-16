@@ -4,15 +4,12 @@ import cires.bemodule.dtos.views.NotificationDTO;
 import cires.bemodule.enums.NotificationStatus;
 import cires.bemodule.enums.NotificationType;
 import cires.bemodule.services.NotificationService;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
-import java.util.Locale;
 
 @AllArgsConstructor
 @RestController
@@ -22,50 +19,14 @@ public class NotificationController {
     private final NotificationService notificationService;
 
     @GetMapping
-    public ResponseEntity<List<NotificationDTO>> getAllNotifications(
+    public ResponseEntity<Page<NotificationDTO>> getAllNotifications(
             @RequestParam(required = false) NotificationType type,
             @RequestParam(required = false) NotificationStatus status,
-            @RequestParam(required = false) String email
+            @RequestParam(required = false) String email,
+            @PageableDefault(size = 20) Pageable pageable
     ) {
-        List<NotificationDTO> notifications = notificationService.findAll(type, status, email);
+        Page<NotificationDTO> notifications = notificationService.findAll(type, status, email,pageable);
         return ResponseEntity.ok(notifications);
-    }
-
-    @GetMapping("/export")
-    public void exportNotifications(HttpServletResponse response,
-                                    @RequestParam(required = false) NotificationType type,
-                                    @RequestParam(required = false) NotificationStatus status,
-                                    @RequestParam(required = false) String email
-
-    ) throws IOException {
-        response.setContentType("text/csv; charset=UTF-8");
-        response.setHeader("Content-Disposition", "attachment; filename=\"notification.csv\"");
-
-        try (PrintWriter writer = response.getWriter()) {
-            writer.println("Id,Subject,To,Status,Type");
-
-            List<NotificationDTO> notifications = notificationService.findAll(type, status, email);
-            for (NotificationDTO notification : notifications) {
-                String row = String.format(Locale.ROOT, "%d,%s,%s, %s, %s",
-                        notification.getId(),
-                        escapeCsv(notification.getToEmail()),
-                        escapeCsv(notification.getNotificationStatus().toString()),
-                        escapeCsv(notification.getNotificationType().toString()),
-                        escapeCsv(notification.getSubject())
-                );
-                writer.println(row);
-            }
-        }
-    }
-
-    private String escapeCsv(String input) {
-        if (input == null) {
-            return "";
-        }
-        if (input.contains(",") || input.contains("\"") || input.contains("\n") || input.contains("\r")) {
-            return "\"" + input.replace("\"", "\"\"") + "\"";
-        }
-        return input;
     }
 
     @GetMapping("/{id}")
@@ -74,10 +35,4 @@ public class NotificationController {
         return ResponseEntity.ok(notification);
     }
 
-
-//    @PostMapping("/send")
-//    public void sendNotification(@RequestBody Object notification) {}
-//
-//    @PostMapping("/{id}/retry")
-//    public void retryNotification(@PathVariable Long id) {}
 }
