@@ -90,20 +90,19 @@ public class TrainingSessionService {
     }
 
     public Page<TrainingSessionDTO> findAll(TrainingSessionStatus status, TrainingSessionMode mode, Pageable pageable) {
-        log.info("Finding training sessions with filters - status: {}, mode: {}, page: {}, size: {}",
-                status, mode, pageable.getPageNumber(), pageable.getPageSize());
         Specification<TrainingSession> spec = Specification
                 .where(TrainingSessionSpecifications.hasMode(mode))
                 .and(TrainingSessionSpecifications.hasStatus(status));
         Page<TrainingSession> sessionPage = trainingSessionRepository.findAll(spec, pageable);
 
         Page<TrainingSessionDTO> dtoPage = sessionPage.map(trainingSessionMapper::toTrainingSessionDto);
-
-        log.info("Found {} training sessions matching filters (total: {})",
-                dtoPage.getNumberOfElements(), dtoPage.getTotalElements());
         return dtoPage;
     }
 
+    public List<TrainingSessionDTO> findAll(TrainingSessionStatus status, TrainingSessionMode mode) {
+        Page<TrainingSessionDTO> page = findAll(status, mode, Pageable.unpaged());
+        return page.getContent();
+    }
     // ################################# UPDATE ######################################
 
     public CancelTrainingSessionResponse cancelSession(Long id, CancelTrainingSessionRequest request) {

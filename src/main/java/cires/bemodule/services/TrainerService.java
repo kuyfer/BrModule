@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @AllArgsConstructor
-@Slf4j
+//@Slf4j
 @Service
 public class TrainerService {
 

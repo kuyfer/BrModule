@@ -80,38 +80,37 @@ public class ExportController {
         }
     }
 
-//    @GetMapping("/sessions")
-//    public void exportSessions(HttpServletResponse response,
-//                               @RequestParam(required = false) TrainingSessionStatus status,
-//                               @RequestParam(required = false) TrainingSessionMode mode,
-//                               @PageableDefault(size = 20) Pageable pageable,
-//                               @RequestParam(defaultValue = "CSV") ExportFormat format) throws IOException {
-//
-//        Page<TrainingSessionDTO> sessions = trainingSessionService.findAll(status, mode, pageable);
-//
-//        String[] headers = {"Id", "Name", "Start Date", "End Date", "Status", "Mode"};
-//        if (format == ExportFormat.EXCEL) {
-//            exportService.exportToExcel(response, "sessions.xlsx", "Training Sessions", headers, sessions,
-//                    session -> new String[]{
-//                            String.valueOf(session.getId()),
-//                            session.getTitle(),
-//                            session.getStartDate().toString(),
-//                            session.getEndDate().toString(),
-//                            session.getStatus().toString(),
-//                            session.getMode().toString()
-//                    });
-//        } else {
-//            exportService.exportToCsv(response, "sessions.csv", headers, sessions,
-//                    session -> new String[]{
-//                            String.valueOf(session.getId()),
-//                            session.getTitle(),
-//                            session.getStartDate().toString(),
-//                            session.getEndDate().toString(),
-//                            session.getStatus().toString(),
-//                            session.getMode().toString()
-//                    });
-//        }
-//    }
+    @GetMapping("/sessions")
+    public void exportSessions(HttpServletResponse response,
+                               @RequestParam(required = false) TrainingSessionStatus status,
+                               @RequestParam(required = false) TrainingSessionMode mode,
+                               @RequestParam(defaultValue = "CSV") ExportFormat format) throws IOException {
+
+        List<TrainingSessionDTO> sessions = trainingSessionService.findAll(status, mode);
+
+        String[] headers = {"Id", "Name", "Start Date", "End Date", "Status", "Mode"};
+        if (format == ExportFormat.EXCEL) {
+            exportService.exportToExcel(response, "sessions.xlsx", "Training Sessions", headers, sessions,
+                    session -> new String[]{
+                            String.valueOf(session.getId()),
+                            session.getTitle(),
+                            session.getStartDate().toString(),
+                            session.getEndDate().toString(),
+                            session.getStatus().toString(),
+                            session.getMode().toString()
+                    });
+        } else {
+            exportService.exportToCsv(response, "sessions.csv", headers, sessions,
+                    session -> new String[]{
+                            String.valueOf(session.getId()),
+                            session.getTitle(),
+                            session.getStartDate().toString(),
+                            session.getEndDate().toString(),
+                            session.getStatus().toString(),
+                            session.getMode().toString()
+                    });
+        }
+    }
 
     @GetMapping("/users")
     public void exportUsers(HttpServletResponse response,
