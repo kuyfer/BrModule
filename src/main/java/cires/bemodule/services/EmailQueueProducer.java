@@ -8,22 +8,19 @@ import cires.bemodule.enums.NotificationStatus;
 import cires.bemodule.enums.NotificationType;
 import cires.bemodule.models.EmailPayload;
 import cires.bemodule.repositories.NotificationRepository;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
+@AllArgsConstructor
 @Service
 public class EmailQueueProducer {
     private static final Logger logger = LoggerFactory.getLogger(EmailQueueProducer.class);
 
     private final RabbitTemplate rabbitTemplate;
     private final NotificationRepository notificationRepository;
-
-    public EmailQueueProducer(RabbitTemplate rabbitTemplate, NotificationRepository notificationRepository) {
-        this.rabbitTemplate = rabbitTemplate;
-        this.notificationRepository = notificationRepository;
-    }
 
     public void queueEmail(EmailPayload payload, NotificationType type) {
         Notification notification = new Notification();

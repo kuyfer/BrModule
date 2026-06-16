@@ -3,7 +3,6 @@ package cires.bemodule.services;
 import cires.bemodule.dtos.requests.CancelTrainingSessionRequest;
 import cires.bemodule.dtos.responses.CancelTrainingSessionResponse;
 import cires.bemodule.dtos.requests.CreateTrainingSessionRequest;
-import cires.bemodule.dtos.responses.CreateTrainingSessionResponse;
 import cires.bemodule.dtos.views.TrainingSessionDTO;
 import cires.bemodule.entities.Participant;
 import cires.bemodule.entities.Trainer;
@@ -18,16 +17,18 @@ import cires.bemodule.repositories.ParticipantRepository;
 import cires.bemodule.repositories.TrainerRepository;
 import cires.bemodule.repositories.TrainingSessionRepository;
 import cires.bemodule.specifications.TrainingSessionSpecifications;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
-@Service
-@RequiredArgsConstructor
 @Slf4j
+@AllArgsConstructor
+@Service
 public class TrainingSessionService {
 
     private final TrainingSessionRepository trainingSessionRepository;
@@ -38,7 +39,7 @@ public class TrainingSessionService {
 
     // ################################# CREATE ######################################
 
-    public CreateTrainingSessionResponse createTrainingSession(CreateTrainingSessionRequest request) {
+    public TrainingSessionDTO createTrainingSession(CreateTrainingSessionRequest request) {
         log.info("Creating training session with title: {}, trainerId: {}", request.getTitle(), request.getTrainerId());
         Trainer trainer = trainerRepository.findById(request.getTrainerId())
                 .orElseThrow(() -> {
@@ -50,7 +51,6 @@ public class TrainingSessionService {
         session.setStartDate(request.getStartDate());
         session.setEndDate(request.getEndDate());
         session.setTitle(request.getTitle());
-        // session.setSubsidiary(request.getSubsidiary());
         session.setStatus(TrainingSessionStatus.SCHEDULED);
         session.setLocation(request.getLocation());
         session.setMode(request.getMode());
@@ -59,11 +59,10 @@ public class TrainingSessionService {
 
         notificationService.sendTrainerAssignmentEmail(session, trainer);
 
+        TrainingSession savedSession = trainingSessionRepository.save(session);
+        log.info("Training session created with id: {}", savedSession.getId());
 
-        trainingSessionRepository.save(session);
-        log.info("Training session created with id: {}", session.getId());
-
-        return new CreateTrainingSessionResponse("done");
+        return trainingSessionMapper.toTrainingSessionDto(savedSession);
     }
 
     public void addParticipants() {
@@ -90,17 +89,19 @@ public class TrainingSessionService {
         return dto;
     }
 
-    public List<TrainingSessionDTO> findAll(TrainingSessionStatus status, TrainingSessionMode mode) {
-        log.info("Finding all training sessions with filters - status: {}, mode: {}", status, mode);
+    public Page<TrainingSessionDTO> findAll(TrainingSessionStatus status, TrainingSessionMode mode, Pageable pageable) {
+        log.info("Finding training sessions with filters - status: {}, mode: {}, page: {}, size: {}",
+                status, mode, pageable.getPageNumber(), pageable.getPageSize());
         Specification<TrainingSession> spec = Specification
                 .where(TrainingSessionSpecifications.hasMode(mode))
                 .and(TrainingSessionSpecifications.hasStatus(status));
-        List<TrainingSession> sessions = trainingSessionRepository.findAll(spec);
-        List<TrainingSessionDTO> dtos = sessions.stream()
-                .map(trainingSessionMapper::toTrainingSessionDto)
-                .toList();
-        log.info("Found {} training sessions matching filters", dtos.size());
-        return dtos;
+        Page<TrainingSession> sessionPage = trainingSessionRepository.findAll(spec, pageable);
+
+        Page<TrainingSessionDTO> dtoPage = sessionPage.map(trainingSessionMapper::toTrainingSessionDto);
+
+        log.info("Found {} training sessions matching filters (total: {})",
+                dtoPage.getNumberOfElements(), dtoPage.getTotalElements());
+        return dtoPage;
     }
 
     // ################################# UPDATE ######################################

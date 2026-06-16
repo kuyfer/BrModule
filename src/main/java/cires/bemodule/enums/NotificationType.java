@@ -1,4 +1,4 @@
-package cires.bemodule.enums;
+package cires.bemodule.enums;;
 
 public enum NotificationType {
     ACCOUNT_CREATION,

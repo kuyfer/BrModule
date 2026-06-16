@@ -12,6 +12,7 @@ import cires.bemodule.mappers.NotificationMapper;
 import cires.bemodule.models.EmailPayload;
 import cires.bemodule.repositories.NotificationRepository;
 import cires.bemodule.specifications.NotificationSpecifications;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
@@ -21,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@AllArgsConstructor
 @Service
 public class NotificationService {
 
@@ -29,12 +31,6 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final NotificationMapper notificationMapper;
     private final EmailQueueProducer emailQueueProducer;
-
-    public NotificationService(NotificationRepository notificationRepository, NotificationMapper notificationMapper, EmailQueueProducer emailQueueProducer) {
-        this.notificationRepository = notificationRepository;
-        this.notificationMapper = notificationMapper;
-        this.emailQueueProducer = emailQueueProducer;
-    }
 
     public NotificationDTO findById(Long id) {
         logger.info("Finding notification by id: {}", id);

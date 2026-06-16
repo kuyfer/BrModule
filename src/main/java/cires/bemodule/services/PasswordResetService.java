@@ -4,6 +4,7 @@ import cires.bemodule.entities.ResetToken;
 import cires.bemodule.entities.User;
 import cires.bemodule.repositories.ResetTokenRepository;
 import cires.bemodule.repositories.UserRepository;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Optional;
 
+@AllArgsConstructor
 @Service
 public class PasswordResetService {
 // FIXME : this blocks from deleting users for sql constraints
@@ -27,13 +29,6 @@ public class PasswordResetService {
     private static final SecureRandom secureRandom = new SecureRandom();
     private static final Base64.Encoder base64Encoder =
             Base64.getUrlEncoder().withoutPadding();
-
-    public PasswordResetService(UserRepository userRepository, ResetTokenRepository resetTokenRepository, EmailQueueProducer emailQueueProducer, NotificationService notificationService) {
-        this.userRepository = userRepository;
-        this.resetTokenRepository = resetTokenRepository;
-        this.emailQueueProducer = emailQueueProducer;
-        this.notificationService = notificationService;
-    }
 
     public void processRequest(String email) {
         logger.info("Processing password reset request for email: {}", email);

@@ -15,6 +15,8 @@ import cires.bemodule.repositories.RoleRepository;
 import cires.bemodule.repositories.TrainerRepository;
 import cires.bemodule.repositories.UserRepository;
 import cires.bemodule.specifications.TrainerSpecifications;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
@@ -22,6 +24,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@AllArgsConstructor
+@Slf4j
 @Service
 public class TrainerService {
 
@@ -31,13 +35,6 @@ public class TrainerService {
     private final TrainerMapper trainerMapper;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-
-    TrainerService(TrainerRepository trainerRepository, TrainerMapper trainerMapper, UserRepository userRepository, RoleRepository roleRepository) {
-        this.trainerRepository = trainerRepository;
-        this.trainerMapper = trainerMapper;
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-    }
 
     // ################################# CREATE ######################################
 

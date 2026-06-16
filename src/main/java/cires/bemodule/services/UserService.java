@@ -13,6 +13,7 @@ import cires.bemodule.mappers.UserMapper;
 import cires.bemodule.repositories.RoleRepository;
 import cires.bemodule.repositories.UserRepository;
 import cires.bemodule.specifications.UserSpecifications;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@AllArgsConstructor
 @Service
 public class UserService {
 
@@ -31,14 +33,6 @@ public class UserService {
     private final UserMapper userMapper;
     private final RoleRepository roleRepository;
     private final NotificationService notificationService;
-
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, RoleRepository roleRepository, NotificationService notificationService) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.userMapper = userMapper;
-        this.roleRepository = roleRepository;
-        this.notificationService = notificationService;
-    }
 
     // ################################# CREATE ######################################
 

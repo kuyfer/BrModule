@@ -4,17 +4,16 @@ package cires.bemodule.services;
 import cires.bemodule.entities.Subsidiary;
 import cires.bemodule.repositories.OrganizationRepository;
 import cires.bemodule.repositories.SubsidiaryRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+@AllArgsConstructor
 @Service
 public class SubsidiaryService {
 
     private final SubsidiaryRepository subsidiaryRepository;
     private final OrganizationRepository organizationRepository;
 
-    public SubsidiaryService(SubsidiaryRepository subsidiaryRepository, OrganizationRepository organizationRepository) {this.subsidiaryRepository = subsidiaryRepository;
-        this.organizationRepository = organizationRepository;
-    }
 
     // ################################# READ ########################################
     // ################################# CREATE ######################################

@@ -5,6 +5,7 @@ import cires.bemodule.enums.NotificationStatus;
 import cires.bemodule.enums.NotificationType;
 import cires.bemodule.services.NotificationService;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,15 +14,12 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Locale;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/notifications")
 public class NotificationController {
 
     private final NotificationService notificationService;
-
-    public NotificationController(NotificationService notificationService) {
-        this.notificationService = notificationService;
-    }
 
     @GetMapping
     public ResponseEntity<List<NotificationDTO>> getAllNotifications(
@@ -77,9 +75,9 @@ public class NotificationController {
     }
 
 
-    @PostMapping("/send")
-    public void sendNotification(@RequestBody Object notification) {}
-
-    @PostMapping("/{id}/retry")
-    public void retryNotification(@PathVariable Long id) {}
+//    @PostMapping("/send")
+//    public void sendNotification(@RequestBody Object notification) {}
+//
+//    @PostMapping("/{id}/retry")
+//    public void retryNotification(@PathVariable Long id) {}
 }

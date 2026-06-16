@@ -5,11 +5,13 @@ import cires.bemodule.enums.AccountStatus;
 import cires.bemodule.mappers.UserMapper;
 import cires.bemodule.repositories.UserRepository;
 import cires.bemodule.services.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -18,10 +20,10 @@ public class UserController {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    public UserController(UserService userService, UserRepository userRepository,
-                          UserMapper userMapper) {this.userService = userService;
-        this.userRepository = userRepository;
-        this.userMapper = userMapper;
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
+        UserDTO user = userService.findUserById(id);
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping
@@ -37,12 +39,6 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
-        UserDTO user = userService.findUserById(id);
-        return ResponseEntity.ok(user);
     }
 
     @PostMapping

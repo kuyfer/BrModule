@@ -10,6 +10,7 @@ import cires.bemodule.exceptions.controllerexceptions.ParticipantNotFoundExcepti
 import cires.bemodule.mappers.ParticipantMapper;
 import cires.bemodule.repositories.ParticipantRepository;
 import cires.bemodule.specifications.ParticipantsSpecifications;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@AllArgsConstructor
 @Service
 public class ParticipantService {
 
@@ -24,11 +26,6 @@ public class ParticipantService {
 
     private final ParticipantRepository participantRepository;
     private final ParticipantMapper participantMapper;
-
-    public ParticipantService(ParticipantRepository participantRepository, ParticipantMapper participantMapper) {
-        this.participantRepository = participantRepository;
-        this.participantMapper = participantMapper;
-    }
 
     // ################################# CREATE ######################################
 

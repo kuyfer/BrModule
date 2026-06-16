@@ -8,6 +8,7 @@ import cires.bemodule.enums.RegistrationSource;
 import cires.bemodule.mappers.ParticipantMapper;
 import cires.bemodule.services.ParticipantService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/participants")
 public class ParticipantController {
@@ -22,16 +24,10 @@ public class ParticipantController {
     private final ParticipantService participantService;
     private final ParticipantMapper participantMapper;
 
-    public ParticipantController(ParticipantService participantService, ParticipantMapper participantMapper) {
-        this.participantService = participantService;
-        this.participantMapper = participantMapper;
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<ParticipantDTO> getParticipantById(@PathVariable Long id) {
         ParticipantDTO participant = participantService.findParticipantById(id);
         return ResponseEntity.ok(participant);
-
     }
 
     @GetMapping

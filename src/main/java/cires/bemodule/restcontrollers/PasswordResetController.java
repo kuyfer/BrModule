@@ -5,6 +5,7 @@ import cires.bemodule.repositories.ResetTokenRepository;
 import cires.bemodule.repositories.UserRepository;
 import cires.bemodule.services.PasswordResetService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import cires.bemodule.entities.ResetToken;
 import cires.bemodule.entities.User;
 import org.springframework.http.HttpStatus;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/passwd")
 public class PasswordResetController {
@@ -25,13 +27,6 @@ public class PasswordResetController {
     private final ResetTokenRepository resetTokenRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    public PasswordResetController(PasswordResetService resetService, ResetTokenRepository resetTokenRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.resetService = resetService;
-        this.resetTokenRepository = resetTokenRepository;
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @PostMapping("/reset-password")
     public ResponseEntity<String> requestReset(@Valid @RequestBody ResetRequest request) {
