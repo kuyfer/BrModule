@@ -1,6 +1,7 @@
 package cires.bemodule.exceptions.controllerexceptions;
 
 import cires.bemodule.exceptions.validationexceptions.ConflictException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.http.*;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import cires.bemodule.exceptions.securityexceptions.SecurityException;
 
 import java.net.URI;
 import java.time.Instant;
@@ -29,13 +31,26 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return build(HttpStatus.NOT_FOUND, "not-found", exception.getMessage(), request);
     }
 
+    @ExceptionHandler(SecurityException.class)
+    public ProblemDetail handleSecurityException(SecurityException ex, HttpServletRequest request) {
+        String slug = ex.getErrorCode().toLowerCase().replace("_", "-");
+
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(ex.getStatus(), ex.getMessage());
+        problem.setType(URI.create("/errors/" + slug));
+        problem.setTitle(ex.getStatus().getReasonPhrase());
+        problem.setInstance(URI.create(request.getRequestURI()));
+        problem.setProperty("timestamp", Instant.now());
+        problem.setProperty("errorCode", ex.getErrorCode());
+        return problem;
+    }
+
     @ExceptionHandler(BadRequestException.class)
     public ProblemDetail badRequestHandler(BadRequestException exception, HttpServletRequest request){
         return build(HttpStatus.BAD_REQUEST, "bad-request", exception.getMessage(), request);
     }
 
     @ExceptionHandler(ConflictException.class)
-    public ProblemDetail conflictExceptionHamdler(ConflictException exception, HttpServletRequest request){
+    public ProblemDetail conflictExceptionHandler(ConflictException exception, HttpServletRequest request){
         return build(HttpStatus.CONFLICT, "conflict", exception.getMessage(), request);
     }
 
@@ -65,6 +80,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         problem.setProperty("timestamp", Instant.now());
 
         return problem;
+    }
+
+    @ExceptionHandler(JwtException.class)
+    public ProblemDetail handleJwtException(JwtException ex, HttpServletRequest request) {
+        return build(HttpStatus.BAD_REQUEST, "invalid-token", ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ProblemDetail handleGenericException(Exception ex, HttpServletRequest request) {
+        return build(HttpStatus.INTERNAL_SERVER_ERROR, "internal-error", "An unexpected error occurred", request);
     }
 
     // idk how it works but it works

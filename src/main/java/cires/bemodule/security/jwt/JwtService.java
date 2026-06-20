@@ -5,6 +5,7 @@ import cires.bemodule.security.models.UserPrincipal;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,11 +16,11 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-
+@Slf4j
 @Service
 public class JwtService {
 
-    private static final Logger logger = LoggerFactory.getLogger(JwtService.class);
+    private static final String TOKEN_TYPE_CLAIM = "token_type";
 
     @Value("${jwt.secret}")
     private String jwtKey;
@@ -33,6 +34,11 @@ public class JwtService {
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
+
+    public String extractTokenType(String token) {
+        return extractClaim(token, claims -> claims.get(TOKEN_TYPE_CLAIM, String.class));
+    }
+
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         return claimsResolver.apply(extractAllClaims(token));
     }
@@ -66,6 +72,7 @@ public class JwtService {
     public String generateJwtToken(UserPrincipal userPrincipal) {
         Map<String, Object> claims = new HashMap<>();
 
+        claims.put(TOKEN_TYPE_CLAIM, "access");
         List<String> roles = userPrincipal.getUser().getRoles().stream()
                 .map(role -> role.getRoleName().name())
                 .toList();
@@ -82,6 +89,8 @@ public class JwtService {
 
     public String generateRefreshJwtToken(UserPrincipal userPrincipal) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put(TOKEN_TYPE_CLAIM, "refresh");
+
         List<String> roles = userPrincipal.getUser().getRoles().stream()
                 .map(role -> role.getRoleName().name())
                 .toList();
@@ -90,7 +99,7 @@ public class JwtService {
     }
 
     private String buildJwtToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
-        logger.debug("Building token for user: {}, expiration: {}ms", userDetails.getUsername(), expiration);
+        log.debug("Building token for user: {}, expiration: {}ms", userDetails.getUsername(), expiration);
         return Jwts.builder()
                 .claims(extraClaims)
                 .subject(userDetails.getUsername())
@@ -105,13 +114,13 @@ public class JwtService {
             Jwts.parser().verifyWith(getSignInKey()).build().parse(authToken);
             return true;
         } catch (MalformedJwtException e) {
-            logger.error("Invalid JWT token: {}", e.getMessage());
+            log.error("Invalid JWT token: {}", e.getMessage());
         } catch (ExpiredJwtException e) {
-            logger.error("JWT token is expired: {}", e.getMessage());
+            log.error("JWT token is expired: {}", e.getMessage());
         } catch (UnsupportedJwtException e) {
-            logger.error("JWT token is unsupported: {}", e.getMessage());
+            log.error("JWT token is unsupported: {}", e.getMessage());
         } catch (IllegalArgumentException e) {
-            logger.error("JWT claims string is empty: {}", e.getMessage());
+            log.error("JWT claims string is empty: {}", e.getMessage());
         }
 
         return false;
