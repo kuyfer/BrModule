@@ -8,6 +8,10 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class UserSpecifications {
 
+    private UserSpecifications() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
+
     public static Specification<User> hasRole(String roleName) {
         return (root, query, criteriaBuilder) -> {
             if (roleName == null || roleName.isEmpty()) {

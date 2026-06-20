@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 public class AttendanceDTO {
 
     private Long id;
+    private Long sessionId;
+    private Long participantId;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private AttendanceStatus attendanceStatus;

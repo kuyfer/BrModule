@@ -50,7 +50,7 @@ public class JwtService {
         if (value instanceof List<?> list) {
             return list.stream()
                     .map(Object::toString)
-                    .collect(Collectors.toList());
+                    .toList();
         }
         return Collections.emptyList();
     }
@@ -68,7 +68,7 @@ public class JwtService {
 
         List<String> roles = userPrincipal.getUser().getRoles().stream()
                 .map(role -> role.getRoleName().name())
-                .collect(Collectors.toList());
+                .toList();
         claims.put("roles", roles);
 
         Set<String> permissions = userPrincipal.getUser().getRoles().stream()
@@ -84,7 +84,7 @@ public class JwtService {
         Map<String, Object> claims = new HashMap<>();
         List<String> roles = userPrincipal.getUser().getRoles().stream()
                 .map(role -> role.getRoleName().name())
-                .collect(Collectors.toList());
+                .toList();
         claims.put("roles", roles);
         return buildJwtToken(claims, userPrincipal, refreshExpiration);
     }

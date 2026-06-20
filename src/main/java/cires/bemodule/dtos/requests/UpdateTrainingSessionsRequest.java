@@ -1,12 +1,9 @@
 package cires.bemodule.dtos.requests;
 
 import cires.bemodule.enums.TrainingSessionStatus;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Setter @Getter@AllArgsConstructor @NoArgsConstructor
+@Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class UpdateTrainingSessionsRequest {
 
     private TrainingSessionStatus status;

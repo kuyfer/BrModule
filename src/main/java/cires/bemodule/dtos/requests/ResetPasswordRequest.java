@@ -4,13 +4,10 @@ import cires.bemodule.annotations.PasswordMatches;
 import cires.bemodule.annotations.ValidPassword;
 import cires.bemodule.interfaces.PasswordConfirmable;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @PasswordMatches
-@Setter @Getter @AllArgsConstructor @NoArgsConstructor
+@Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class ResetPasswordRequest implements PasswordConfirmable {
 
     @NotBlank(message = "Token is required")

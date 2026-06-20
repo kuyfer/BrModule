@@ -8,6 +8,10 @@ import org.springframework.util.StringUtils;
 
 public class NotificationSpecifications {
 
+    private NotificationSpecifications() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
+
     public static Specification<Notification> hasType(NotificationType type){
         return (root, query, criteriaBuilder) -> {
             if(type == null){

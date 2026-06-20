@@ -9,11 +9,12 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @PasswordMatches
-@Data @AllArgsConstructor @NoArgsConstructor
+@Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class RegisterRequest implements PasswordConfirmable {
     
     @NotBlank(message = "Username is required")

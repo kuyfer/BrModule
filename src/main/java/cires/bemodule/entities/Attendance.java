@@ -30,4 +30,10 @@ public class Attendance {
     @JoinColumn(name = "session_participant_id")
     private SessionParticipant sessionParticipant;
 
+    private Long sessionId;
+
+    private Long participantId;
+
+    private String period;
+
 }

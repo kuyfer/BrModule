@@ -1,28 +1,23 @@
 package cires.bemodule.dtos.requests;
 
-import cires.bemodule.utilities.EmailNormalizer;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
-public class CreateParticipantRequest {
+public class ParticipantImportRequest {
 
     @NotBlank(message = "First name is required")
-    @Size(min = 2, max = 50)
     private String firstName;
 
     @NotBlank(message = "Last name is required")
-    @Size(min = 2, max = 50)
     private String lastName;
 
     @NotBlank(message = "Email is required")
-    @Email(message = "Email should be valid")
-    @JsonDeserialize(using = EmailNormalizer.class)
+    @Email(message = "Must be a valid email address")
     private String email;
 
     private String phone;
 
+    private Long formationId;
 }

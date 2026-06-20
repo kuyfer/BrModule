@@ -7,6 +7,10 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class TrainingSessionSpecifications {
 
+    private TrainingSessionSpecifications() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
+
     public static Specification<TrainingSession> hasMode(TrainingSessionMode mode){
         return (root, query, criteriaBuilder) -> {
             if(mode == null){

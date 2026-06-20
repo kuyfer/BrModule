@@ -5,6 +5,10 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class TrainerSpecifications {
 
+    private TrainerSpecifications() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
+
     public static Specification<Trainer> hasSpeciality(String speciality){
         return (root, query, criteriaBuilder) -> {
             if(speciality == null){
