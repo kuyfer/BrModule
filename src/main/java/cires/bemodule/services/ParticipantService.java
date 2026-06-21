@@ -10,19 +10,17 @@ import cires.bemodule.exceptions.controllerexceptions.ParticipantNotFoundExcepti
 import cires.bemodule.mappers.ParticipantMapper;
 import cires.bemodule.repositories.ParticipantRepository;
 import cires.bemodule.specifications.ParticipantsSpecifications;
-import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
+@Slf4j
 @Service
 public class ParticipantService {
-
-    private static final Logger log = LoggerFactory.getLogger(ParticipantService.class);
 
     private final ParticipantRepository participantRepository;
     private final ParticipantMapper participantMapper;

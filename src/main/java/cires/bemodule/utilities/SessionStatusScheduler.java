@@ -6,18 +6,16 @@ import cires.bemodule.repositories.TrainingSessionRepository;
 import cires.bemodule.services.NotificationService;
 import cires.bemodule.services.TrainingSessionService;
 import jakarta.transaction.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Component
 public class SessionStatusScheduler {
-
-    Logger log = LoggerFactory.getLogger(SessionStatusScheduler.class);
 
     private final TrainingSessionRepository sessionRepository;
     private final TrainingSessionService sessionService;

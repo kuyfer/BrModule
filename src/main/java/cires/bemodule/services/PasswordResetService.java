@@ -4,9 +4,8 @@ import cires.bemodule.entities.ResetToken;
 import cires.bemodule.entities.User;
 import cires.bemodule.repositories.ResetTokenRepository;
 import cires.bemodule.repositories.UserRepository;
-import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -14,16 +13,13 @@ import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Optional;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
+@Slf4j
 @Service
 public class PasswordResetService {
-// FIXME : this blocks from deleting users for sql constraints
-
-    private static final Logger logger = LoggerFactory.getLogger(PasswordResetService.class);
 
     private final UserRepository userRepository;
     private final ResetTokenRepository resetTokenRepository;
-    private final EmailQueueProducer emailQueueProducer;
     private final NotificationService notificationService;
 
     private static final SecureRandom secureRandom = new SecureRandom();
@@ -31,16 +27,16 @@ public class PasswordResetService {
             Base64.getUrlEncoder().withoutPadding();
 
     public void processRequest(String email) {
-        logger.info("Processing password reset request for email: {}", email);
+        log.info("Processing password reset request for email: {}", email);
         Optional<User> userOpt = userRepository.findByEmail(email);
         if (userOpt.isEmpty()) {
-            logger.debug("No user found for password reset with email: {}", email);
+            log.debug("No user found for password reset with email: {}", email);
             return;
         }
 
         User user = userOpt.get();
         String token = makeResetToken();
-        logger.debug("Generated reset token for user id: {}", user.getId());
+        log.debug("Generated reset token for user id: {}", user.getId());
 
         ResetToken resetTokenEntity = new ResetToken();
         resetTokenEntity.setToken(token);
@@ -48,7 +44,7 @@ public class PasswordResetService {
         resetTokenEntity.setExpiresAt(LocalDateTime.now().plusMinutes(60));
 
         resetTokenRepository.save(resetTokenEntity);
-        logger.info("Reset token saved for user id: {}, expires at: {}", user.getId(), resetTokenEntity.getExpiresAt());
+        log.info("Reset token saved for user id: {}, expires at: {}", user.getId(), resetTokenEntity.getExpiresAt());
 
         notificationService.sendResetEmail(user.getEmail(), token);
     }
@@ -59,7 +55,7 @@ public class PasswordResetService {
         byte[] randomBytes = new byte[4];
         secureRandom.nextBytes(randomBytes);
         String token = base64Encoder.encodeToString(randomBytes);
-        logger.debug("Generated raw token (for internal use)");
+        log.debug("Generated raw token (for internal use)");
         return token;
     }
 }

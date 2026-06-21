@@ -4,10 +4,10 @@ package cires.bemodule.services;
 import cires.bemodule.entities.Subsidiary;
 import cires.bemodule.repositories.OrganizationRepository;
 import cires.bemodule.repositories.SubsidiaryRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class SubsidiaryService {
 

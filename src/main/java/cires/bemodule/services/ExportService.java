@@ -1,10 +1,9 @@
 package cires.bemodule.services;
 
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.PrintWriter;
@@ -12,11 +11,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.function.Function;
 
+@Slf4j
 @Service
 public class ExportService {
-
-    private static final Logger logger = LoggerFactory.getLogger(ExportService.class);
-
     /**
      * Generic method to export any list of objects as CSV.
      *
@@ -32,7 +29,7 @@ public class ExportService {
                                 List<T> data,
                                 Function<T, String[]> mapper) throws IOException {
 
-        logger.info("Starting CSV export to file: {}, number of records: {}", filename, data != null ? data.size() : 0);
+        log.info("Starting CSV export to file: {}, number of records: {}", filename, data != null ? data.size() : 0);
 
         response.setContentType("text/csv; charset=UTF-8");
         response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
@@ -45,9 +42,9 @@ public class ExportService {
                 String row = String.join(",", escapeCsvFields(fields));
                 writer.println(row);
             }
-            logger.info("CSV export completed successfully: {}", filename);
+            log.info("CSV export completed successfully: {}", filename);
         } catch (IOException e) {
-            logger.error("Error during CSV export: {}", filename, e);
+            log.error("Error during CSV export: {}", filename, e);
             throw e;
         }
     }
@@ -69,7 +66,7 @@ public class ExportService {
                                   List<T> data,
                                   Function<T, String[]> mapper) throws IOException {
 
-        logger.info("Starting Excel export to file: {}, sheet: {}, records: {}", filename, sheetName, data != null ? data.size() : 0);
+        log.info("Starting Excel export to file: {}, sheet: {}, records: {}", filename, sheetName, data != null ? data.size() : 0);
 
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
@@ -107,9 +104,9 @@ public class ExportService {
 
             workbook.write(response.getOutputStream());
             response.getOutputStream().flush();
-            logger.info("Excel export completed successfully: {}", filename);
+            log.info("Excel export completed successfully: {}", filename);
         } catch (IOException e) {
-            logger.error("Error during Excel export: {}", filename, e);
+            log.error("Error during Excel export: {}", filename, e);
             throw e;
         }
     }

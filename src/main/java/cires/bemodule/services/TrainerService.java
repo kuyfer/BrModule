@@ -16,6 +16,7 @@ import cires.bemodule.repositories.TrainerRepository;
 import cires.bemodule.repositories.UserRepository;
 import cires.bemodule.specifications.TrainerSpecifications;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,7 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class TrainerService {
 

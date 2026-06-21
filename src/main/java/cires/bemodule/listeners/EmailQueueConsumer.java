@@ -1,6 +1,9 @@
 package cires.bemodule.listeners;
 
-// code source:: https://medium.com/@AlexanderObregon/making-a-simple-email-queue-with-spring-boot-and-rabbitmq-566a188a9e67
+/**
+ * code source::
+ * https://medium.com/@AlexanderObregon/making-a-simple-email-queue-with-spring-boot-and-rabbitmq-566a188a9e67
+ */
 
 import cires.bemodule.configs.RabbitMQConfig;
 import cires.bemodule.enums.NotificationStatus;
@@ -8,8 +11,8 @@ import cires.bemodule.models.EmailPayload;
 import cires.bemodule.repositories.NotificationRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -17,22 +20,14 @@ import org.springframework.stereotype.Component;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
+@Slf4j
+@RequiredArgsConstructor
 @Component
 public class EmailQueueConsumer {
-
-    private static final Logger log = LoggerFactory.getLogger(EmailQueueConsumer.class);
 
     private final JavaMailSender mailSender;
     private final SpringTemplateEngine templateEngine;
     private final NotificationRepository notificationRepository;
-
-    public EmailQueueConsumer(
-            JavaMailSender mailSender,
-            SpringTemplateEngine templateEngine, NotificationRepository notificationRepository) {
-        this.mailSender = mailSender;
-        this.templateEngine = templateEngine;
-        this.notificationRepository = notificationRepository;
-    }
 
     @RabbitListener(queues = RabbitMQConfig.EMAIL_QUEUE_NAME)
     public void handleEmailMessage(EmailPayload payload) {
@@ -76,5 +71,4 @@ public class EmailQueueConsumer {
         helper.setFrom("mmhimer0@gmail.com");
         mailSender.send(message);
     }
-
 }

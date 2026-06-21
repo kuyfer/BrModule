@@ -12,7 +12,7 @@ import cires.bemodule.mappers.NotificationMapper;
 import cires.bemodule.models.EmailPayload;
 import cires.bemodule.repositories.NotificationRepository;
 import cires.bemodule.specifications.NotificationSpecifications;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class NotificationService {
 
