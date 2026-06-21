@@ -5,6 +5,7 @@ import cires.bemodule.security.models.UserPrincipal;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,6 +31,17 @@ public class JwtService {
 
     @Value("${jwt.refresh-expiration}")
     private long refreshExpiration;
+
+    private SecretKey signingKey;
+
+    @PostConstruct
+    private void initSigningKey() {
+        this.signingKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtKey));
+    }
+
+    private SecretKey getSignInKey() {
+        return signingKey;
+    }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -112,7 +124,7 @@ public class JwtService {
 
     public boolean validateJwtToken(String authToken) {
         try {
-            Jwts.parser().verifyWith(getSignInKey()).build().parse(authToken);
+            Jwts.parser().verifyWith(getSignInKey()).build().parseSignedClaims(authToken);
             return true;
         } catch (MalformedJwtException e) {
             log.error("Invalid JWT token: {}", e.getMessage());
@@ -125,9 +137,5 @@ public class JwtService {
         }
 
         return false;
-    }
-
-    private SecretKey getSignInKey() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtKey));
     }
 }

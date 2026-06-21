@@ -57,29 +57,30 @@ public class AuthService {
 
     public AuthResponse refreshToken(RefreshTokenRequest request) {
         final String refreshToken = request.getRefreshToken();
-        final String userEmail;
-
-            userEmail = jwtService.extractUsername(refreshToken);
-        if (userEmail == null) {
-            throw new InvalidJwtTokenException("Refresh token missing subject");
-        }
+        final String username;
 
         // Validate token type
         if (!REFRESH_TOKEN_TYPE.equals(jwtService.extractTokenType(refreshToken))) {
             throw new InvalidJwtTokenException("Invalid token type – expected refresh token");
         }
 
-        // Load user
-        UserPrincipal userPrincipal;
-        try {
-            userPrincipal = (UserPrincipal) userDetailsService.loadUserByUsername(userEmail);
-        } catch (UsernameNotFoundException e) {
-            throw new InvalidJwtTokenException("User not found for refresh token");
-        }
-
         // Validate token (signature, expiration, etc.)
         if (!jwtService.validateJwtToken(refreshToken)) {
             throw new InvalidJwtTokenException("Invalid or expired refresh token");
+        }
+
+        // Extract username from refresh token
+            username = jwtService.extractUsername(refreshToken);
+        if (username == null) {
+            throw new InvalidJwtTokenException("Refresh token missing subject");
+        }
+
+        // Load user
+        UserPrincipal userPrincipal;
+        try {
+            userPrincipal = (UserPrincipal) userDetailsService.loadUserByUsername(username);
+        } catch (UsernameNotFoundException e) {
+            throw new InvalidJwtTokenException("User not found for refresh token");
         }
 
         // Issue new tokens
