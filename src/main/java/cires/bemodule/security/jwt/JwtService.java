@@ -6,8 +6,6 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -21,6 +19,8 @@ import java.util.stream.Collectors;
 public class JwtService {
 
     private static final String TOKEN_TYPE_CLAIM = "token_type";
+    private static final String ROLES_CLAIM = "roles";
+    private static final String PERMISSIONS_CLAIM = "permissions";
 
     @Value("${jwt.secret}")
     private String jwtKey;
@@ -50,6 +50,7 @@ public class JwtService {
                 .parseSignedClaims(token)
                 .getPayload();
     }
+
     private List<String> extractListClaim(String token, String claimName) {
         Claims claims = extractAllClaims(token);
         Object value = claims.get(claimName);
@@ -62,11 +63,11 @@ public class JwtService {
     }
 
     public List<String> extractRoles(String token) {
-        return extractListClaim(token, "roles");
+        return extractListClaim(token, ROLES_CLAIM);
     }
 
     public List<String> extractPermissions(String token) {
-        return extractListClaim(token, "permissions");
+        return extractListClaim(token, PERMISSIONS_CLAIM);
     }
 
     public String generateJwtToken(UserPrincipal userPrincipal) {
@@ -76,13 +77,13 @@ public class JwtService {
         List<String> roles = userPrincipal.getUser().getRoles().stream()
                 .map(role -> role.getRoleName().name())
                 .toList();
-        claims.put("roles", roles);
+        claims.put(ROLES_CLAIM, roles);
 
         Set<String> permissions = userPrincipal.getUser().getRoles().stream()
                 .flatMap(role -> role.getPermissions().stream())
                 .map(Permission::getName)
                 .collect(Collectors.toSet());
-        claims.put("permissions", permissions);
+        claims.put(PERMISSIONS_CLAIM, permissions);
 
         return buildJwtToken(claims, userPrincipal, jwtExpiration);
     }
@@ -94,7 +95,7 @@ public class JwtService {
         List<String> roles = userPrincipal.getUser().getRoles().stream()
                 .map(role -> role.getRoleName().name())
                 .toList();
-        claims.put("roles", roles);
+        claims.put(ROLES_CLAIM, roles);
         return buildJwtToken(claims, userPrincipal, refreshExpiration);
     }
 
@@ -126,7 +127,6 @@ public class JwtService {
         return false;
     }
 
-// TODO: use Key instead or another class type
     private SecretKey getSignInKey() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtKey));
     }
