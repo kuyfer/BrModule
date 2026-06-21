@@ -2,14 +2,11 @@ package cires.bemodule.dtos.responses;
 
 import cires.bemodule.entities.Trainer;
 import cires.bemodule.enums.TrainingSessionMode;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@Getter @Builder @AllArgsConstructor @NoArgsConstructor
 public class CancelTrainingSessionResponse {
 
     private Long id;

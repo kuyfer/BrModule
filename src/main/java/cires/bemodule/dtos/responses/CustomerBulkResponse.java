@@ -3,13 +3,11 @@ package cires.bemodule.dtos.responses;
 import cires.bemodule.entities.Participant;
 import cires.bemodule.enums.BulkActionType;
 import cires.bemodule.enums.BulkStatus;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
-@Data @NoArgsConstructor @AllArgsConstructor
+@Getter @Builder @AllArgsConstructor @NoArgsConstructor
 public class CustomerBulkResponse {
     private BulkActionType bulkActionType;
     private List<Participant> participants;

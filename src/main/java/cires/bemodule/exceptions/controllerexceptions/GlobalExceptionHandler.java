@@ -92,9 +92,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return build(HttpStatus.INTERNAL_SERVER_ERROR, "internal-error", "An unexpected error occurred", request);
     }
 
-    // idk how it works but it works
-    // alteratively use Binding Results and Field Errors
-    // source: https://medium.com/@RoussiAbdelghani/error-handling-in-spring-web-using-rfc-9457-specification-f2cc8398e285
+    /**
+     *alteratively use Binding Results and Field Errors
+     *   code source:
+     *    https://medium.com/@RoussiAbdelghani/error-handling-in-spring-web-using-rfc-9457-specification-f2cc8398e285
+     */
     private String getErrorsDetails(MethodArgumentNotValidException ex) {
         return Optional.of(ex.getDetailMessageArguments())
                 .map(args -> Arrays.stream(args)

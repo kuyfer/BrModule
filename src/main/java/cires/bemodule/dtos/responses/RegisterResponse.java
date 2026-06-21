@@ -1,10 +1,8 @@
 package cires.bemodule.dtos.responses;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data @AllArgsConstructor @NoArgsConstructor
+@Getter @Builder @AllArgsConstructor @NoArgsConstructor
 public class RegisterResponse {
 
     private Long userId;

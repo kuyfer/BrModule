@@ -2,7 +2,7 @@ package cires.bemodule.dtos.responses;
 
 import lombok.*;
 
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@Getter @Builder @AllArgsConstructor @NoArgsConstructor
 public class CreateParticipantResponse {
 
     private String firstName;

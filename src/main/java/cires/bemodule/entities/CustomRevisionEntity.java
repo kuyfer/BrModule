@@ -9,7 +9,8 @@ import org.hibernate.envers.RevisionMapping;
 
 @Getter
 @Setter
-@NoArgsConstructor @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 @Entity(name = "CustomRevisionEntity")
 @Table(name = "CUSTOM_REV_INFO")
 @RevisionEntity(CustomRevisionEntityListener.class)
@@ -18,5 +19,4 @@ public class CustomRevisionEntity extends RevisionMapping {
     private String username;
 
     private String ipAddress;
-
 }

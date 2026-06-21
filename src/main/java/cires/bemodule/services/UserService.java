@@ -13,7 +13,6 @@ import cires.bemodule.mappers.UserMapper;
 import cires.bemodule.repositories.RoleRepository;
 import cires.bemodule.repositories.UserRepository;
 import cires.bemodule.specifications.UserSpecifications;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +36,7 @@ public class UserService {
 
     public User registerUser(RegisterRequest request) {
 
-        if (userRepository.findByUsername(request.getUsername()) != null) {
+        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
             throw new UsernameAlreadyExistsException("Username already exists");
         }
 
@@ -56,9 +55,11 @@ public class UserService {
         user.setEmail(request.getEmail());
         user.setAccountStatus(AccountStatus.ACTIVE);
 
+        User savedUser = userRepository.save(user);
+
         notificationService.sendRegistrationEmail(request);
 
-        return userRepository.save(user);
+        return savedUser;
     }
 
     // ################################# READ ######################################
