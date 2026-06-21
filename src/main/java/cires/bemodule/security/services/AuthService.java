@@ -6,10 +6,8 @@ import cires.bemodule.dtos.requests.RefreshTokenRequest;
 import cires.bemodule.exceptions.securityexceptions.InvalidJwtTokenException;
 import cires.bemodule.security.models.UserPrincipal;
 import cires.bemodule.security.jwt.JwtService;
-import io.jsonwebtoken.JwtException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 
 @Slf4j
+@RequiredArgsConstructor
 @Service
 public class AuthService {
 
@@ -29,17 +28,9 @@ public class AuthService {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
-
-    public AuthService(AuthenticationManager authenticationManager, JwtService jwtService, UserDetailsService userDetailsService) {
-        this.authenticationManager = authenticationManager;
-        this.jwtService = jwtService;
-        this.userDetailsService = userDetailsService;
-    }
-
     @Value("${jwt.expiration}")
     private long jwtExpiration;
 
-    private static final String TOKEN_TYPE_CLAIM = "token_type";
     private static final String REFRESH_TOKEN_TYPE = "refresh";
 
     public AuthResponse login(LoginRequest request) {
@@ -61,21 +52,14 @@ public class AuthService {
         } catch (AuthenticationException e) {
             log.error("Authentication error for user: {}", request.getUsername(), e);
             throw e;
-        } catch (Exception e) {
-            log.error("Unexpected login error", e);
-            throw new RuntimeException("Login failed due to internal error", e);
         }
     }
+
     public AuthResponse refreshToken(RefreshTokenRequest request) {
         final String refreshToken = request.getRefreshToken();
         final String userEmail;
 
-        try {
             userEmail = jwtService.extractUsername(refreshToken);
-        } catch (JwtException e) {
-            throw e;
-        }
-
         if (userEmail == null) {
             throw new InvalidJwtTokenException("Refresh token missing subject");
         }
