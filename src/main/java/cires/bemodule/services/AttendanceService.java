@@ -6,8 +6,11 @@ import cires.bemodule.entities.TrainingSession;
 import cires.bemodule.enums.AttendanceSlot;
 import cires.bemodule.enums.AttendanceStatus;
 import cires.bemodule.enums.TrainingSessionStatus;
+import cires.bemodule.exceptions.controllerexceptions.AttendanceNotFoundException;
+import cires.bemodule.exceptions.controllerexceptions.BadRequestException;
 import cires.bemodule.exceptions.controllerexceptions.ParticipantNotFoundException;
 import cires.bemodule.exceptions.controllerexceptions.TrainingSessionNotFoundException;
+import cires.bemodule.exceptions.validationexceptions.ConflictException;
 import cires.bemodule.mappers.AttendanceMapper;
 import cires.bemodule.repositories.*;
 import lombok.RequiredArgsConstructor;
@@ -57,7 +60,7 @@ public class AttendanceService {
         assertDayNotValidated(request.getSessionId(), request.getDate());
 
         if (request.getStatus() == AttendanceStatus.LATE && isBlank(request.getDelayReason())) {
-            throw new RuntimeException("Delay reason is required when status is LATE.");
+            throw new BadRequestException("Delay reason is required when status is LATE.");
         }
 
         Attendance attendance = attendanceRepository
@@ -92,7 +95,7 @@ public class AttendanceService {
 
     public BulkMarkResult bulkMarkAttendance(BulkMarkAttendanceRequest request) {
         if (request.getEntries() == null || request.getEntries().isEmpty()) {
-            throw new RuntimeException("Bulk request must contain at least one entry.");
+            throw new BadRequestException("Bulk request must contain at least one entry.");
         }
 
         List<AttendanceResponse> results = new ArrayList<>();
@@ -137,7 +140,7 @@ public class AttendanceService {
 
         // Only the assigned trainer can validate
         if (!session.getTrainer().getUser().getId().equals(trainerId)) {
-            throw new RuntimeException("Only the assigned trainer may validate attendance.");
+            throw new BadRequestException("Only the assigned trainer may validate attendance.");
         }
 
         // All enrolled participants must have both slots marked
@@ -151,7 +154,7 @@ public class AttendanceService {
                 .toList();
 
         if (!unmarked.isEmpty()) {
-            throw new RuntimeException(
+            throw new BadRequestException(
                     unmarked.size() + " participant(s) have no attendance record for " + date +
                             ". Mark all participants before validating."
             );
@@ -172,7 +175,7 @@ public class AttendanceService {
         Attendance attendance = findAttendanceOrThrow(attendanceId);
 
         if (request.getStatus() == AttendanceStatus.LATE && isBlank(request.getDelayReason())) {
-            throw new RuntimeException("Delay reason is required when correcting to LATE.");
+            throw new BadRequestException("Delay reason is required when correcting to LATE.");
         }
 
         // Append to audit note — never overwrite it
@@ -324,7 +327,7 @@ public class AttendanceService {
 
     private Attendance findAttendanceOrThrow(Long id) {
         return attendanceRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Attendance not found: " + id));
+                .orElseThrow(() -> new AttendanceNotFoundException(id));
     }
 
     private Participant resolveParticipant(Long participantId) {
@@ -334,7 +337,7 @@ public class AttendanceService {
 
     private void assertSessionIsInProgress(TrainingSession session) {
         if (session.getStatus() != TrainingSessionStatus.ONGOING) {
-            throw new RuntimeException(
+            throw new ConflictException(
                     "Attendance can only be recorded for ONGOING sessions. Current status: "
                             + session.getStatus());
         }
@@ -344,20 +347,20 @@ public class AttendanceService {
         LocalDate start = session.getStartDate().toLocalDate();
         LocalDate end   = session.getEndDate().toLocalDate();
         if (date.isBefore(start) || date.isAfter(end)) {
-            throw new RuntimeException(
+            throw new BadRequestException(
                     "Date " + date + " is outside session range [" + start + " – " + end + "].");
         }
     }
 
     private void assertParticipantEnrolled(Long sessionId, Long participantId) {
         if (!sessionParticipantRepository.existsByTrainingSessionIdAndParticipantId(sessionId, participantId)) {
-            throw new RuntimeException("Participant " + participantId + " is not enrolled in session " + sessionId);
+            throw new BadRequestException("Participant " + participantId + " is not enrolled in session " + sessionId);
         }
     }
 
     private void assertDayNotValidated(Long sessionId, LocalDate date) {
         if (attendanceRepository.isDayValidatedForSession(sessionId, date)) {
-            throw new RuntimeException(
+            throw new ConflictException(
                     "Attendance for " + date + " has been validated. Use admin correction to override.");
         }
     }

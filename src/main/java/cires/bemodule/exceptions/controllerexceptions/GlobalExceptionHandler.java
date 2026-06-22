@@ -26,6 +26,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 TrainingSessionNotFoundException.class,
                 ParticipantNotFoundException.class,
                 NotificationNotFoundException.class,
+                AttendanceNotFoundException.class,
                 RoleNotFoundException.class})
     public ProblemDetail handleNotFound(RuntimeException exception, HttpServletRequest request){
         return build(HttpStatus.NOT_FOUND, "not-found", exception.getMessage(), request);
