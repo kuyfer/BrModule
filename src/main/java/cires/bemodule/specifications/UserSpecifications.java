@@ -22,13 +22,8 @@ public class UserSpecifications {
         };
     }
 
-    public static Specification<User> hasStatus(AccountStatus status){
-        return (root, query, criteriaBuilder) -> {
-            if(status == null){
-                return criteriaBuilder.conjunction();
-            }
-            return criteriaBuilder.equal(root.get("accountStatus"), status);
-        };
+    public static Specification<User> hasStatus(AccountStatus status) {
+        return (root, query, criteriaBuilder) ->
+                status == null ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("accountStatus"), status);
     }
-
 }

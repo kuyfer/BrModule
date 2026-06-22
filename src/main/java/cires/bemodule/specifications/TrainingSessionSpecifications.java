@@ -11,23 +11,15 @@ public class TrainingSessionSpecifications {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
-    public static Specification<TrainingSession> hasMode(TrainingSessionMode mode){
-        return (root, query, criteriaBuilder) -> {
-            if(mode == null){
-                return criteriaBuilder.conjunction();
-            }
-            return criteriaBuilder.equal(root.get("mode"), mode);
-        };
+    public static Specification<TrainingSession> hasMode(TrainingSessionMode mode) {
+        return (root, query, criteriaBuilder) ->
+                mode == null ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("mode"), mode);
     }
 
-    public static Specification<TrainingSession> hasStatus(TrainingSessionStatus status){
-        return (root, query, criteriaBuilder) -> {
-            if(status == null){
-                return criteriaBuilder.conjunction();
-            }
-            return criteriaBuilder.equal(root.get("status"), status);
-        };
+    public static Specification<TrainingSession> hasStatus(TrainingSessionStatus status) {
+        return (root, query, criteriaBuilder) ->
+                status == null ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("status"), status);
     }
+
+    // TODO: add trainer id specification
 }
-
-// TODO: add trainer id specification

@@ -9,12 +9,8 @@ public class TrainerSpecifications {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
-    public static Specification<Trainer> hasSpeciality(String speciality){
-        return (root, query, criteriaBuilder) -> {
-            if(speciality == null){
-                return criteriaBuilder.conjunction();
-            }
-            return criteriaBuilder.equal(root.get("speciality"), speciality);
-        };
+    public static Specification<Trainer> hasSpeciality(String speciality) {
+        return (root, query, criteriaBuilder) ->
+                speciality == null ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("speciality"), speciality);
     }
 }
