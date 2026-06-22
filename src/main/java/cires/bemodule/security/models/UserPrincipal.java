@@ -22,6 +22,10 @@ public class UserPrincipal implements UserDetails {
 
     public UserPrincipal(User user) {this.user = user;}
 
+    public Long getId() {
+        return user.getId();
+    }
+
     // TODO : return list.of() or collection of roles
     @Override
     @NonNull
@@ -70,4 +74,6 @@ public class UserPrincipal implements UserDetails {
         return user.getAccountStatus() == AccountStatus.ACTIVE;
         //return UserDetails.super.isEnabled();
     }
+
+
 }
