@@ -5,6 +5,7 @@ import cires.bemodule.dtos.responses.CancelTrainingSessionResponse;
 import cires.bemodule.dtos.requests.CreateTrainingSessionRequest;
 import cires.bemodule.dtos.views.TrainingSessionDTO;
 import cires.bemodule.entities.Participant;
+import cires.bemodule.entities.SessionParticipant;
 import cires.bemodule.entities.Trainer;
 import cires.bemodule.entities.TrainingSession;
 import cires.bemodule.enums.TrainingSessionMode;
@@ -14,10 +15,10 @@ import cires.bemodule.exceptions.controllerexceptions.TrainingSessionNotFoundExc
 import cires.bemodule.exceptions.validationexceptions.ConflictException;
 import cires.bemodule.mappers.TrainingSessionMapper;
 import cires.bemodule.repositories.ParticipantRepository;
+import cires.bemodule.repositories.SessionParticipantRepository;
 import cires.bemodule.repositories.TrainerRepository;
 import cires.bemodule.repositories.TrainingSessionRepository;
 import cires.bemodule.specifications.TrainingSessionSpecifications;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +34,7 @@ import java.util.List;
 public class TrainingSessionService {
 
     private final TrainingSessionRepository trainingSessionRepository;
+    private final SessionParticipantRepository sessionParticipantRepository;
     private final TrainingSessionMapper trainingSessionMapper;
     private final TrainerRepository trainerRepository;
     private final ParticipantRepository participantRepository;
@@ -66,18 +68,16 @@ public class TrainingSessionService {
         return trainingSessionMapper.toTrainingSessionDto(savedSession);
     }
 
-    public void addParticipants() {
-        log.debug("Add participants method called with default id 1L");
-        TrainingSession session = getSessionIdOrThrow(1L);
-        // method incomplete in original
-    }
-
     public void addParticipants(Long trainingSessionId, List<Long> participantIds) {
-        log.info("Adding participants {} to training session id: {}", participantIds, trainingSessionId);
-        TrainingSession trainingSession = getSessionIdOrThrow(trainingSessionId);
+        TrainingSession session = getSessionIdOrThrow(trainingSessionId);
         List<Participant> participants = participantRepository.findAllById(participantIds);
-        log.info("Found {} participants to add to session id: {}", participants.size(), trainingSessionId);
-        // remaining logic not provided in original
+
+        for (Participant participant : participants) {
+            SessionParticipant sp = new SessionParticipant();
+            sp.setTrainingSession(session);
+            sp.setParticipant(participant);
+            sessionParticipantRepository.save(sp);
+        }
     }
 
     // ################################# READ ######################################
@@ -103,6 +103,7 @@ public class TrainingSessionService {
         Page<TrainingSessionDTO> page = findAll(status, mode, Pageable.unpaged());
         return page.getContent();
     }
+
     // ################################# UPDATE ######################################
 
     public CancelTrainingSessionResponse cancelSession(Long id, CancelTrainingSessionRequest request) {

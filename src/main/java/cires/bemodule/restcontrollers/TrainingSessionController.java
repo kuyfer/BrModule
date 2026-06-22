@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/sessions")
@@ -57,13 +59,20 @@ public class TrainingSessionController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/{id}/participants")
+//    @PreAuthorize("hasAnyRole('ADMIN_FONCTIONNEL', 'SUPER_ADMIN')")
+    public ResponseEntity<Void> addParticipants(
+            @PathVariable Long id,
+            @RequestBody List<Long> participantIds) {
+
+        trainingSessionService.addParticipants(id, participantIds);
+        return ResponseEntity.noContent().build();
+    }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteSession(@PathVariable Long id){
 
         trainingSessionService.deleteTrainingSession(id);
         return ResponseEntity.noContent().build();
-
-}
-
+    }
 }

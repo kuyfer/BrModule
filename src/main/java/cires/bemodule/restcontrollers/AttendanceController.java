@@ -27,31 +27,29 @@ public class AttendanceController {
     // ─── MARK SINGLE ──────────────────────────────────────────────────────────
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('FORMATEUR', 'GESTIONNAIRE_FORMATION', 'ADMIN_FONCTIONNEL', 'SUPER_ADMIN')")
+//    @PreAuthorize("hasAnyRole('FORMATEUR', 'GESTIONNAIRE_FORMATION', 'ADMIN_FONCTIONNEL', 'SUPER_ADMIN')")
     public ResponseEntity<AttendanceResponse> markAttendance(
-            @Valid @RequestBody MarkAttendanceRequest request,
-            @AuthenticationPrincipal UserPrincipal principal) {
+            @Valid @RequestBody MarkAttendanceRequest request) {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(attendanceService.markAttendance(request, principal.getId()));
+                .body(attendanceService.markAttendance(request));
     }
 
     // ─── BULK MARK ────────────────────────────────────────────────────────────
 
-    @PostMapping("/bulk")
-    @PreAuthorize("hasAnyRole('FORMATEUR', 'GESTIONNAIRE_FORMATION', 'ADMIN_FONCTIONNEL', 'SUPER_ADMIN')")
+   @PostMapping("/bulk")
+//    @PreAuthorize("hasAnyRole('FORMATEUR', 'GESTIONNAIRE_FORMATION', 'ADMIN_FONCTIONNEL', 'SUPER_ADMIN')")
     public ResponseEntity<BulkMarkResult> bulkMarkAttendance(
-            @Valid @RequestBody BulkMarkAttendanceRequest request,
-            @AuthenticationPrincipal UserPrincipal principal) {
+            @Valid @RequestBody BulkMarkAttendanceRequest request) {
 
-        return ResponseEntity.ok(attendanceService.bulkMarkAttendance(request, principal.getId()));
+        return ResponseEntity.ok(attendanceService.bulkMarkAttendance(request));
     }
 
     // ─── TRAINER VALIDATION ───────────────────────────────────────────────────
 
     @PostMapping("/validate-day")
-    @PreAuthorize("hasAnyRole('FORMATEUR', 'ADMIN_FONCTIONNEL', 'SUPER_ADMIN')")
+//    @PreAuthorize("hasAnyRole('FORMATEUR', 'ADMIN_FONCTIONNEL', 'SUPER_ADMIN')")
     public ResponseEntity<Void> validateDay(
             @Valid @RequestBody ValidateDayRequest request,
             @AuthenticationPrincipal UserPrincipal principal) {
@@ -64,7 +62,7 @@ public class AttendanceController {
     // ─── ADMIN CORRECTION ─────────────────────────────────────────────────────
 
     @PatchMapping("/{id}/correct")
-    @PreAuthorize("hasAnyRole('ADMIN_FONCTIONNEL', 'SUPER_ADMIN')")
+//    @PreAuthorize("hasAnyRole('ADMIN_FONCTIONNEL', 'SUPER_ADMIN')")
     public ResponseEntity<AttendanceResponse> correct(
             @PathVariable Long id,
             @Valid @RequestBody CorrectAttendanceRequest request,
@@ -77,7 +75,7 @@ public class AttendanceController {
     // ─── READ SINGLE ──────────────────────────────────────────────────────────
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('FORMATEUR', 'GESTIONNAIRE_FORMATION', 'ADMIN_FONCTIONNEL', 'SUPER_ADMIN')")
+//    @PreAuthorize("hasAnyRole('FORMATEUR', 'GESTIONNAIRE_FORMATION', 'ADMIN_FONCTIONNEL', 'SUPER_ADMIN')")
     public ResponseEntity<AttendanceResponse> getById(@PathVariable Long id) {
         return ResponseEntity.ok(attendanceService.getById(id));
     }
@@ -96,7 +94,7 @@ public class AttendanceController {
     // ─── GRID ─────────────────────────────────────────────────────────────────
 
     @GetMapping("/session/{sessionId}/grid")
-    @PreAuthorize("hasAnyRole('FORMATEUR', 'GESTIONNAIRE_FORMATION', 'ADMIN_FONCTIONNEL', 'SUPER_ADMIN')")
+//    @PreAuthorize("hasAnyRole('FORMATEUR', 'GESTIONNAIRE_FORMATION', 'ADMIN_FONCTIONNEL', 'SUPER_ADMIN')")
     public ResponseEntity<List<AttendanceDayGrid>> getGrid(@PathVariable Long sessionId) {
         return ResponseEntity.ok(attendanceService.getGridForSession(sessionId));
     }
@@ -104,7 +102,7 @@ public class AttendanceController {
     // ─── PARTICIPANT SUMMARY ──────────────────────────────────────────────────
 
     @GetMapping("/session/{sessionId}/participant/{participantId}/summary")
-    @PreAuthorize("hasAnyRole('FORMATEUR', 'GESTIONNAIRE_FORMATION', 'ADMIN_FONCTIONNEL', 'SUPER_ADMIN')")
+//    @PreAuthorize("hasAnyRole('FORMATEUR', 'GESTIONNAIRE_FORMATION', 'ADMIN_FONCTIONNEL', 'SUPER_ADMIN')")
     public ResponseEntity<ParticipantAttendanceSummary> getParticipantSummary(
             @PathVariable Long sessionId,
             @PathVariable Long participantId) {

@@ -49,7 +49,7 @@ public class AttendanceService {
 
     // ─── MARK ─────────────────────────────────────────────────────────────────
 
-    public AttendanceResponse markAttendance(MarkAttendanceRequest request, Long markedByUserId) {
+    public AttendanceResponse markAttendance(MarkAttendanceRequest request) {
         TrainingSession session = findSessionOrThrow(request.getSessionId());
         assertSessionIsInProgress(session);
         assertDateWithinSession(request.getDate(), session);
@@ -90,7 +90,7 @@ public class AttendanceService {
 
     // ─── BULK MARK ────────────────────────────────────────────────────────────
 
-    public BulkMarkResult bulkMarkAttendance(BulkMarkAttendanceRequest request, Long markedByUserId) {
+    public BulkMarkResult bulkMarkAttendance(BulkMarkAttendanceRequest request) {
         if (request.getEntries() == null || request.getEntries().isEmpty()) {
             throw new RuntimeException("Bulk request must contain at least one entry.");
         }
@@ -109,7 +109,7 @@ public class AttendanceService {
                         .delayReason(entry.getDelayReason())
                         .comment(entry.getComment())
                         .build();
-                results.add(markAttendance(single, markedByUserId));
+                results.add(markAttendance(single));
             } catch (RuntimeException e) {
                 errors.add("Participant " + entry.getParticipantId() + ": " + e.getMessage());
             }

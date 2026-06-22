@@ -12,12 +12,10 @@ public interface AttendanceMapper {
     AttendanceDTO toAttemdanceDto(Attendance attendance);
 
     Attendance toAttendance(AttendanceDTO attendanceDTO);
-//
-//    @Mapping(source = "sessionId",    target = "sessionId")
-//    @Mapping(source = "sessionTitle", target = "sessionTitle")
-//    @Mapping(source = "participantId", target = "participantId")
-//    @Mapping(expression = "java(attendance.getParticipant().getFirstName() + \" \" + attendance.getParticipant().getLastName())",
-//            target = "participantFullName")
+
+    @Mapping(source = "session.id",           target = "sessionId")
+    @Mapping(source = "session.title",        target = "sessionTitle")
+    @Mapping(source = "participant.id",       target = "participantId")
     AttendanceResponse toAttendanceResponse(Attendance attendance);
 
     AttendanceResponse toResponse(Attendance saved);

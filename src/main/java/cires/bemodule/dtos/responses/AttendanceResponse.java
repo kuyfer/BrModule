@@ -16,7 +16,6 @@ public class AttendanceResponse {
     private Long             sessionId;
     private String           sessionTitle;
     private Long             participantId;
-    private String           participantFullName;
     private LocalDate date;
     private AttendanceSlot   slot;
     private AttendanceStatus status;
