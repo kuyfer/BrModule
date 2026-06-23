@@ -18,5 +18,7 @@ public interface TrainingSessionRepository extends JpaRepository<TrainingSession
 
     List<TrainingSession> findByStatusAndStartDateBetween(TrainingSessionStatus trainingSessionStatus, LocalDateTime from, LocalDateTime to);
 
+    List<TrainingSession> findByStatusIn(List<TrainingSessionStatus> statuses);
+
 }
 
