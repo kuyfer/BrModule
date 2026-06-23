@@ -145,7 +145,7 @@ public class AttendanceService {
 
         // All enrolled participants must have both slots marked
         List<Long> enrolledIds = sessionParticipantRepository
-                .findParticipantIdsByTrainingSessionId(sessionId);
+                .findParticipantIdByTrainingSessionId(sessionId);
         List<Long> markedIds   = attendanceRepository
                 .findParticipantIdsMarkedForDay(sessionId, date);
 
@@ -206,12 +206,6 @@ public class AttendanceService {
         return attendanceMapper.toResponse(findAttendanceOrThrow(id));
     }
 
-//    @Transactional(readOnly = true)
-//    public Page<AttendanceResponse> search(AttendanceFilterRequest filter, Pageable pageable) {
-//        return attendanceRepository.search(filter, pageable)
-//                .map(attendanceMapper::toResponse);
-//    }
-
     /**
      * Builds the full attendance grid for a session.
      * Each row is one day. Each row has an AM column and a PM column.
@@ -224,7 +218,7 @@ public class AttendanceService {
         List<Attendance> records     = attendanceRepository
                 .findAllBySessionIdOrderByDateAscSlotAsc(sessionId);
         List<Long> enrolledIds       = sessionParticipantRepository
-                .findParticipantIdsByTrainingSessionId(sessionId);
+                .findParticipantIdByTrainingSessionId(sessionId);
 
         Map<LocalDate, List<Attendance>> byDate = records.stream()
                 .collect(Collectors.groupingBy(Attendance::getDate));

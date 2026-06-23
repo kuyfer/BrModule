@@ -21,9 +21,4 @@ public class CurrentUser {
     public String getIpAddress() { return addrStorage.get(); }
 
     public void clearIpAddress() { addrStorage.remove(); }
-
-    public void clear() {
-        Userstorage.remove();
-        addrStorage.remove();
-    }
 }
