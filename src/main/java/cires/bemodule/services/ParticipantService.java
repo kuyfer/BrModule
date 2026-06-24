@@ -61,19 +61,6 @@ public class ParticipantService {
 
     // ################################# UPDATE ######################################
 
-    public Participant updateParticipant(Long id, PatchParticipantRequest request) {
-        log.info("Updating participant id={} with request: {}", id, request);
-        Participant existingParticipant = getParticipantIdOrThrow(id);
-        existingParticipant.setFirstName(request.getFirstName());
-        existingParticipant.setLastName(request.getLastName());
-        existingParticipant.setEmail(request.getEmail());
-        existingParticipant.setPhoneNumber(request.getPhoneNumber());
-        existingParticipant.setAddress(request.getAddress());
-        Participant updated = participantRepository.save(existingParticipant);
-        log.info("Participant updated id={}, email={}", updated.getId(), updated.getEmail());
-        return updated;
-    }
-
     public ParticipantDTO patchParticipant(Long id, PatchParticipantRequest request) {
         log.info("Patching participant id={} with request: {}", id, request);
         Participant participant = getParticipantIdOrThrow(id);

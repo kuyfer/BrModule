@@ -15,7 +15,6 @@ import cires.bemodule.repositories.RoleRepository;
 import cires.bemodule.repositories.TrainerRepository;
 import cires.bemodule.repositories.UserRepository;
 import cires.bemodule.specifications.TrainerSpecifications;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

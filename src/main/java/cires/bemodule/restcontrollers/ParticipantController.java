@@ -43,16 +43,13 @@ public class ParticipantController {
                                                 @RequestBody @Valid PatchParticipantRequest request) {
         return ResponseEntity.ok(participantService.patchParticipant(id, request));
     }
+
     @PostMapping
     public ResponseEntity<CreateParticipantResponse> createParticipant(
             @Valid @RequestBody CreateParticipantRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(participantService.createParticipant(request));
     }
-
-
-    @PostMapping("/import/session/{sessionId}")
-    public void importParticipantsFromSession(@PathVariable Long sessionId, @RequestBody Object importRequest) {}
 
     @PreAuthorize( "hasRole('SUPER_ADMIN')")
     @DeleteMapping("/{id}")
