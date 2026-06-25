@@ -44,7 +44,7 @@ public class TrainerService {
 
         Trainer trainer = trainerMapper.toTrainer(request);
         trainer.setSpeciality(request.getSpeciality());
-        Role trainerRole = roleRepository.findByroleName(RoleType.TRAINER)
+        Role trainerRole = roleRepository.findByRoleName(RoleType.TRAINER)
                 .orElseThrow(() -> new RoleNotFoundException());
         user.setRoles(List.of(trainerRole));
         trainer.setUser(user);

@@ -47,7 +47,7 @@ public class UserService {
         User user = new User();
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        Role adminRole = roleRepository.findByroleName(RoleType.SUPER_ADMIN)
+        Role adminRole = roleRepository.findByRoleName(RoleType.SUPER_ADMIN)
                 .orElseThrow(() -> new RuntimeException("Role not found"));
         user.setRoles(List.of(adminRole));
         user.setFirstName(request.getFirstName());
