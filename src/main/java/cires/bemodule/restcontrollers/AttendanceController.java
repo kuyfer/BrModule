@@ -7,13 +7,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import cires.bemodule.dtos.requests.*;
 import cires.bemodule.dtos.responses.*;
 
 import java.util.List;
-
 
 @Slf4j
 @RestController
@@ -26,7 +26,7 @@ public class AttendanceController {
     // ─── MARK SINGLE ──────────────────────────────────────────────────────────
 
     @PostMapping
-//    @PreAuthorize("hasAnyRole('FORMATEUR', 'GESTIONNAIRE_FORMATION', 'ADMIN_FONCTIONNEL', 'SUPER_ADMIN')")
+    @PreAuthorize("hasAuthority('attendance:mark')")
     public ResponseEntity<AttendanceResponse> markAttendance(
             @Valid @RequestBody MarkAttendanceRequest request) {
 
@@ -37,8 +37,8 @@ public class AttendanceController {
 
     // ─── BULK MARK ────────────────────────────────────────────────────────────
 
-   @PostMapping("/bulk")
-//    @PreAuthorize("hasAnyRole('FORMATEUR', 'GESTIONNAIRE_FORMATION', 'ADMIN_FONCTIONNEL', 'SUPER_ADMIN')")
+    @PostMapping("/bulk")
+    @PreAuthorize("hasAuthority('attendance:mark')")
     public ResponseEntity<BulkMarkResult> bulkMarkAttendance(
             @Valid @RequestBody BulkMarkAttendanceRequest request) {
 
@@ -48,7 +48,7 @@ public class AttendanceController {
     // ─── TRAINER VALIDATION ───────────────────────────────────────────────────
 
     @PostMapping("/validate-day")
-//    @PreAuthorize("hasAnyRole('FORMATEUR', 'ADMIN_FONCTIONNEL', 'SUPER_ADMIN')")
+    @PreAuthorize("hasAuthority('attendance:validate')")
     public ResponseEntity<Void> validateDay(
             @Valid @RequestBody ValidateDayRequest request,
             @AuthenticationPrincipal UserPrincipal principal) {
@@ -61,7 +61,7 @@ public class AttendanceController {
     // ─── ADMIN CORRECTION ─────────────────────────────────────────────────────
 
     @PatchMapping("/{id}/correct")
-//    @PreAuthorize("hasAnyRole('ADMIN_FONCTIONNEL', 'SUPER_ADMIN')")
+    @PreAuthorize("hasAuthority('attendance:correct')")
     public ResponseEntity<AttendanceResponse> correct(
             @PathVariable Long id,
             @Valid @RequestBody CorrectAttendanceRequest request,
@@ -74,22 +74,19 @@ public class AttendanceController {
     // ─── READ SINGLE ──────────────────────────────────────────────────────────
 
     @GetMapping("/{id}")
-//    @PreAuthorize("hasAnyRole('FORMATEUR', 'GESTIONNAIRE_FORMATION', 'ADMIN_FONCTIONNEL', 'SUPER_ADMIN')")
+    @PreAuthorize("hasAuthority('attendance:read')")
     public ResponseEntity<AttendanceResponse> getById(@PathVariable Long id) {
         return ResponseEntity.ok(attendanceService.getById(id));
     }
 
-
-
     @GetMapping("/session/{sessionId}/grid")
-//    @PreAuthorize("hasAnyRole('FORMATEUR', 'GESTIONNAIRE_FORMATION', 'ADMIN_FONCTIONNEL', 'SUPER_ADMIN')")
+    @PreAuthorize("hasAuthority('attendance:read')")
     public ResponseEntity<List<AttendanceDayGrid>> getGrid(@PathVariable Long sessionId) {
         return ResponseEntity.ok(attendanceService.getGridForSession(sessionId));
     }
 
-
     @GetMapping("/session/{sessionId}/participant/{participantId}/summary")
-//    @PreAuthorize("hasAnyRole('FORMATEUR', 'GESTIONNAIRE_FORMATION', 'ADMIN_FONCTIONNEL', 'SUPER_ADMIN')")
+    @PreAuthorize("hasAuthority('attendance:read')")
     public ResponseEntity<ParticipantAttendanceSummary> getParticipantSummary(
             @PathVariable Long sessionId,
             @PathVariable Long participantId) {

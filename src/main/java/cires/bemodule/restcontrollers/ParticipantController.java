@@ -25,38 +25,39 @@ public class ParticipantController {
     private final ParticipantMapper participantMapper;
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('participant:read')")
     public ResponseEntity<ParticipantDTO> getParticipantById(@PathVariable Long id) {
         ParticipantDTO participant = participantService.findParticipantById(id);
         return ResponseEntity.ok(participant);
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('participant:read')")
     public ResponseEntity<List<ParticipantDTO>> getAllParticipants(
-            @RequestParam(required = false) RegistrationSource source)
-          {
+            @RequestParam(required = false) RegistrationSource source) {
         List<ParticipantDTO> participants = participantService.findAll(source);
         return ResponseEntity.ok(participants);
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasAuthority('participant:update')")
     public ResponseEntity<ParticipantDTO> patch(@PathVariable Long id,
                                                 @RequestBody @Valid PatchParticipantRequest request) {
         return ResponseEntity.ok(participantService.patchParticipant(id, request));
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('participant:create')")
     public ResponseEntity<CreateParticipantResponse> createParticipant(
             @Valid @RequestBody CreateParticipantRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(participantService.createParticipant(request));
     }
 
-    @PreAuthorize( "hasRole('SUPER_ADMIN')")
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('participant:delete')")
     public ResponseEntity<Void> deleteParticipant(@PathVariable Long id) {
         participantService.deleteParticipant(id);
         return ResponseEntity.noContent().build();
-
     }
-
 }

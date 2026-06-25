@@ -25,22 +25,23 @@ public class UserController {
     private final UserMapper userMapper;
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('user:read')")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
         UserDTO user = userService.findUserById(id);
         return ResponseEntity.ok(user);
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('user:read')")
     public ResponseEntity<Page<UserDTO>> getAllUsers(
             @RequestParam(required = false) String role,
             @RequestParam(required = false) AccountStatus status,
-            @PageableDefault(size = 20) Pageable pageable)
-        {
-        Page<UserDTO> users = userService.findAll(role, status,pageable);
+            @PageableDefault(size = 20) Pageable pageable) {
+        Page<UserDTO> users = userService.findAll(role, status, pageable);
         return ResponseEntity.ok(users);
     }
 
-    @PreAuthorize( "hasRole('SUPER_ADMIN')")
+    @PreAuthorize("hasAuthority('user:delete')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
@@ -64,13 +65,20 @@ public class UserController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('user:create')")
     public void createUser(@RequestBody Object user) {
-
+        // placeholder – no implementation
     }
 
     @PutMapping("/{id}")
-    public void updateUser(@PathVariable Long id, @RequestBody Object user) {}
+    @PreAuthorize("hasAuthority('user:update')")
+    public void updateUser(@PathVariable Long id, @RequestBody Object user) {
+        // placeholder – no implementation
+    }
 
     @PatchMapping("/{id}")
-    public void patchUser(@PathVariable Long id) {}
+    @PreAuthorize("hasAuthority('user:update')")
+    public void patchUser(@PathVariable Long id) {
+        // placeholder – no implementation
+    }
 }

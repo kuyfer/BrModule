@@ -20,7 +20,7 @@ public class ParticipantImportController {
     private final ParticipantImportService importService;
 
     @GetMapping("/template")
-//    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN_FONCTIONNEL','GESTIONNAIRE_FORMATION')")
+    @PreAuthorize("hasAuthority('import:execute')")
     public ResponseEntity<byte[]> downloadTemplate() {
         byte[] template = importService.generateExcelTemplate();
         return ResponseEntity.ok()
@@ -33,14 +33,14 @@ public class ParticipantImportController {
     }
 
     @PostMapping(value = "/csv", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN_FONCTIONNEL','GESTIONNAIRE_FORMATION')")
+    @PreAuthorize("hasAuthority('import:execute')")
     public ResponseEntity<ImportResult> importCsv(
             @RequestParam("file") MultipartFile file) {
         return ResponseEntity.ok(importService.importFromCsv(file));
     }
 
     @PostMapping(value = "/excel", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN_FONCTIONNEL','GESTIONNAIRE_FORMATION')")
+    @PreAuthorize("hasAuthority('import:execute')")
     public ResponseEntity<ImportResult> importExcel(
             @RequestParam("file") MultipartFile file) {
         return ResponseEntity.ok(importService.importFromExcel(file));

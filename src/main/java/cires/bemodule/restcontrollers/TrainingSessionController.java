@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,12 +27,14 @@ public class TrainingSessionController {
     private final TrainingSessionService trainingSessionService;
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('session:read')")
     public ResponseEntity<TrainingSessionDTO> getSessionById(@PathVariable Long id) {
         TrainingSessionDTO session = trainingSessionService.findTrainingSessionById(id);
         return ResponseEntity.ok(session);
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('session:read')")
     public ResponseEntity<Page<TrainingSessionDTO>> getAllTrainingSessions(
             @RequestParam(required = false) TrainingSessionStatus status,
             @RequestParam(required = false) TrainingSessionMode mode,
@@ -42,25 +45,28 @@ public class TrainingSessionController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('session:create')")
     public ResponseEntity<TrainingSessionDTO> createSession(@Valid @RequestBody CreateTrainingSessionRequest request) {
         TrainingSessionDTO session = trainingSessionService.createTrainingSession(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(session);
     }
 
     @PostMapping("/{id}")
+    @PreAuthorize("hasAuthority('session:update')")
     public ResponseEntity<Void> cancelSession(@PathVariable Long id,@Valid @RequestBody CancelTrainingSessionRequest request) {
         trainingSessionService.cancelSession(id, request);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{id}/status")
+    @PreAuthorize("hasAuthority('session:update')")
     public ResponseEntity<Void> updateSession(@PathVariable Long id, @RequestBody UpdateTrainingSessionsRequest request ) {
         trainingSessionService.changeStatus(id, request.getStatus());
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{id}/participants")
-//    @PreAuthorize("hasAnyRole('ADMIN_FONCTIONNEL', 'SUPER_ADMIN')")
+    @PreAuthorize("hasAuthority('session:update')")
     public ResponseEntity<Void> addParticipants(
             @PathVariable Long id,
             @RequestBody List<Long> participantIds) {
@@ -70,6 +76,7 @@ public class TrainingSessionController {
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasAuthority('session:delete')")
     public ResponseEntity<Void> deleteSession(@PathVariable Long id){
 
         trainingSessionService.deleteTrainingSession(id);

@@ -21,16 +21,19 @@ public class SubsidiaryController {
     private final SubsidiaryService subsidiaryService;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('subsidiary:create')")
     public ResponseEntity<SubsidiaryDTO> create(@Valid @RequestBody CreateSubsidiaryRequest request) {
         return ResponseEntity.ok(subsidiaryService.createSubsidiary(request));
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('subsidiary:read')")
     public ResponseEntity<SubsidiaryDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok(subsidiaryService.findSubsidiaryById(id));
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('subsidiary:read')")
     public ResponseEntity<Page<SubsidiaryDTO>> getAll(
             @RequestParam(required = false) String name,
             @PageableDefault(size = 20) Pageable pageable) {
@@ -38,6 +41,7 @@ public class SubsidiaryController {
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasAuthority('subsidiary:update')")
     public ResponseEntity<SubsidiaryDTO> update(
             @PathVariable Long id,
             @Valid @RequestBody PatchSubsidiaryRequest request) {
@@ -45,6 +49,7 @@ public class SubsidiaryController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('subsidiary:delete')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         subsidiaryService.deleteSubsidiary(id);
         return ResponseEntity.noContent().build();

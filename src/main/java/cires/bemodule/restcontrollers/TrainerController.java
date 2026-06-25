@@ -21,27 +21,30 @@ import java.util.List;
 public class TrainerController {
     private final TrainerService trainerService;
 
-@GetMapping("/{id}")
-public ResponseEntity<TrainerDTO> getTrainerById(@PathVariable Long id){
-    TrainerDTO trainer = trainerService.findTrainerById(id);
-    return ResponseEntity.ok(trainer);
-}
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('trainer:read')")
+    public ResponseEntity<TrainerDTO> getTrainerById(@PathVariable Long id){
+        TrainerDTO trainer = trainerService.findTrainerById(id);
+        return ResponseEntity.ok(trainer);
+    }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('trainer:read')")
     public ResponseEntity<Page<TrainerDTO>> getAllTrainers(@RequestParam(required = false) String speciality,
                                                            @PageableDefault(size = 20) Pageable pageable){
         Page<TrainerDTO> trainers = trainerService.findAll(speciality, pageable);
         return ResponseEntity.ok(trainers);
     }
 
-@PostMapping("/{userId}")
-public  ResponseEntity<TrainerDTO> createTrainer(@Valid @RequestBody CreateTrainerRequest request, @PathVariable Long userId){
-       TrainerDTO trainer = trainerService.createTrainer(request, userId);
+    @PostMapping("/{userId}")
+    @PreAuthorize("hasAuthority('trainer:create')")
+    public ResponseEntity<TrainerDTO> createTrainer(@Valid @RequestBody CreateTrainerRequest request, @PathVariable Long userId){
+        TrainerDTO trainer = trainerService.createTrainer(request, userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(trainer);
-}
+    }
 
-@PreAuthorize( "hasRole('SUPER_ADMIN')")
-@DeleteMapping("/{id}")
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('trainer:delete')")
     ResponseEntity<Void> deleteTrainer(@PathVariable Long id){
         trainerService.deleteTrainer(id);
         return ResponseEntity.noContent().build();

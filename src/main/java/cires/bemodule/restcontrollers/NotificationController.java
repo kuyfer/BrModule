@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
@@ -19,6 +20,7 @@ public class NotificationController {
     private final NotificationService notificationService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('notification:read')")
     public ResponseEntity<Page<NotificationDTO>> getAllNotifications(
             @RequestParam(required = false) NotificationType type,
             @RequestParam(required = false) NotificationStatus status,
@@ -30,9 +32,9 @@ public class NotificationController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('notification:read')")
     public ResponseEntity<NotificationDTO> getNotificationById(@PathVariable Long id) {
         NotificationDTO notification = notificationService.findById(id);
         return ResponseEntity.ok(notification);
     }
-
 }
