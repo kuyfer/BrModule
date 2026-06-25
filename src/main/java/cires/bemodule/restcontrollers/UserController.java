@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
+
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/users")
@@ -43,6 +45,22 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{userId}/roles")
+    @PreAuthorize("hasAuthority('user:update')")
+    public ResponseEntity<Void> addRolesToUser(@PathVariable Long userId,
+                                               @RequestBody Set<Long> roleIds) {
+        userService.addRolesToUser(userId, roleIds);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{userId}/roles")
+    @PreAuthorize("hasAuthority('user:update')")
+    public ResponseEntity<Void> removeRolesFromUser(@PathVariable Long userId,
+                                                    @RequestBody Set<Long> roleIds) {
+        userService.removeRolesFromUser(userId, roleIds);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping

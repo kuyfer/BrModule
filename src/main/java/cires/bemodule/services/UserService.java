@@ -6,6 +6,7 @@ import cires.bemodule.entities.Role;
 import cires.bemodule.entities.User;
 import cires.bemodule.enums.AccountStatus;
 import cires.bemodule.enums.RoleType;
+import cires.bemodule.exceptions.controllerexceptions.RoleNotFoundException;
 import cires.bemodule.exceptions.controllerexceptions.UserNotFoundException;
 import cires.bemodule.exceptions.validationexceptions.EmailAlreadyExistsException;
 import cires.bemodule.exceptions.validationexceptions.UsernameAlreadyExistsException;
@@ -13,6 +14,7 @@ import cires.bemodule.mappers.UserMapper;
 import cires.bemodule.repositories.RoleRepository;
 import cires.bemodule.repositories.UserRepository;
 import cires.bemodule.specifications.UserSpecifications;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +22,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -117,5 +121,31 @@ public class UserService {
     private User getUserIdOrThrow(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
+    }
+
+    @Transactional
+    public void addRolesToUser(Long userId, Set<Long> roleIds) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+        Set<Role> roles = new HashSet<>();
+        for (Long rid : roleIds) {
+            Role role = roleRepository.findById(rid)
+                    .orElseThrow(() -> new RoleNotFoundException(rid));
+            roles.add(role);
+        }
+        user.getRoles().addAll(roles);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void removeRolesFromUser(Long userId, Set<Long> roleIds) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+        for (Long rid : roleIds) {
+            Role role = roleRepository.findById(rid)
+                    .orElseThrow(() -> new RoleNotFoundException(rid));
+            user.getRoles().remove(role);
+        }
+        userRepository.save(user);
     }
 }
