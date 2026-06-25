@@ -39,7 +39,7 @@ public class DashboardRepository {
 
     public long countParticipants() {
         return em.createQuery(
-                        "SELECT COUNT(p) FROM Participant P", Long.class)
+                        "SELECT COUNT(p) FROM Participant p", Long.class)
                 .getSingleResult();
     }
 

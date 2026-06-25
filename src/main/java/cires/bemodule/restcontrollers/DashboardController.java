@@ -24,19 +24,19 @@ public class DashboardController {
     private final DashboardService dashboardService;
 
     @GetMapping("/executive")
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN_FONCTIONNEL')")
+    @PreAuthorize("hasAuthority('dashboard:executive')")
     public ResponseEntity<ExecutiveDashboardResponse> executive() {
         return ResponseEntity.ok(dashboardService.getExecutiveDashboard());
     }
 
     @GetMapping("/operational")
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN_FONCTIONNEL', 'GESTIONNAIRE_FORMATION')")
+    @PreAuthorize("hasAuthority('dashboard:operational')")
     public ResponseEntity<OperationalDashboardResponse> operational() {
         return ResponseEntity.ok(dashboardService.getOperationalDashboard());
     }
 
     @GetMapping("/trainer")
-    @PreAuthorize("hasAnyRole('FORMATEUR', 'SUPER_ADMIN')")
+    @PreAuthorize("hasAuthority('dashboard:trainer')")
     public ResponseEntity<TrainerDashboardResponse> trainer(
             @AuthenticationPrincipal UserPrincipal principal) {
         return ResponseEntity.ok(
@@ -44,7 +44,7 @@ public class DashboardController {
     }
 
 //    @GetMapping("/audit")
-//    @PreAuthorize("hasRole('SUPER_ADMIN')")
+//    @PreAuthorize("hasAuthority('dashboard:audit')")
 //    public ResponseEntity<AuditDashboardResponse> audit() {
 //        return ResponseEntity.ok(dashboardService.getAuditDashboard());
 //    }

@@ -91,7 +91,13 @@ public class DatabaseInitializer implements CommandLineRunner {
                 createPermission("attendance:read", "attendance", "read"),
 
                 // Notification
-                createPermission("notification:read", "notification", "read")
+                createPermission("notification:read", "notification", "read"),
+
+                // Dashboard
+                createPermission("dashboard:executive", "dashboard", "executive"),
+                createPermission("dashboard:operational", "dashboard", "operational"),
+                createPermission("dashboard:trainer", "dashboard", "trainer"),
+                createPermission("dashboard:audit", "dashboard", "audit")
         );
 
         // ─── Save all permissions if they don't exist ──────────────────────
@@ -154,6 +160,14 @@ public class DatabaseInitializer implements CommandLineRunner {
         // Notification permissions
         Permission notificationRead = permissionRepository.findByName("notification:read");
 
+        // Dashboard permissions
+        Permission dashboardExecutive = permissionRepository.findByName("dashboard:executive");
+        Permission dashboardOperational = permissionRepository.findByName("dashboard:operational");
+        Permission dashboardTrainer = permissionRepository.findByName("dashboard:trainer");
+        Permission dashboardAudit = permissionRepository.findByName("dashboard:audit");
+
+
+
         // ─── Define permissions per role ────────────────────────────────────
         Map<RoleType, Set<Permission>> rolePermissions = Map.of(
                 // SUPER_ADMIN – everything
@@ -169,7 +183,8 @@ public class DatabaseInitializer implements CommandLineRunner {
                         participantCreate, participantRead, participantUpdate, participantDelete,
                         importExecute,
                         // Attendance
-                        attendanceMark, attendanceValidate, attendanceCorrect, attendanceRead , notificationRead
+                        attendanceMark, attendanceValidate, attendanceCorrect, attendanceRead , notificationRead ,
+                        dashboardExecutive, dashboardOperational, dashboardTrainer, dashboardAudit
                 ),
 
                 // OPERATIONAL_ADMIN – full attendance rights too
@@ -185,7 +200,8 @@ public class DatabaseInitializer implements CommandLineRunner {
                         participantRead, participantUpdate,
                         importExecute,
                         // Attendance – all
-                        attendanceMark, attendanceValidate, attendanceCorrect, attendanceRead , notificationRead
+                        attendanceMark, attendanceValidate, attendanceCorrect, attendanceRead , notificationRead,
+                        dashboardOperational
                 ),
 
                 // TRAINING_MANAGER – can mark, validate, read; but not correct
@@ -199,7 +215,8 @@ public class DatabaseInitializer implements CommandLineRunner {
                         subsidiaryRead,
                         organizationRead,
                         // Attendance – mark, validate, read (no correct)
-                        attendanceMark, attendanceValidate, attendanceRead, notificationRead
+                        attendanceMark, attendanceValidate, attendanceRead, notificationRead,
+                        dashboardTrainer
                 ),
 
                 // TRAINER – can mark, validate, read; no correct
@@ -210,7 +227,8 @@ public class DatabaseInitializer implements CommandLineRunner {
                         reportView,
                         participantRead,
                         // Attendance – mark, validate, read (no correct)
-                        attendanceMark, attendanceValidate, attendanceRead
+                        attendanceMark, attendanceValidate, attendanceRead,
+                        dashboardTrainer
                 ),
 
                 // READ_ONLY – can only read attendance
