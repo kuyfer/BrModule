@@ -21,5 +21,8 @@ public class Organization {
     @OneToMany(mappedBy = "organization")
     private Set<Subsidiary> subsidiaries = new HashSet<>();
 
+    private String address;
+    private String contactEmail;
+    private String phone;
 }
 
