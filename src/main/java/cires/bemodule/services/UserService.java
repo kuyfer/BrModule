@@ -1,5 +1,6 @@
 package cires.bemodule.services;
 
+import cires.bemodule.dtos.requests.PatchUserRequest;
 import cires.bemodule.dtos.requests.RegisterRequest;
 import cires.bemodule.dtos.views.UserDTO;
 import cires.bemodule.entities.Role;
@@ -16,6 +17,7 @@ import cires.bemodule.repositories.UserRepository;
 import cires.bemodule.specifications.UserSpecifications;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -89,12 +92,13 @@ public class UserService {
 
     // ################################# UPDATE ######################################
 
-    public User updateUser(Long id, User user) {
-        User existingUser = getUserIdOrThrow(id);
-        existingUser.setFirstName(user.getFirstName());
-        existingUser.setLastName(user.getLastName());
-        existingUser.setEmail(user.getEmail());
-        return userRepository.save(existingUser);
+    public UserDTO patchUser(Long id, PatchUserRequest request) {
+        log.info("Patching User id={} with request: {}", id, request);
+        User user = getUserIdOrThrow(id);
+        userMapper.patchUserFromRequest(request, user);
+        User saved = userRepository.save(user);
+        log.info("Participant patched id={}, email={}", saved.getId(), saved.getEmail());
+        return userMapper.toUserDto(saved);
     }
 
     // ################################# DELETE ######################################
@@ -103,8 +107,7 @@ public class UserService {
         User user = getUserIdOrThrow(id);
         userRepository.delete(user);
     }
-
-    // ################################# UTILS ######################################
+    // ################################# SPECIAL ####################################
 
     public void activateAccount(Long id) {
         User user = getUserIdOrThrow(id);
@@ -118,15 +121,9 @@ public class UserService {
         userRepository.save(user);
     }
 
-    private User getUserIdOrThrow(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
-    }
-
     @Transactional
     public void addRolesToUser(Long userId, Set<Long> roleIds) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
+        User user = getUserIdOrThrow(userId);
         Set<Role> roles = new HashSet<>();
         for (Long rid : roleIds) {
             Role role = roleRepository.findById(rid)
@@ -139,13 +136,19 @@ public class UserService {
 
     @Transactional
     public void removeRolesFromUser(Long userId, Set<Long> roleIds) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
+        User user = getUserIdOrThrow(userId);
         for (Long rid : roleIds) {
             Role role = roleRepository.findById(rid)
                     .orElseThrow(() -> new RoleNotFoundException(rid));
             user.getRoles().remove(role);
         }
         userRepository.save(user);
+    }
+
+    // ################################# UTILS ######################################
+
+    private User getUserIdOrThrow(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
 }

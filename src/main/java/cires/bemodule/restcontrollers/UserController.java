@@ -1,10 +1,10 @@
 package cires.bemodule.restcontrollers;
 
+import cires.bemodule.dtos.requests.PatchUserRequest;
 import cires.bemodule.dtos.views.UserDTO;
 import cires.bemodule.enums.AccountStatus;
-import cires.bemodule.mappers.UserMapper;
-import cires.bemodule.repositories.UserRepository;
 import cires.bemodule.services.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,8 +21,16 @@ import java.util.Set;
 public class UserController {
 
     private final UserService userService;
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
+
+    // ################################# CREATE ######################################
+
+    @PostMapping
+    @PreAuthorize("hasAuthority('user:create')")
+    public void createUser(@RequestBody Object user) {
+        // placeholder – no implementation
+    }
+
+    // ################################# READ ######################################
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('user:read')")
@@ -41,10 +49,26 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    @PreAuthorize("hasAuthority('user:delete')")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+    // ################################# UPDATE ######################################
+
+    @PatchMapping("/{id}")
+    @PreAuthorize("hasAuthority('user:update')")
+    public ResponseEntity<UserDTO> patch(@PathVariable Long id,
+                                         @RequestBody @Valid PatchUserRequest request) {
+        return ResponseEntity.ok(userService.patchUser(id, request));
+    }
+
+    @PatchMapping("/{id}/activate")
+    @PreAuthorize("hasAuthority('user:update')")
+    public ResponseEntity<Void> activateAccount(@PathVariable Long id) {
+        userService.activateAccount(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/deactivate")
+    @PreAuthorize("hasAuthority('user:update')")
+    public ResponseEntity<Void> deactivateAccount(@PathVariable Long id) {
+        userService.deactivateAccount(id);
         return ResponseEntity.noContent().build();
     }
 
@@ -64,21 +88,12 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping
-    @PreAuthorize("hasAuthority('user:create')")
-    public void createUser(@RequestBody Object user) {
-        // placeholder – no implementation
-    }
+    // ################################# DELETE ######################################
 
-    @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('user:update')")
-    public void updateUser(@PathVariable Long id, @RequestBody Object user) {
-        // placeholder – no implementation
-    }
-
-    @PatchMapping("/{id}")
-    @PreAuthorize("hasAuthority('user:update')")
-    public void patchUser(@PathVariable Long id) {
-        // placeholder – no implementation
+    @PreAuthorize("hasAuthority('user:delete')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 }
