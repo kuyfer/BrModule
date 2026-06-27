@@ -7,12 +7,10 @@ import java.util.Set;
 
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class TrainerDTO {
-
     private Long id;
     private String specialty;
     private UserDTO user;
     private Set<Organization> affiliatedOrganizations;
-
 }
 
 

@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-// TODO : implement boolean methods
 @Getter
 public class UserPrincipal implements UserDetails {
 
@@ -26,7 +25,6 @@ public class UserPrincipal implements UserDetails {
         return user.getId();
     }
 
-    // TODO : return list.of() or collection of roles
     @Override
     @NonNull
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -46,34 +44,21 @@ public class UserPrincipal implements UserDetails {
     }
 
     @Override
+    public boolean isEnabled() {return user.getAccountStatus() == AccountStatus.ACTIVE;}
+
+    @Override
     @NonNull
     public String getUsername() {
         return user.getUsername();
     }
 
     @Override
-    public boolean isAccountNonExpired() {
-        //return UserDetails.super.isAccountNonExpired();
-        return true;
-    }
+    public boolean isAccountNonExpired() {return true;}
 
     @Override
-    public boolean isAccountNonLocked() {
-        //return UserDetails.super.isAccountNonLocked();
-        return true;
-    }
+    public boolean isAccountNonLocked() {return true;}
 
     @Override
-    public boolean isCredentialsNonExpired() {
-        //return UserDetails.super.isCredentialsNonExpired();
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return user.getAccountStatus() == AccountStatus.ACTIVE;
-        //return UserDetails.super.isEnabled();
-    }
-
+    public boolean isCredentialsNonExpired() {return true;}
 
 }

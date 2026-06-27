@@ -1,5 +1,6 @@
 package cires.bemodule.restcontrollers;
 
+import cires.bemodule.dtos.requests.PatchTrainerRequest;
 import cires.bemodule.dtos.views.TrainerDTO;
 import cires.bemodule.dtos.requests.CreateTrainerRequest;
 import cires.bemodule.services.TrainerService;
@@ -47,5 +48,12 @@ public class TrainerController {
     ResponseEntity<Void> deleteTrainer(@PathVariable Long id){
         trainerService.deleteTrainer(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}")
+    @PreAuthorize("hasAuthority('trainer:update')")
+    public ResponseEntity<TrainerDTO> patch(@PathVariable Long id,
+                                            @RequestBody @Valid PatchTrainerRequest request) {
+        return ResponseEntity.ok(trainerService.patchTrainer(id, request));
     }
 }

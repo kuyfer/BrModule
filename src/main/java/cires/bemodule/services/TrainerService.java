@@ -1,7 +1,10 @@
 package cires.bemodule.services;
 
+import cires.bemodule.dtos.requests.PatchTrainerRequest;
+import cires.bemodule.dtos.requests.PatchUserRequest;
 import cires.bemodule.dtos.views.TrainerDTO;
 import cires.bemodule.dtos.requests.CreateTrainerRequest;
+import cires.bemodule.dtos.views.UserDTO;
 import cires.bemodule.entities.Role;
 import cires.bemodule.entities.Trainer;
 import cires.bemodule.entities.User;
@@ -16,6 +19,7 @@ import cires.bemodule.repositories.TrainerRepository;
 import cires.bemodule.repositories.UserRepository;
 import cires.bemodule.specifications.TrainerSpecifications;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class TrainerService {
@@ -73,10 +78,13 @@ public class TrainerService {
 
     // ################################# UPDATE ######################################
 
-    public Trainer updateTrainer(Long id, Trainer trainer) {
-        Trainer existingTrainer = getTrainerIdOrThrow(id);
-        existingTrainer.setSpeciality(trainer.getSpeciality());
-        return trainerRepository.save(existingTrainer);
+    public TrainerDTO patchTrainer(Long id, PatchTrainerRequest request) {
+        log.info("Patching Trainer id={} with request: {}", id, request);
+        Trainer trainer = getTrainerIdOrThrow(id);
+        trainerMapper.patchTrainerFromRequest(request, trainer);
+        Trainer saved = trainerRepository.save(trainer);
+        log.info("Trainer patched id={}, speciality={}", saved.getId(), saved.getSpeciality());
+        return trainerMapper.toTrainerDTO(saved);
     }
 
     // ################################# DELETE ######################################

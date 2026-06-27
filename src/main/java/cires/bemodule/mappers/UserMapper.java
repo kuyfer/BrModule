@@ -10,9 +10,6 @@ public interface UserMapper {
 
     UserDTO toUserDto(User user);
 
-    @Mapping(ignore = true, target = "password")
-    User toUser(UserDTO userDTO);
-
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void patchUserFromRequest(PatchUserRequest request, @MappingTarget User user);
 }

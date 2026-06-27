@@ -97,7 +97,7 @@ public class UserService {
         User user = getUserIdOrThrow(id);
         userMapper.patchUserFromRequest(request, user);
         User saved = userRepository.save(user);
-        log.info("Participant patched id={}, email={}", saved.getId(), saved.getEmail());
+        log.info("User patched id={}, email={}", saved.getId(), saved.getEmail());
         return userMapper.toUserDto(saved);
     }
 
