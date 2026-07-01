@@ -1,4 +1,4 @@
-package cires.bemodule.dtos;
+package cires.bemodule.dtos.imports;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-// What comes back to the client after import
+/**
+ * Result object returned to the client after a bulk import operation.
+ */
 @Getter
 @Builder
 @NoArgsConstructor

@@ -160,8 +160,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problem;
     }
 
-
-
     /**
      * Handles {@link JwtException} thrown by the JWT processing layer.
      * <p>

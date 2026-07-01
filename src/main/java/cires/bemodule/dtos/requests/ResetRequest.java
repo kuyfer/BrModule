@@ -6,6 +6,10 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+/**
+ * Request to initiate a password reset (sends email with token).
+ */
+
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class ResetRequest {
 

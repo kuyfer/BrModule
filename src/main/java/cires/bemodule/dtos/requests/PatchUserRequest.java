@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Request to partially update a user.
+ */
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class PatchUserRequest {
 

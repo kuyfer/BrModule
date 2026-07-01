@@ -7,6 +7,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
+/**
+ * Filter parameters for querying attendance records.
+ */
 @Data
 @Builder
 @NoArgsConstructor

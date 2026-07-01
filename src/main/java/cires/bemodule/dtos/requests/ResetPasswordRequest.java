@@ -6,6 +6,9 @@ import cires.bemodule.interfaces.PasswordConfirmable;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+/**
+ * Request to reset password using a token.
+ */
 @PasswordMatches
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class ResetPasswordRequest implements PasswordConfirmable {

@@ -1,8 +1,10 @@
-package cires.bemodule.dtos;
+package cires.bemodule.dtos.imports;
 
 import lombok.*;
 
-// Internal — raw parsed row before any validation
+/**
+ * Raw parsed row from the import file, before any validation.
+ */
 @Data
 @Builder
 @NoArgsConstructor
@@ -13,5 +15,5 @@ public class RawImportRow {
     private String lastName;
     private String email;
     private String phone;
-    private String formationRaw;   // "42 - Java Bootcamp" or just "42"
+    private String formationRaw;
 }

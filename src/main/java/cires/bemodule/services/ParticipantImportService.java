@@ -1,7 +1,7 @@
 package cires.bemodule.services;
 
 
-import cires.bemodule.dtos.*;
+import cires.bemodule.dtos.imports.*;
 import cires.bemodule.entities.TrainingSession;
 import cires.bemodule.enums.TrainingSessionStatus;
 import cires.bemodule.exceptions.imports.FileProcessingException;

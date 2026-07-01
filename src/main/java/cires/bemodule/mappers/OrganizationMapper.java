@@ -3,7 +3,7 @@ package cires.bemodule.mappers;
 import cires.bemodule.dtos.requests.CreateOrganizationRequest;
 import cires.bemodule.dtos.requests.PatchOrganizationRequest;
 import cires.bemodule.dtos.views.OrganizationDTO;
-import cires.bemodule.dtos.SubsidiarySummaryDTO;
+import cires.bemodule.dtos.views.SubsidiarySummaryDTO;
 import cires.bemodule.entities.Organization;
 import cires.bemodule.entities.Subsidiary;
 import org.mapstruct.Mapper;

@@ -5,6 +5,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+/**
+ * Request to correct an existing attendance record (admin override).
+ */
 @Data
 @Builder
 @NoArgsConstructor

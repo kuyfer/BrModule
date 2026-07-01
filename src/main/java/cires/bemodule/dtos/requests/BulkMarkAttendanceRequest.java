@@ -8,6 +8,9 @@ import lombok.*;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Request to bulk-mark attendance for a session/day/slot.
+ */
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class BulkMarkAttendanceRequest {
 

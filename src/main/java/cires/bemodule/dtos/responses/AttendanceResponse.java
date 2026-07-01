@@ -7,6 +7,9 @@ import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * Response containing full attendance record details.
+ */
 @Getter
 @Builder
 @NoArgsConstructor
@@ -16,13 +19,13 @@ public class AttendanceResponse {
     private Long             sessionId;
     private String           sessionTitle;
     private Long             participantId;
-    private LocalDate date;
+    private LocalDate        date;
     private AttendanceSlot   slot;
     private AttendanceStatus status;
     private String           delayReason;
     private String           comment;
     private boolean          validated;
-    private LocalDateTime validatedAt;
+    private LocalDateTime    validatedAt;
     private String           correctionReason;
     private LocalDateTime    createdAt;
     private LocalDateTime    updatedAt;

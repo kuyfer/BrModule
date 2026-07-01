@@ -7,6 +7,9 @@ import lombok.*;
 
 import java.time.LocalDate;
 
+/**
+ * Request to mark attendance for a single participant.
+ */
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class MarkAttendanceRequest {
     @NotNull(message = "Session ID is required")

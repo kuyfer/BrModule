@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
+/**
+ * Request to create a new role with optional initial permissions.
+ */
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class CreateRoleRequest {
     @NotNull(message = "Role type is required")

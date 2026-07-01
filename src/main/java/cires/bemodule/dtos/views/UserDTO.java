@@ -6,8 +6,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Collection;
+import java.util.Set;
 
+/**
+ * View projection for training sessions.
+ */
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class UserDTO {
     private Long id;
@@ -16,5 +19,5 @@ public class UserDTO {
     private String firstName;
     private String lastName;
     private AccountStatus accountStatus;
-    private Collection<RoleDTO> roles;
+    private Set<RoleDTO> roles;
 }

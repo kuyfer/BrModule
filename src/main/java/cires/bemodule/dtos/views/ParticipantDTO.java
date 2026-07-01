@@ -3,6 +3,9 @@ package cires.bemodule.dtos.views;
 import cires.bemodule.enums.RegistrationSource;
 import lombok.*;
 
+/**
+ * View projection for participants.
+ */
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class ParticipantDTO {
 
@@ -13,5 +16,4 @@ public class ParticipantDTO {
     private String phoneNumber;
     private String address;
     private RegistrationSource registrationSource;
-
 }

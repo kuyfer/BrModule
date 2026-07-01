@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * Internal row representing an import history entry.
+ */
 @Getter @Builder @NoArgsConstructor @AllArgsConstructor
 public class ImportHistoryRow {
     private Long          id;

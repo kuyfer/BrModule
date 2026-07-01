@@ -1,6 +1,5 @@
 package cires.bemodule.dtos.requests;
 
-import cires.bemodule.dtos.AttendanceEntryDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -10,6 +9,9 @@ import lombok.*;
 
 import java.util.List;
 
+/**
+ * Request to mark attendance for multiple participants in one session and period.
+ */
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class AttendanceRequest {
 
@@ -20,5 +22,5 @@ public class AttendanceRequest {
     private String period;
 
     @NotEmpty @Valid
-    private List<AttendanceEntryDto> entries;
+    private List<AttendanceEntryDTO> entries;
 }

@@ -13,6 +13,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Request to register a new user account.
+ */
 @PasswordMatches
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class RegisterRequest implements PasswordConfirmable {

@@ -7,6 +7,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+/**
+ * Request to create a new participant.
+ */
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class CreateParticipantRequest {
 

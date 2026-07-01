@@ -4,7 +4,9 @@ import lombok.*;
 
 import java.util.List;
 
-// Returned after bulk mark
+/**
+ * Result of a bulk attendance marking operation.
+ */
 @Getter
 @Builder
 @NoArgsConstructor

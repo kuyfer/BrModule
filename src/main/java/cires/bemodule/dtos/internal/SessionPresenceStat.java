@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * Internal presence statistics per session.
+ */
 @Getter @Builder @NoArgsConstructor @AllArgsConstructor
 public class SessionPresenceStat {
     private Long   sessionId;

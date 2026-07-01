@@ -1,11 +1,17 @@
 package cires.bemodule.dtos.requests;
 
 import cires.bemodule.enums.RoleType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
-@Data
+/**
+ * Request to partially update a role (name and/or permissions).
+ */
+@Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class PatchRoleRequest {
     private RoleType roleName;  
     private Set<Long> permissionIds;

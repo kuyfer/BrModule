@@ -1,17 +1,16 @@
 package cires.bemodule.dtos.views;
 
-import cires.bemodule.entities.Organization;
 import lombok.*;
 
 import java.util.Set;
 
+/**
+ * View projection for trainers.
+ */
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class TrainerDTO {
     private Long id;
     private String speciality;
     private UserDTO user;
-    private Set<Organization> affiliatedOrganizations;
+    private Set<OrganizationDTO> affiliatedOrganizations;
 }
-
-
-

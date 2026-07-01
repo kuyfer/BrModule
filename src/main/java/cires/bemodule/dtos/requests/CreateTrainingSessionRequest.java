@@ -13,16 +13,25 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * Request to create a new training session.
+ */
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class CreateTrainingSessionRequest {
 
     @NotNull
     private Long trainerId;
 
+    /**
+     * Start date and time (must be present or future).
+     */
     @NotNull
     @FutureOrPresent
     private LocalDateTime startDate;
 
+    /**
+     * End date and time (must be strictly after startDate).
+     */
     @NotNull
     @Future
     private LocalDateTime endDate;

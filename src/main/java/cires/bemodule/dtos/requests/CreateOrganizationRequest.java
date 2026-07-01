@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Request to create a new organization.
+ */
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class CreateOrganizationRequest {
 

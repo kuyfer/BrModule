@@ -6,7 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
+/**
+ * Request to create a new subsidiary (office/branch) under an organization.
+ */
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class CreateSubsidiaryRequest {
 

@@ -8,6 +8,9 @@ import lombok.AllArgsConstructor;
 
 import java.time.LocalDate;
 
+/**
+ * Internal summary row for a training session.
+ */
 @Getter @Builder @NoArgsConstructor @AllArgsConstructor
 public class SessionSummaryRow {
     private Long                  sessionId;

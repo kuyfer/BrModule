@@ -1,8 +1,10 @@
-package cires.bemodule.dtos;
+package cires.bemodule.dtos.imports;
 
 import lombok.*;
 
-// One error entry per bad row
+/**
+ * One error entry per bad row in the import file.
+ */
 @Getter
 @Builder
 @NoArgsConstructor

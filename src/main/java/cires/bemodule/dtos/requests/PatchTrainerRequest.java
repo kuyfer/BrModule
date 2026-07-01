@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Request to partially update a trainer.
+ */
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class PatchTrainerRequest {
 

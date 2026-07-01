@@ -2,6 +2,9 @@ package cires.bemodule.dtos.responses;
 
 import lombok.*;
 
+/**
+ * Response after creating a new participant.
+ */
 @Getter @Builder @AllArgsConstructor @NoArgsConstructor
 public class CreateParticipantResponse {
 

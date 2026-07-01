@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Request to partially update an organization.
+ */
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class PatchOrganizationRequest {
     private String name;

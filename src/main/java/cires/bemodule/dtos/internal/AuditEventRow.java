@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * Internal row representing an audit event.
+ */
 @Getter @Builder @NoArgsConstructor @AllArgsConstructor
 public class AuditEventRow {
     private String        userEmail;

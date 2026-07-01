@@ -5,6 +5,9 @@ import lombok.*;
 
 import java.time.LocalDate;
 
+/**
+ * Request to validate a specific day of attendance for a session.
+ */
 @Data
 @Builder
 @NoArgsConstructor

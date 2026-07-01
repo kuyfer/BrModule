@@ -1,10 +1,12 @@
 package cires.bemodule.dtos.requests;
 
-
 import cires.bemodule.enums.AttendanceStatus;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+/**
+ * One entry in a bulk attendance marking request.
+ */
 @Data
 @Builder
 @NoArgsConstructor

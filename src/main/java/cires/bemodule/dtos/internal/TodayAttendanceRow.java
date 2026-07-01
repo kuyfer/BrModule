@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * Internal row for today's attendance status per session.
+ */
 @Getter @Builder @NoArgsConstructor @AllArgsConstructor
 public class TodayAttendanceRow {
     private Long      sessionId;

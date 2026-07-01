@@ -1,6 +1,6 @@
 package cires.bemodule.restcontrollers;
 
-import cires.bemodule.dtos.ImportResult;
+import cires.bemodule.dtos.imports.ImportResult;
 import cires.bemodule.services.ParticipantImportService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

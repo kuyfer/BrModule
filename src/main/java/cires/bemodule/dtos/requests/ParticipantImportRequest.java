@@ -4,6 +4,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+/**
+ * Request to import a single participant (not used for bulk import).
+ */
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class ParticipantImportRequest {
 

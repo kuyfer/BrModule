@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Login request with username and password.
+ */
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class LoginRequest {
     

@@ -7,6 +7,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * Internal row representing an export history entry.
+ */
+
 @Getter @Builder @NoArgsConstructor @AllArgsConstructor
 public class ExportHistoryRow {
     private Long          id;

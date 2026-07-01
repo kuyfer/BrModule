@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * Request to partially update a training session.
+ */
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class PatchTrainingSessionRequest {
     private String title;

@@ -3,6 +3,9 @@ package cires.bemodule.dtos.responses;
 import cires.bemodule.enums.AttendanceStatus;
 import lombok.*;
 
+/**
+ * Entry for a single participant inside a slot grid.
+ */
 @Getter
 @Builder
 @NoArgsConstructor

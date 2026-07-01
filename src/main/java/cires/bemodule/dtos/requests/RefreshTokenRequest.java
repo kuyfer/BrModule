@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Request to refresh an expired JWT access token.
+ */
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class RefreshTokenRequest {
     

@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+/**
+ * Internal row for unvalidated attendance days.
+ */
 @Getter @Builder @NoArgsConstructor @AllArgsConstructor
 public class UnvalidatedDayRow {
     private Long      sessionId;

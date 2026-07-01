@@ -1,6 +1,5 @@
 package cires.bemodule.dtos.views;
 
-import cires.bemodule.dtos.SubsidiarySummaryDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +7,9 @@ import lombok.Setter;
 
 import java.util.List;
 
+/**
+ * View projection for organizations with their subsidiaries.
+ */
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class OrganizationDTO {
     private Long id;
@@ -17,5 +19,4 @@ public class OrganizationDTO {
     private String phone;
     private Integer subsidiaryCount;
     private List<SubsidiarySummaryDTO> subsidiaries;
-
 }
