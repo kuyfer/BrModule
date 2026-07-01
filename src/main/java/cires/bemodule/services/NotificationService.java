@@ -7,7 +7,7 @@ import cires.bemodule.entities.Trainer;
 import cires.bemodule.entities.TrainingSession;
 import cires.bemodule.enums.NotificationStatus;
 import cires.bemodule.enums.NotificationType;
-import cires.bemodule.exceptions.controllerexceptions.NotificationNotFoundException;
+import cires.bemodule.exceptions.notfound.NotificationNotFoundException;
 import cires.bemodule.mappers.NotificationMapper;
 import cires.bemodule.models.EmailPayload;
 import cires.bemodule.repositories.NotificationRepository;

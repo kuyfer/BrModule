@@ -1,18 +1,16 @@
 package cires.bemodule.services;
 
 import cires.bemodule.dtos.requests.PatchTrainerRequest;
-import cires.bemodule.dtos.requests.PatchUserRequest;
 import cires.bemodule.dtos.views.TrainerDTO;
 import cires.bemodule.dtos.requests.CreateTrainerRequest;
-import cires.bemodule.dtos.views.UserDTO;
 import cires.bemodule.entities.Role;
 import cires.bemodule.entities.Trainer;
 import cires.bemodule.entities.User;
 import cires.bemodule.enums.RoleType;
-import cires.bemodule.exceptions.controllerexceptions.RoleNotFoundException;
-import cires.bemodule.exceptions.validationexceptions.ConflictException;
-import cires.bemodule.exceptions.controllerexceptions.TrainerNotFoundException;
-import cires.bemodule.exceptions.controllerexceptions.UserNotFoundException;
+import cires.bemodule.exceptions.notfound.RoleNotFoundException;
+import cires.bemodule.exceptions.business.ConflictException;
+import cires.bemodule.exceptions.notfound.TrainerNotFoundException;
+import cires.bemodule.exceptions.notfound.UserNotFoundException;
 import cires.bemodule.mappers.TrainerMapper;
 import cires.bemodule.repositories.RoleRepository;
 import cires.bemodule.repositories.TrainerRepository;

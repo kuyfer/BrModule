@@ -7,10 +7,10 @@ import cires.bemodule.entities.Role;
 import cires.bemodule.entities.User;
 import cires.bemodule.enums.AccountStatus;
 import cires.bemodule.enums.RoleType;
-import cires.bemodule.exceptions.controllerexceptions.RoleNotFoundException;
-import cires.bemodule.exceptions.controllerexceptions.UserNotFoundException;
-import cires.bemodule.exceptions.validationexceptions.EmailAlreadyExistsException;
-import cires.bemodule.exceptions.validationexceptions.UsernameAlreadyExistsException;
+import cires.bemodule.exceptions.notfound.RoleNotFoundException;
+import cires.bemodule.exceptions.notfound.UserNotFoundException;
+import cires.bemodule.exceptions.validation.DuplicateEmailException;
+import cires.bemodule.exceptions.validation.DuplicateUsernameException;
 import cires.bemodule.mappers.UserMapper;
 import cires.bemodule.repositories.RoleRepository;
 import cires.bemodule.repositories.UserRepository;
@@ -44,11 +44,11 @@ public class UserService {
     public User registerUser(RegisterRequest request) {
 
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
-            throw new UsernameAlreadyExistsException("Username already exists");
+            throw new DuplicateUsernameException("Username already exists");
         }
 
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new EmailAlreadyExistsException("Email already exists");
+            throw new DuplicateEmailException("Email already exists");
         }
 
         User user = new User();

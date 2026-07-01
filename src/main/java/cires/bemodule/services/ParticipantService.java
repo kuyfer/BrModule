@@ -6,7 +6,7 @@ import cires.bemodule.dtos.responses.CreateParticipantResponse;
 import cires.bemodule.dtos.requests.PatchParticipantRequest;
 import cires.bemodule.entities.Participant;
 import cires.bemodule.enums.RegistrationSource;
-import cires.bemodule.exceptions.controllerexceptions.ParticipantNotFoundException;
+import cires.bemodule.exceptions.notfound.ParticipantNotFoundException;
 import cires.bemodule.mappers.ParticipantMapper;
 import cires.bemodule.repositories.ParticipantRepository;
 import cires.bemodule.specifications.ParticipantsSpecifications;

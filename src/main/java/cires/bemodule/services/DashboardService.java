@@ -7,7 +7,7 @@ import cires.bemodule.dtos.responses.OperationalDashboardResponse;
 import cires.bemodule.dtos.responses.TrainerDashboardResponse;
 import cires.bemodule.entities.Trainer;
 import cires.bemodule.enums.TrainingSessionStatus;
-import cires.bemodule.exceptions.controllerexceptions.TrainerNotFoundException;
+import cires.bemodule.exceptions.notfound.TrainerNotFoundException;
 import cires.bemodule.repositories.DashboardRepository;
 import cires.bemodule.repositories.TrainerRepository;
 import lombok.RequiredArgsConstructor;

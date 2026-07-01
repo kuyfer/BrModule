@@ -1,16 +1,13 @@
 package cires.bemodule.services;
 
 import cires.bemodule.dtos.requests.CreateSubsidiaryRequest;
-import cires.bemodule.dtos.requests.PatchParticipantRequest;
 import cires.bemodule.dtos.requests.PatchSubsidiaryRequest;
-import cires.bemodule.dtos.views.ParticipantDTO;
 import cires.bemodule.dtos.views.SubsidiaryDTO;
 import cires.bemodule.entities.Organization;
-import cires.bemodule.entities.Participant;
 import cires.bemodule.entities.Subsidiary;
-import cires.bemodule.exceptions.controllerexceptions.OrganizationNotFoundException;
-import cires.bemodule.exceptions.controllerexceptions.SubsidiaryNotFoundException;
-import cires.bemodule.exceptions.validationexceptions.ConflictException;
+import cires.bemodule.exceptions.notfound.OrganizationNotFoundException;
+import cires.bemodule.exceptions.notfound.SubsidiaryNotFoundException;
+import cires.bemodule.exceptions.business.ConflictException;
 import cires.bemodule.mappers.SubsidiaryMapper;
 import cires.bemodule.repositories.OrganizationRepository;
 import cires.bemodule.repositories.SubsidiaryRepository;

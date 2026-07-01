@@ -1,0 +1,519 @@
+{
+  "project_info": {
+    "name": "exceptions",
+    "path": "C:\\Users\\PC\\Desktop\\BeModule\\src\\main\\java\\cires\\bemodule\\exceptions",
+    "generated_at": "2026-07-01T03:05:03.5358307",
+    "total_files": 26,
+    "total_size": 12457
+  },
+  "structure": {
+    "business": {
+      "BadRequestException.java": {
+        "type": "file",
+        "info": {
+          "size": 198,
+          "last_modified": "2026-07-01T03:05:03.3677736",
+          "mime_type": "text/x-java-source",
+          "extension": ".java"
+        }
+      },
+      "ConflictException.java": {
+        "type": "file",
+        "info": {
+          "size": 178,
+          "last_modified": "2026-07-01T03:05:03.39009",
+          "mime_type": "text/x-java-source",
+          "extension": ".java"
+        }
+      },
+      "ImportException.java": {
+        "type": "file",
+        "info": {
+          "size": 279,
+          "last_modified": "2026-07-01T03:05:03.3976662",
+          "mime_type": "text/x-java-source",
+          "extension": ".java"
+        }
+      }
+    },
+    "email": {
+      "EmailSendingException.java": {
+        "type": "file",
+        "info": {
+          "size": 111,
+          "last_modified": "2026-07-01T03:05:03.4088444",
+          "mime_type": "text/x-java-source",
+          "extension": ".java"
+        }
+      },
+      "EmptyTemplateException.java": {
+        "type": "file",
+        "info": {
+          "size": 115,
+          "last_modified": "2026-07-01T03:05:03.4153644",
+          "mime_type": "text/x-java-source",
+          "extension": ".java"
+        }
+      },
+      "InvalidEmailAddressException.java": {
+        "type": "file",
+        "info": {
+          "size": 121,
+          "last_modified": "2026-07-01T03:05:03.4245187",
+          "mime_type": "text/x-java-source",
+          "extension": ".java"
+        }
+      },
+      "SmtpTimeoutException.java": {
+        "type": "file",
+        "info": {
+          "size": 115,
+          "last_modified": "2026-07-01T03:05:03.4322237",
+          "mime_type": "text/x-java-source",
+          "extension": ".java"
+        }
+      }
+    },
+    "GlobalExceptionHandler.java": {
+      "type": "file",
+      "info": {
+        "size": 5953,
+        "last_modified": "2026-07-01T03:05:03.442749",
+        "mime_type": "text/x-java-source",
+        "extension": ".java"
+      }
+    },
+    "imports": {
+      "FileProcessingException.java": {
+        "type": "file",
+        "info": {
+          "size": 369,
+          "last_modified": "2026-07-01T03:05:03.4499636",
+          "mime_type": "text/x-java-source",
+          "extension": ".java"
+        }
+      },
+      "ImportRowException.java": {
+        "type": "file",
+        "info": {
+          "size": 190,
+          "last_modified": "2026-07-01T03:05:03.4555826",
+          "mime_type": "text/x-java-source",
+          "extension": ".java"
+        }
+      },
+      "ImportValidationException.java": {
+        "type": "file",
+        "info": {
+          "size": 249,
+          "last_modified": "2026-07-01T03:05:03.4605687",
+          "mime_type": "text/x-java-source",
+          "extension": ".java"
+        }
+      }
+    },
+    "notfound": {
+      "AttendanceNotFoundException.java": {
+        "type": "file",
+        "info": {
+          "size": 223,
+          "last_modified": "2026-07-01T03:05:03.4687614",
+          "mime_type": "text/x-java-source",
+          "extension": ".java"
+        }
+      },
+      "EntityNotFoundException.java": {
+        "type": "file",
+        "info": {
+          "size": 201,
+          "last_modified": "2026-07-01T03:05:03.4737608",
+          "mime_type": "text/x-java-source",
+          "extension": ".java"
+        }
+      },
+      "NotificationNotFoundException.java": {
+        "type": "file",
+        "info": {
+          "size": 228,
+          "last_modified": "2026-07-01T03:05:03.4790459",
+          "mime_type": "text/x-java-source",
+          "extension": ".java"
+        }
+      },
+      "OrganizationNotFoundException.java": {
+        "type": "file",
+        "info": {
+          "size": 355,
+          "last_modified": "2026-07-01T03:05:03.4855355",
+          "mime_type": "text/x-java-source",
+          "extension": ".java"
+        }
+      },
+      "ParticipantNotFoundException.java": {
+        "type": "file",
+        "info": {
+          "size": 231,
+          "last_modified": "2026-07-01T03:05:03.4895752",
+          "mime_type": "text/x-java-source",
+          "extension": ".java"
+        }
+      },
+      "PermissionNotFoundException.java": {
+        "type": "file",
+        "info": {
+          "size": 223,
+          "last_modified": "2026-07-01T03:05:03.4931701",
+          "mime_type": "text/x-java-source",
+          "extension": ".java"
+        }
+      },
+      "RoleNotFoundException.java": {
+        "type": "file",
+        "info": {
+          "size": 462,
+          "last_modified": "2026-07-01T03:05:03.4967507",
+          "mime_type": "text/x-java-source",
+          "extension": ".java"
+        }
+      },
+      "SubsidiaryNotFoundException.java": {
+        "type": "file",
+        "info": {
+          "size": 360,
+          "last_modified": "2026-07-01T03:05:03.5007161",
+          "mime_type": "text/x-java-source",
+          "extension": ".java"
+        }
+      },
+      "TrainerNotFoundException.java": {
+        "type": "file",
+        "info": {
+          "size": 235,
+          "last_modified": "2026-07-01T03:05:03.504751",
+          "mime_type": "text/x-java-source",
+          "extension": ".java"
+        }
+      },
+      "TrainingSessionNotFoundException.java": {
+        "type": "file",
+        "info": {
+          "size": 244,
+          "last_modified": "2026-07-01T03:05:03.5079869",
+          "mime_type": "text/x-java-source",
+          "extension": ".java"
+        }
+      },
+      "UserNotFoundException.java": {
+        "type": "file",
+        "info": {
+          "size": 234,
+          "last_modified": "2026-07-01T03:05:03.5110311",
+          "mime_type": "text/x-java-source",
+          "extension": ".java"
+        }
+      }
+    },
+    "security": {
+      "InvalidJwtTokenException.java": {
+        "type": "file",
+        "info": {
+          "size": 452,
+          "last_modified": "2026-07-01T03:05:03.5175245",
+          "mime_type": "text/x-java-source",
+          "extension": ".java"
+        }
+      },
+      "SecurityException.java": {
+        "type": "file",
+        "info": {
+          "size": 749,
+          "last_modified": "2026-07-01T03:05:03.5215566",
+          "mime_type": "text/x-java-source",
+          "extension": ".java"
+        }
+      }
+    },
+    "validation": {
+      "DuplicateEmailException.java": {
+        "type": "file",
+        "info": {
+          "size": 188,
+          "last_modified": "2026-07-01T03:05:03.5267897",
+          "mime_type": "text/x-java-source",
+          "extension": ".java"
+        }
+      },
+      "DuplicateUsernameException.java": {
+        "type": "file",
+        "info": {
+          "size": 194,
+          "last_modified": "2026-07-01T03:05:03.5298303",
+          "mime_type": "text/x-java-source",
+          "extension": ".java"
+        }
+      }
+    }
+  },
+  "files": [
+    {
+      "path": "business\\BadRequestException.java",
+      "content": "package cires.bemodule.exceptions.business;\r\n\r\npublic class BadRequestException extends RuntimeException{\r\n\r\n        public BadRequestException(String message) {\r\n        super(message);\r\n    }\r\n}\r\n",
+      "info": {
+        "size": 198,
+        "last_modified": "2026-07-01T03:05:03.3677736",
+        "mime_type": "text/x-java-source",
+        "extension": ".java"
+      }
+    },
+    {
+      "path": "business\\ConflictException.java",
+      "content": "package cires.bemodule.exceptions.business;\r\n\r\npublic class ConflictException extends RuntimeException{\r\n\r\n        public ConflictException(String message) {super(message);}\r\n}\r\n",
+      "info": {
+        "size": 178,
+        "last_modified": "2026-07-01T03:05:03.39009",
+        "mime_type": "text/x-java-source",
+        "extension": ".java"
+      }
+    },
+    {
+      "path": "business\\ImportException.java",
+      "content": "package cires.bemodule.exceptions.business;\r\n\r\npublic class ImportException extends RuntimeException {\r\n\r\n    public ImportException(String message) {\r\n        super(message);\r\n    }\r\n\r\n    public ImportException(String message, Throwable cause) {super(message, cause);\r\n    }\r\n}",
+      "info": {
+        "size": 279,
+        "last_modified": "2026-07-01T03:05:03.3976662",
+        "mime_type": "text/x-java-source",
+        "extension": ".java"
+      }
+    },
+    {
+      "path": "email\\EmailSendingException.java",
+      "content": "package cires.bemodule.exceptions.email;\r\n\r\n\r\npublic class EmailSendingException extends RuntimeException{\r\n}\r\n",
+      "info": {
+        "size": 111,
+        "last_modified": "2026-07-01T03:05:03.4088444",
+        "mime_type": "text/x-java-source",
+        "extension": ".java"
+      }
+    },
+    {
+      "path": "email\\EmptyTemplateException.java",
+      "content": "package cires.bemodule.exceptions.email;\r\n\r\npublic class EmptyTemplateException extends EmailSendingException{\r\n}\r\n",
+      "info": {
+        "size": 115,
+        "last_modified": "2026-07-01T03:05:03.4153644",
+        "mime_type": "text/x-java-source",
+        "extension": ".java"
+      }
+    },
+    {
+      "path": "email\\InvalidEmailAddressException.java",
+      "content": "package cires.bemodule.exceptions.email;\r\n\r\npublic class InvalidEmailAddressException extends EmailSendingException{\r\n}\r\n",
+      "info": {
+        "size": 121,
+        "last_modified": "2026-07-01T03:05:03.4245187",
+        "mime_type": "text/x-java-source",
+        "extension": ".java"
+      }
+    },
+    {
+      "path": "email\\SmtpTimeoutException.java",
+      "content": "package cires.bemodule.exceptions.email;\r\n\r\npublic class SmtpTimeoutException extends EmailSendingException{\r\n\r\n}\r\n",
+      "info": {
+        "size": 115,
+        "last_modified": "2026-07-01T03:05:03.4322237",
+        "mime_type": "text/x-java-source",
+        "extension": ".java"
+      }
+    },
+    {
+      "path": "GlobalExceptionHandler.java",
+      "content": "package cires.bemodule.exceptions;\r\n\r\nimport cires.bemodule.exceptions.business.BadRequestException;\r\nimport cires.bemodule.exceptions.imports.FileProcessingException;\r\nimport cires.bemodule.exceptions.business.ImportException;\r\nimport cires.bemodule.exceptions.imports.ImportValidationException;\r\nimport cires.bemodule.exceptions.notfound.*;\r\nimport cires.bemodule.exceptions.business.ConflictException;\r\nimport io.jsonwebtoken.JwtException;\r\nimport jakarta.servlet.http.HttpServletRequest;\r\nimport org.apache.commons.lang3.ObjectUtils;\r\nimport org.springframework.http.*;\r\nimport org.springframework.web.bind.MethodArgumentNotValidException;\r\nimport org.springframework.web.bind.annotation.ControllerAdvice;\r\nimport org.springframework.web.bind.annotation.ExceptionHandler;\r\nimport org.springframework.web.context.request.WebRequest;\r\nimport org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;\r\nimport cires.bemodule.exceptions.security.SecurityException;\r\n\r\nimport java.net.URI;\r\nimport java.time.Instant;\r\nimport java.util.Arrays;\r\nimport java.util.Optional;\r\n\r\n@ControllerAdvice\r\npublic class GlobalExceptionHandler extends ResponseEntityExceptionHandler {\r\n\r\n    @ExceptionHandler(EntityNotFoundException.class)\r\n    public ProblemDetail handleNotFound(RuntimeException exception, HttpServletRequest request){\r\n        return build(HttpStatus.NOT_FOUND, \"not-found\", exception.getMessage(), request);\r\n    }\r\n\r\n    @ExceptionHandler(SecurityException.class)\r\n    public ProblemDetail handleSecurityException(SecurityException ex, HttpServletRequest request) {\r\n        String slug = ex.getErrorCode().toLowerCase().replace(\"_\", \"-\");\r\n\r\n        ProblemDetail problem = ProblemDetail.forStatusAndDetail(ex.getStatus(), ex.getMessage());\r\n        problem.setType(URI.create(\"/errors/\" + slug));\r\n        problem.setTitle(ex.getStatus().getReasonPhrase());\r\n        problem.setInstance(URI.create(request.getRequestURI()));\r\n        problem.setProperty(\"timestamp\", Instant.now());\r\n        problem.setProperty(\"errorCode\", ex.getErrorCode());\r\n        return problem;\r\n    }\r\n\r\n    @ExceptionHandler(BadRequestException.class)\r\n    public ProblemDetail badRequestHandler(BadRequestException exception, HttpServletRequest request){\r\n        return build(HttpStatus.BAD_REQUEST, \"bad-request\", exception.getMessage(), request);\r\n    }\r\n\r\n    @ExceptionHandler(ConflictException.class)\r\n    public ProblemDetail conflictExceptionHandler(ConflictException exception, HttpServletRequest request){\r\n        return build(HttpStatus.CONFLICT, \"conflict\", exception.getMessage(), request);\r\n    }\r\n\r\n    @Override\r\n    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {\r\n        ProblemDetail problemDetail = handleValidationException(ex);\r\n        return ResponseEntity.status(status.value()).body(problemDetail);\r\n    }\r\n\r\n    private ProblemDetail build(HttpStatus status, String errorSlug,\r\n                                                String detail, HttpServletRequest request) {\r\n        ProblemDetail problem = ProblemDetail.forStatusAndDetail(status, detail);\r\n        problem.setType(URI.create(\"/errors/\" + errorSlug));\r\n        problem.setTitle(status.getReasonPhrase());\r\n        problem.setInstance(URI.create(request.getRequestURI()));\r\n        problem.setProperty(\"timestamp\", Instant.now());\r\n\r\n        return problem;\r\n    }\r\n\r\n    @ExceptionHandler(ImportValidationException.class)\r\n    public ProblemDetail handleImportValidationException(ImportValidationException ex, HttpServletRequest request) {\r\n        return build(HttpStatus.UNPROCESSABLE_ENTITY, \"import-validation-failed\", ex.getMessage(), request);\r\n    }\r\n\r\n    @ExceptionHandler(FileProcessingException.class)\r\n    public ProblemDetail handleFileProcessingException(FileProcessingException ex, HttpServletRequest request) {\r\n        return build(HttpStatus.INTERNAL_SERVER_ERROR, \"file-processing-failed\", ex.getMessage(), request);\r\n    }\r\n\r\n    @ExceptionHandler(ImportException.class)\r\n    public ProblemDetail handleImportException(ImportException ex, HttpServletRequest request) {\r\n        return build(HttpStatus.UNPROCESSABLE_ENTITY, \"import-failed\", ex.getMessage(), request);\r\n    }\r\n\r\n    private ProblemDetail handleValidationException(MethodArgumentNotValidException ex) {\r\n        String details = getErrorsDetails(ex);\r\n        ProblemDetail problem = ProblemDetail.forStatusAndDetail(ex.getStatusCode(), details);\r\n        problem.setType(URI.create(\"/errors/bad-request\"));\r\n        problem.setTitle(\"Bad request\");\r\n        problem.setInstance(ex.getBody().getInstance());\r\n        problem.setProperty(\"timestamp\", Instant.now());\r\n\r\n        return problem;\r\n    }\r\n\r\n    @ExceptionHandler(JwtException.class)\r\n    public ProblemDetail handleJwtException(JwtException ex, HttpServletRequest request) {\r\n        return build(HttpStatus.BAD_REQUEST, \"invalid-token\", ex.getMessage(), request);\r\n    }\r\n\r\n//    @ExceptionHandler(Exception.class)\r\n//    public ProblemDetail handleGenericException(Exception ex, HttpServletRequest request) {\r\n//        return build(HttpStatus.INTERNAL_SERVER_ERROR, \"internal-error\", \"An unexpected error occurred\", request);\r\n//    }\r\n\r\n    /**\r\n     *alteratively use Binding Results and Field Errors\r\n     *   code source:\r\n     *    https://medium.com/@RoussiAbdelghani/error-handling-in-spring-web-using-rfc-9457-specification-f2cc8398e285\r\n     */\r\n    private String getErrorsDetails(MethodArgumentNotValidException ex) {\r\n        return Optional.of(ex.getDetailMessageArguments())\r\n                .map(args -> Arrays.stream(args)\r\n                        .filter(msg -> !ObjectUtils.isEmpty(msg))\r\n                        .reduce(\"Please make sure to provide a valid request, \", (a, b) -> a + \" \" + b)\r\n                )\r\n                .orElse(\"\").toString();\r\n    }\r\n}",
+      "info": {
+        "size": 5953,
+        "last_modified": "2026-07-01T03:05:03.442749",
+        "mime_type": "text/x-java-source",
+        "extension": ".java"
+      }
+    },
+    {
+      "path": "imports\\FileProcessingException.java",
+      "content": "package cires.bemodule.exceptions.imports;\r\n\r\nimport cires.bemodule.exceptions.business.ImportException;\r\n\r\npublic class FileProcessingException extends ImportException {\r\n    public FileProcessingException(String message) {\r\n        super(message);\r\n    }\r\n    public FileProcessingException(String message, Throwable cause) {\r\n        super(message, cause);\r\n    }\r\n}",
+      "info": {
+        "size": 369,
+        "last_modified": "2026-07-01T03:05:03.4499636",
+        "mime_type": "text/x-java-source",
+        "extension": ".java"
+      }
+    },
+    {
+      "path": "imports\\ImportRowException.java",
+      "content": "package cires.bemodule.exceptions.imports;\r\n\r\npublic class ImportRowException extends RuntimeException {\r\n    public ImportRowException(String message) {\r\n        super(message);\r\n    }\r\n}\r\n",
+      "info": {
+        "size": 190,
+        "last_modified": "2026-07-01T03:05:03.4555826",
+        "mime_type": "text/x-java-source",
+        "extension": ".java"
+      }
+    },
+    {
+      "path": "imports\\ImportValidationException.java",
+      "content": "package cires.bemodule.exceptions.imports;\r\n\r\nimport cires.bemodule.exceptions.business.ImportException;\r\n\r\npublic class ImportValidationException extends ImportException {\r\n\r\n    public ImportValidationException(String message) {super(message);}\r\n}",
+      "info": {
+        "size": 249,
+        "last_modified": "2026-07-01T03:05:03.4605687",
+        "mime_type": "text/x-java-source",
+        "extension": ".java"
+      }
+    },
+    {
+      "path": "notfound\\AttendanceNotFoundException.java",
+      "content": "package cires.bemodule.exceptions.notfound;\r\n\r\npublic class AttendanceNotFoundException extends EntityNotFoundException {\r\n    public AttendanceNotFoundException(Long id) {super(\"Attendance not found with id: \" + id);}\r\n}\r\n",
+      "info": {
+        "size": 223,
+        "last_modified": "2026-07-01T03:05:03.4687614",
+        "mime_type": "text/x-java-source",
+        "extension": ".java"
+      }
+    },
+    {
+      "path": "notfound\\EntityNotFoundException.java",
+      "content": "package cires.bemodule.exceptions.notfound;\r\n\r\npublic class EntityNotFoundException extends RuntimeException {\r\n    public EntityNotFoundException(String message) {\r\n        super(message);\r\n    }\r\n}\r\n",
+      "info": {
+        "size": 201,
+        "last_modified": "2026-07-01T03:05:03.4737608",
+        "mime_type": "text/x-java-source",
+        "extension": ".java"
+      }
+    },
+    {
+      "path": "notfound\\NotificationNotFoundException.java",
+      "content": "package cires.bemodule.exceptions.notfound;\r\n\r\npublic class NotificationNotFoundException extends EntityNotFoundException{\r\n    public NotificationNotFoundException(Long id) {super(\"Notification not found with id: \" + id);}\r\n}\r\n",
+      "info": {
+        "size": 228,
+        "last_modified": "2026-07-01T03:05:03.4790459",
+        "mime_type": "text/x-java-source",
+        "extension": ".java"
+      }
+    },
+    {
+      "path": "notfound\\OrganizationNotFoundException.java",
+      "content": "package cires.bemodule.exceptions.notfound;\r\n\r\npublic class OrganizationNotFoundException extends EntityNotFoundException{\r\n    public OrganizationNotFoundException(Long id) {super(\"Organization not found with id: \" + id);}\r\n\r\n    public OrganizationNotFoundException(String name) {\r\n        super(\"Organization not found with name: \" + name);\r\n    }\r\n}\r\n",
+      "info": {
+        "size": 355,
+        "last_modified": "2026-07-01T03:05:03.4855355",
+        "mime_type": "text/x-java-source",
+        "extension": ".java"
+      }
+    },
+    {
+      "path": "notfound\\ParticipantNotFoundException.java",
+      "content": "package cires.bemodule.exceptions.notfound;\r\n\r\npublic class ParticipantNotFoundException extends EntityNotFoundException{\r\n\r\n        public ParticipantNotFoundException(Long id) {super(\"Participant not found with id: \" + id);}\r\n}\r\n",
+      "info": {
+        "size": 231,
+        "last_modified": "2026-07-01T03:05:03.4895752",
+        "mime_type": "text/x-java-source",
+        "extension": ".java"
+      }
+    },
+    {
+      "path": "notfound\\PermissionNotFoundException.java",
+      "content": "package cires.bemodule.exceptions.notfound;\r\n\r\npublic class PermissionNotFoundException extends EntityNotFoundException {\r\n    public PermissionNotFoundException(Long id) {super(\"Permission not found with id: \" + id);}\r\n}\r\n",
+      "info": {
+        "size": 223,
+        "last_modified": "2026-07-01T03:05:03.4931701",
+        "mime_type": "text/x-java-source",
+        "extension": ".java"
+      }
+    },
+    {
+      "path": "notfound\\RoleNotFoundException.java",
+      "content": "package cires.bemodule.exceptions.notfound;\r\n\r\nimport cires.bemodule.enums.RoleType;\r\n\r\npublic class RoleNotFoundException extends EntityNotFoundException {\r\n\r\n    public RoleNotFoundException() {\r\n        super(\"Role not found\");\r\n    }\r\n    public RoleNotFoundException(Long id) {\r\n        super(\"Role not found with id: \" + id);\r\n    }\r\n    public RoleNotFoundException(RoleType roleName) {\r\n        super(\"Role not found with name: \" + roleName);\r\n    }\r\n}\r\n",
+      "info": {
+        "size": 462,
+        "last_modified": "2026-07-01T03:05:03.4967507",
+        "mime_type": "text/x-java-source",
+        "extension": ".java"
+      }
+    },
+    {
+      "path": "notfound\\SubsidiaryNotFoundException.java",
+      "content": "package cires.bemodule.exceptions.notfound;\r\n\r\npublic class SubsidiaryNotFoundException extends EntityNotFoundException {\r\n    public SubsidiaryNotFoundException(Long id) {\r\n        super(\"Subsidiary not found with id: \" + id);\r\n    }\r\n    public SubsidiaryNotFoundException(String name) {\r\n        super(\"Subsidiary not found with name: \" + name);\r\n    }\r\n}\r\n",
+      "info": {
+        "size": 360,
+        "last_modified": "2026-07-01T03:05:03.5007161",
+        "mime_type": "text/x-java-source",
+        "extension": ".java"
+      }
+    },
+    {
+      "path": "notfound\\TrainerNotFoundException.java",
+      "content": "package cires.bemodule.exceptions.notfound;\r\n\r\npublic class TrainerNotFoundException extends EntityNotFoundException{\r\n\r\n        public TrainerNotFoundException(Long id) {\r\n        super(\"Trainer not found with id: \" + id);\r\n    }\r\n}\r\n",
+      "info": {
+        "size": 235,
+        "last_modified": "2026-07-01T03:05:03.504751",
+        "mime_type": "text/x-java-source",
+        "extension": ".java"
+      }
+    },
+    {
+      "path": "notfound\\TrainingSessionNotFoundException.java",
+      "content": "package cires.bemodule.exceptions.notfound;\r\n\r\npublic class TrainingSessionNotFoundException extends EntityNotFoundException{\r\n\r\n        public TrainingSessionNotFoundException(Long id) {super(\"Training session not found with id: \" + id);}\r\n}\r\n",
+      "info": {
+        "size": 244,
+        "last_modified": "2026-07-01T03:05:03.5079869",
+        "mime_type": "text/x-java-source",
+        "extension": ".java"
+      }
+    },
+    {
+      "path": "notfound\\UserNotFoundException.java",
+      "content": "package cires.bemodule.exceptions.notfound;\r\n\r\npublic class UserNotFoundException extends EntityNotFoundException{\r\n\r\n        public UserNotFoundException(Long id) {\r\n            super(\"User not found with id: \" + id);\r\n        }\r\n}\r\n",
+      "info": {
+        "size": 234,
+        "last_modified": "2026-07-01T03:05:03.5110311",
+        "mime_type": "text/x-java-source",
+        "extension": ".java"
+      }
+    },
+    {
+      "path": "security\\InvalidJwtTokenException.java",
+      "content": "package cires.bemodule.exceptions.security;\r\n\r\nimport org.springframework.http.HttpStatus;\r\n\r\npublic class InvalidJwtTokenException extends SecurityException {\r\n\r\n    public InvalidJwtTokenException(String message) {\r\n        super(message, HttpStatus.UNAUTHORIZED, \"INVALID_TOKEN\");\r\n    }\r\n\r\n    public InvalidJwtTokenException(String message, Throwable cause) {\r\n        super(message, cause, HttpStatus.UNAUTHORIZED, \"INVALID_TOKEN\");\r\n    }\r\n\r\n}\r\n",
+      "info": {
+        "size": 452,
+        "last_modified": "2026-07-01T03:05:03.5175245",
+        "mime_type": "text/x-java-source",
+        "extension": ".java"
+      }
+    },
+    {
+      "path": "security\\SecurityException.java",
+      "content": "package cires.bemodule.exceptions.security;\r\n\r\nimport org.springframework.http.HttpStatus;\r\n\r\npublic class SecurityException extends RuntimeException {\r\n\r\n    private final HttpStatus status;\r\n    private final String errorCode;\r\n\r\n    protected SecurityException(String message, HttpStatus status, String errorCode) {\r\n        super(message);\r\n        this.status = status;\r\n        this.errorCode = errorCode;\r\n    }\r\n\r\n    protected SecurityException(String message, Throwable cause, HttpStatus status, String errorCode) {\r\n        super(message, cause);\r\n        this.status = status;\r\n        this.errorCode = errorCode;\r\n    }\r\n\r\n    public HttpStatus getStatus() { return status; }\r\n    public String getErrorCode() { return errorCode; }\r\n}\r\n",
+      "info": {
+        "size": 749,
+        "last_modified": "2026-07-01T03:05:03.5215566",
+        "mime_type": "text/x-java-source",
+        "extension": ".java"
+      }
+    },
+    {
+      "path": "validation\\DuplicateEmailException.java",
+      "content": "package cires.bemodule.exceptions.validation;\r\n\r\npublic class DuplicateEmailException extends RuntimeException{\r\n\r\n    public DuplicateEmailException(String message) {super(message);}\r\n}\r\n",
+      "info": {
+        "size": 188,
+        "last_modified": "2026-07-01T03:05:03.5267897",
+        "mime_type": "text/x-java-source",
+        "extension": ".java"
+      }
+    },
+    {
+      "path": "validation\\DuplicateUsernameException.java",
+      "content": "package cires.bemodule.exceptions.validation;\r\n\r\npublic class DuplicateUsernameException extends RuntimeException{\r\n\r\n    public DuplicateUsernameException(String message) {super(message);}\r\n}\r\n",
+      "info": {
+        "size": 194,
+        "last_modified": "2026-07-01T03:05:03.5298303",
+        "mime_type": "text/x-java-source",
+        "extension": ".java"
+      }
+    }
+  ]
+}
