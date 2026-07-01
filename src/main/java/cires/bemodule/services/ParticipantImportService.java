@@ -4,6 +4,9 @@ package cires.bemodule.services;
 import cires.bemodule.dtos.*;
 import cires.bemodule.entities.TrainingSession;
 import cires.bemodule.enums.TrainingSessionStatus;
+import cires.bemodule.exceptions.importexceptions.FileProcessingException;
+import cires.bemodule.exceptions.importexceptions.ImportRowException;
+import cires.bemodule.exceptions.importexceptions.ImportValidationException;
 import cires.bemodule.repositories.ParticipantBulkRepository;
 import cires.bemodule.repositories.TrainingSessionRepository;
 import jakarta.transaction.Transactional;
@@ -102,7 +105,7 @@ public class ParticipantImportService {
             return out.toByteArray();
 
         } catch (IOException e) {
-            throw new RuntimeException("Failed to generate template: " + e.getMessage());
+            throw new FileProcessingException("Failed to generate Excel template: " + e.getMessage());
         }
     }
 
@@ -230,7 +233,7 @@ public class ParticipantImportService {
             }
 
         } catch (IOException e) {
-            throw new RuntimeException("Failed to parse CSV: " + e.getMessage());
+            throw new FileProcessingException("Failed to parse CSV: " + e.getMessage());
         }
 
         return rows;
@@ -244,7 +247,7 @@ public class ParticipantImportService {
             if (sheet == null) sheet = workbook.getSheetAt(0);
 
             Row headerRow = sheet.getRow(0);
-            if (headerRow == null) throw new RuntimeException("File has no header row.");
+            if (headerRow == null) throw new ImportValidationException("File has no header row.");
             validateHeaders(readExcelHeaders(headerRow));
 
             for (int i = 1; i <= sheet.getLastRowNum(); i++) {
@@ -262,7 +265,7 @@ public class ParticipantImportService {
             }
 
         } catch (IOException e) {
-            throw new RuntimeException("Failed to parse Excel: " + e.getMessage());
+            throw new FileProcessingException("Failed to parse Excel: " + e.getMessage());
         }
 
         return rows;
@@ -298,7 +301,7 @@ public class ParticipantImportService {
                 .filter(h -> !normalized.contains(h))
                 .toList();
         if (!missing.isEmpty()) {
-            throw new RuntimeException("Invalid file. Missing columns: " + missing);
+            throw new ImportValidationException("Invalid file. Missing columns: " + missing);
         }
     }
 
@@ -320,7 +323,7 @@ public class ParticipantImportService {
 
     private void validateFile(MultipartFile file, String expectedType) {
         if (file == null || file.isEmpty()) {
-            throw new RuntimeException("File is empty.");
+            throw new FileProcessingException("File is empty.");
         }
     }
 
@@ -363,8 +366,8 @@ public class ParticipantImportService {
         return style;
     }
 
-    // Caught per row — never aborts the whole import
-    static class ImportRowException extends RuntimeException {
-        public ImportRowException(String msg) { super(msg); }
-    }
+//    // Caught per row — never aborts the whole import
+//    static class ImportRowException extends RuntimeException {
+//        public ImportRowException(String msg) { super(msg); }
+//    }
 }

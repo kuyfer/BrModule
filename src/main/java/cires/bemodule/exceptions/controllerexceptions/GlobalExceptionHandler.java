@@ -1,5 +1,7 @@
 package cires.bemodule.exceptions.controllerexceptions;
 
+import cires.bemodule.exceptions.importexceptions.FileProcessingException;
+import cires.bemodule.exceptions.importexceptions.ImportValidationException;
 import cires.bemodule.exceptions.validationexceptions.ConflictException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -73,6 +75,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problem;
     }
 
+    @ExceptionHandler(ImportValidationException.class)
+    public ProblemDetail handleImportValidationException(ImportValidationException ex, HttpServletRequest request) {
+        return build(HttpStatus.UNPROCESSABLE_ENTITY, "import-validation-failed", ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(FileProcessingException.class)
+    public ProblemDetail handleFileProcessingException(FileProcessingException ex, HttpServletRequest request) {
+        return build(HttpStatus.INTERNAL_SERVER_ERROR, "file-processing-failed", ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(ImportException.class)
+    public ProblemDetail handleImportException(ImportException ex, HttpServletRequest request) {
+        return build(HttpStatus.UNPROCESSABLE_ENTITY, "import-failed", ex.getMessage(), request);
+    }
+
     private ProblemDetail handleValidationException(MethodArgumentNotValidException ex) {
         String details = getErrorsDetails(ex);
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(ex.getStatusCode(), details);
@@ -89,10 +106,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return build(HttpStatus.BAD_REQUEST, "invalid-token", ex.getMessage(), request);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ProblemDetail handleGenericException(Exception ex, HttpServletRequest request) {
-        return build(HttpStatus.INTERNAL_SERVER_ERROR, "internal-error", "An unexpected error occurred", request);
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ProblemDetail handleGenericException(Exception ex, HttpServletRequest request) {
+//        return build(HttpStatus.INTERNAL_SERVER_ERROR, "internal-error", "An unexpected error occurred", request);
+//    }
 
     /**
      *alteratively use Binding Results and Field Errors
