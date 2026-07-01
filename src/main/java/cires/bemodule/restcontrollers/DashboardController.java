@@ -1,6 +1,5 @@
 package cires.bemodule.restcontrollers;
 
-import cires.bemodule.dtos.responses.AuditDashboardResponse;
 import cires.bemodule.dtos.responses.ExecutiveDashboardResponse;
 import cires.bemodule.dtos.responses.OperationalDashboardResponse;
 import cires.bemodule.dtos.responses.TrainerDashboardResponse;

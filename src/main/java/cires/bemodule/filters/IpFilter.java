@@ -1,5 +1,10 @@
 package cires.bemodule.filters;
-// Code provided from https://medium.com/@AlexanderObregon/client-ip-address-tracking-in-spring-boot-apis-358bde38296f
+/**
+ * Code provided from:
+ *  https://medium.com/@AlexanderObregon/client-ip-address-tracking-in-spring-boot-apis-358bde38296f
+ *
+ * might not work if there is a reverse proxy, firewall, gateway or loadbalancer in between
+ */
 
 import cires.bemodule.utilities.CurrentUser;
 import jakarta.servlet.FilterChain;
@@ -11,8 +16,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-// TODO: change it ContextFilter ?? add ProcessTime
-// might not work if there is a reverse proxy, firewall, gateway or loadbalancer in between
 @Component
 public class IpFilter extends OncePerRequestFilter {
     @Override

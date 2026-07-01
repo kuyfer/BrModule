@@ -7,13 +7,10 @@ import cires.bemodule.dtos.SubsidiarySummaryDTO;
 import cires.bemodule.entities.Organization;
 import cires.bemodule.entities.Subsidiary;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
 @Mapper(componentModel = "spring")
 public interface OrganizationMapper {
 
@@ -33,6 +30,6 @@ public interface OrganizationMapper {
                         .id(s.getId())
                         .name(s.getName())
                         .build())
-                .collect(Collectors.toList());
+                        .toList();
     }
 }
