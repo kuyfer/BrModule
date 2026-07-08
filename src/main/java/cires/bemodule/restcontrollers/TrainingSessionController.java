@@ -74,6 +74,12 @@ public class TrainingSessionController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/{id}/publish")
+    @PreAuthorize("hasAuthority('session:update')")
+    public ResponseEntity<TrainingSessionDTO> publishSession(@PathVariable Long id) {
+        return ResponseEntity.ok(trainingSessionService.publishSession(id));
+    }
+
     @PostMapping("/{id}/participants")
     @PreAuthorize("hasAuthority('session:update')")
     public ResponseEntity<Void> addParticipants(

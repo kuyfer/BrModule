@@ -55,18 +55,27 @@ public class TrainingSessionService {
         session.setStartDate(request.getStartDate());
         session.setEndDate(request.getEndDate());
         session.setTitle(request.getTitle());
-        session.setStatus(TrainingSessionStatus.SCHEDULED);
+        session.setStatus(TrainingSessionStatus.DRAFT);
         session.setLocation(request.getLocation());
         session.setMode(request.getMode());
         session.setDescription(request.getDescription());
         session.setTrainer(trainer);
 
-        notificationService.sendTrainerAssignmentEmail(session, trainer);
-
         TrainingSession savedSession = trainingSessionRepository.save(session);
         log.info("Training session created with id: {}", savedSession.getId());
 
         return trainingSessionMapper.toTrainingSessionDto(savedSession);
+    }
+
+    public TrainingSessionDTO publishSession(Long id) {
+        log.info("Publishing training session id: {}", id);
+        TrainingSession session = getSessionIdOrThrow(id);
+
+        changeStatus(id, TrainingSessionStatus.SCHEDULED);
+
+        notificationService.sendTrainerAssignmentEmail(session, session.getTrainer());
+        log.info("Session published id: {}", id);
+        return trainingSessionMapper.toTrainingSessionDto(session);
     }
 
     public void addParticipants(Long trainingSessionId, List<Long> participantIds) {
@@ -171,6 +180,8 @@ public class TrainingSessionService {
     private void assertValidTransition(TrainingSessionStatus current, TrainingSessionStatus next) {
         log.debug("Validating status transition from {} to {}", current, next);
         boolean valid = switch (current) {
+            case DRAFT -> next == TrainingSessionStatus.SCHEDULED ||
+                    next == TrainingSessionStatus.CANCELLED;
             case SCHEDULED, POSTPONED -> next == TrainingSessionStatus.ONGOING ||
                     next == TrainingSessionStatus.CANCELLED ||
                     next == TrainingSessionStatus.POSTPONED;

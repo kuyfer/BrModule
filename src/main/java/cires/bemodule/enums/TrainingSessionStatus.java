@@ -1,9 +1,10 @@
 package cires.bemodule.enums;
 
 public enum TrainingSessionStatus {
-    COMPLETED,
-    CANCELLED,
+    DRAFT,
     SCHEDULED,
     ONGOING,
+    COMPLETED,
+    CANCELLED,
     POSTPONED
 }
