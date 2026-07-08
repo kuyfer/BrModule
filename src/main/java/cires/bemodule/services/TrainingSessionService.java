@@ -1,6 +1,7 @@
 package cires.bemodule.services;
 
 import cires.bemodule.dtos.requests.CancelTrainingSessionRequest;
+import cires.bemodule.dtos.requests.PostponeTrainingSessionRequest;
 import cires.bemodule.dtos.responses.CancelTrainingSessionResponse;
 import cires.bemodule.dtos.requests.CreateTrainingSessionRequest;
 import cires.bemodule.dtos.views.TrainingSessionDTO;
@@ -108,14 +109,30 @@ public class TrainingSessionService {
 
     public CancelTrainingSessionResponse cancelSession(Long id, CancelTrainingSessionRequest request) {
         log.info("Cancelling training session id: {}, reason: {}", id, request.getReason());
+        changeStatus(id, TrainingSessionStatus.CANCELLED);
+
         TrainingSession session = getSessionIdOrThrow(id);
-
-        session.setStatus(TrainingSessionStatus.CANCELLED);
-        trainingSessionRepository.save(session);
-
         notificationService.sendSessionCancelledEmail(session, request.getReason());
         log.info("Training session cancelled id: {}", id);
         return trainingSessionMapper.toCancelTrainingSessionResponse(session);
+    }
+
+    public TrainingSessionDTO postponeSession(Long id, PostponeTrainingSessionRequest request) {
+        log.info("Postponing training session id: {}, new dates: {} - {}, reason: {}",
+                id, request.getStartDate(), request.getEndDate(), request.getReason());
+
+        TrainingSession session = getSessionIdOrThrow(id);
+
+        session.setStartDate(request.getStartDate());
+        session.setEndDate(request.getEndDate());
+        trainingSessionRepository.save(session);
+
+        changeStatus(id, TrainingSessionStatus.POSTPONED);
+
+        notificationService.sendSessionPostponedEmail(session, request.getReason(), request.getStartDate(), request.getEndDate());
+
+        log.info("Training session postponed id: {}", id);
+        return trainingSessionMapper.toTrainingSessionDto(session);
     }
 
     public void changeStatus(Long id, TrainingSessionStatus newStatus) {

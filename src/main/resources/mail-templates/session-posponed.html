@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Session Postponed</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f4f4f5;
+            color: #18181b;
+            padding: 40px 16px;
+        }
+
+        .wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ── Header ── */
+        .header {
+            background-color: #d97706; /* amber-600 */
+            border-radius: 12px 12px 0 0;
+            padding: 36px 40px;
+            text-align: center;
+        }
+
+        .header-icon {
+            width: 52px;
+            height: 52px;
+            background-color: rgba(255,255,255,0.15);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .header h1 {
+            color: #ffffff;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.85);
+            font-size: 14px;
+            margin-top: 6px;
+        }
+
+        /* ── Body card ── */
+        .card {
+            background: #ffffff;
+            padding: 40px;
+            border-left: 1px solid #e4e4e7;
+            border-right: 1px solid #e4e4e7;
+        }
+
+        .greeting {
+            font-size: 15px;
+            color: #52525b;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        /* ── Postponement reason banner ── */
+        .reason-banner {
+            background-color: #fffbeb; /* amber-50 */
+            border-left: 4px solid #d97706; /* amber-600 */
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin-bottom: 28px;
+        }
+
+        .reason-banner .reason-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #b45309; /* amber-700 */
+            margin-bottom: 6px;
+        }
+
+        .reason-banner .reason-text {
+            font-size: 14px;
+            color: #78350f; /* amber-900 */
+            line-height: 1.5;
+        }
+
+        /* ── Session details ── */
+        .section-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #a1a1aa;
+            margin-bottom: 12px;
+        }
+
+        .detail-grid {
+            background: #fafafa;
+            border: 1px solid #e4e4e7;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 28px;
+        }
+
+        .detail-row {
+            display: flex;
+            padding: 14px 20px;
+            border-bottom: 1px solid #e4e4e7;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-row .icon {
+            font-size: 16px;
+            width: 20px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .detail-row .label {
+            font-size: 12px;
+            color: #71717a;
+            min-width: 100px;
+            flex-shrink: 0;
+            padding-top: 1px;
+        }
+
+        .detail-row .value {
+            font-size: 14px;
+            font-weight: 500;
+            color: #18181b;
+            line-height: 1.5;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 999px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-online {
+            background-color: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .badge-onsite {
+            background-color: #f0fdf4;
+            color: #15803d;
+        }
+
+        .badge-postponed {
+            background-color: #fffbeb;
+            color: #b45309;
+        }
+
+        /* ── Description ── */
+        .description-box {
+            background: #fafafa;
+            border: 1px solid #e4e4e7;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 28px;
+        }
+
+        .description-box p {
+            font-size: 14px;
+            color: #52525b;
+            line-height: 1.7;
+        }
+
+        /* ── Help note ── */
+        .help-note {
+            background-color: #f0f9ff;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 8px;
+        }
+
+        .help-note p {
+            font-size: 13px;
+            color: #0369a1;
+            line-height: 1.6;
+        }
+
+        /* ── Footer ── */
+        .footer {
+            background-color: #f4f4f5;
+            border: 1px solid #e4e4e7;
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            padding: 24px 40px;
+            text-align: center;
+        }
+
+        .footer p {
+            font-size: 12px;
+            color: #a1a1aa;
+            line-height: 1.6;
+        }
+
+        .footer .company {
+            font-weight: 600;
+            color: #71717a;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #e4e4e7;
+            margin: 24px 0;
+        }
+
+        /* ── Rescheduled date highlight ── */
+        .new-schedule {
+            background: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            border-radius: 6px;
+            padding: 14px 20px;
+            margin-top: 8px;
+            margin-bottom: 8px;
+        }
+
+        .new-schedule .label {
+            color: #b45309;
+        }
+
+        .new-schedule .value {
+            color: #78350f;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+
+    <!-- ── Header ── -->
+    <div class="header">
+        <div class="header-icon">
+            <!-- Reschedule icon: clock with circular arrow -->
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" stroke="white" stroke-width="2"/>
+                <polyline points="12 6 12 12 16 14" stroke="white" stroke-width="2"
+                          stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M18 18l-1.5-1.5M6 6l1.5 1.5" stroke="white" stroke-width="2"
+                      stroke-linecap="round"/>
+                <path d="M2 12h2M20 12h2" stroke="white" stroke-width="2"
+                      stroke-linecap="round"/>
+            </svg>
+        </div>
+        <h1>Session Postponed</h1>
+        <p th:text="${sessionTitle}">Session Title</p>
+    </div>
+
+    <!-- ── Card ── -->
+    <div class="card">
+
+        <p class="greeting">
+            This email confirms that the following training session has been
+            <strong>postponed</strong>. Please review the updated schedule below.
+        </p>
+
+        <!-- ── Postponement reason ── -->
+        <div class="reason-banner">
+            <div class="reason-label">Reason for postponement</div>
+            <div class="reason-text"
+                 th:if="${postponementReason != null and !#strings.isEmpty(postponementReason)}"
+                 th:text="${postponementReason}">Reason provided</div>
+            <div class="reason-text"
+                 th:unless="${postponementReason != null and !#strings.isEmpty(postponementReason)}">
+                No reason provided.
+            </div>
+        </div>
+
+        <!-- ── Session details ── -->
+        <div class="section-title">Session details</div>
+
+        <div class="detail-grid">
+
+            <div class="detail-row">
+                <span class="icon">📋</span>
+                <span class="label">Title</span>
+                <span class="value" th:text="${sessionTitle}">—</span>
+            </div>
+
+            <!-- Old schedule -->
+            <div class="detail-row">
+                <span class="icon">⏪</span>
+                <span class="label">Old start</span>
+                <span class="value" th:text="${oldStartDate}">—</span>
+            </div>
+            <div class="detail-row">
+                <span class="icon">⏪</span>
+                <span class="label">Old end</span>
+                <span class="value" th:text="${oldEndDate}">—</span>
+            </div>
+
+            <!-- New schedule highlighted -->
+            <div class="detail-row new-schedule" style="border-bottom: 1px solid #fde68a;">
+                <span class="icon">📅</span>
+                <span class="label">New start</span>
+                <span class="value" th:text="${newStartDate}">—</span>
+            </div>
+            <div class="detail-row new-schedule">
+                <span class="icon">📅</span>
+                <span class="label">New end</span>
+                <span class="value" th:text="${newEndDate}">—</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="icon">📍</span>
+                <span class="label">Location</span>
+                <span class="value" th:text="${location}">—</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="icon">🖥️</span>
+                <span class="label">Mode</span>
+                <span class="value">
+                    <span class="badge"
+                          th:classappend="${mode == 'ONLINE'} ? 'badge-online' : 'badge-onsite'"
+                          th:text="${mode}">—</span>
+                </span>
+            </div>
+
+            <div class="detail-row">
+                <span class="icon">🔖</span>
+                <span class="label">Status</span>
+                <span class="value">
+                    <span class="badge badge-postponed">Postponed</span>
+                </span>
+            </div>
+
+        </div>
+
+        <!-- ── Description ── -->
+        <div th:if="${sessionDescription != null and !#strings.isEmpty(sessionDescription)}">
+            <div class="section-title">About this session</div>
+            <div class="description-box">
+                <p th:text="${sessionDescription}">—</p>
+            </div>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- ── Help note ── -->
+        <div class="help-note">
+            <p>
+                If you have any questions about the new schedule or need further
+                assistance, please contact your training administrator.
+            </p>
+        </div>
+
+    </div>
+
+    <!-- ── Footer ── -->
+    <div class="footer">
+        <p>
+            This is an automated notification from
+            <span class="company">Cires Tech</span>.<br/>
+            Please do not reply to this email.
+        </p>
+    </div>
+
+</div>
+</body>
+</html>

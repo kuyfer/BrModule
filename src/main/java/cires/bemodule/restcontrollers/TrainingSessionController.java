@@ -2,6 +2,7 @@ package cires.bemodule.restcontrollers;
 
 import cires.bemodule.dtos.requests.CancelTrainingSessionRequest;
 import cires.bemodule.dtos.requests.CreateTrainingSessionRequest;
+import cires.bemodule.dtos.requests.PostponeTrainingSessionRequest;
 import cires.bemodule.dtos.views.TrainingSessionDTO;
 import cires.bemodule.dtos.requests.UpdateTrainingSessionsRequest;
 import cires.bemodule.enums.TrainingSessionMode;
@@ -56,6 +57,14 @@ public class TrainingSessionController {
     public ResponseEntity<Void> cancelSession(@PathVariable Long id,@Valid @RequestBody CancelTrainingSessionRequest request) {
         trainingSessionService.cancelSession(id, request);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/postpone")
+    @PreAuthorize("hasAuthority('session:update')")
+    public ResponseEntity<TrainingSessionDTO> postponeSession(
+            @PathVariable Long id,
+            @Valid @RequestBody PostponeTrainingSessionRequest request) {
+        return ResponseEntity.ok(trainingSessionService.postponeSession(id, request));
     }
 
     @PostMapping("/{id}/status")

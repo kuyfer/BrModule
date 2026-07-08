@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -137,5 +138,26 @@ public class NotificationService {
                 model
         );
         emailQueueProducer.queueEmail(payload, NotificationType.SESSION_REMINDER);
+    }
+
+    public void sendSessionPostponedEmail(TrainingSession session, String reason, LocalDateTime newStartDate, LocalDateTime newEndDate) {
+        Map<String, Object> model = new HashMap<>();
+        model.put("sessionTitle", session.getTitle());
+        model.put("sessionDescription", session.getDescription());
+        model.put("oldStartDate", session.getStartDate().toString());
+        model.put("oldEndDate", session.getEndDate().toString());
+        model.put("newStartDate", newStartDate.toString());
+        model.put("newEndDate", newEndDate.toString());
+        model.put("location", session.getLocation());
+        model.put("mode", session.getMode());
+        model.put("postponementReason", reason);
+
+        EmailPayload payload = new EmailPayload(
+                session.getTrainer().getUser().getEmail(),
+                "Session Postponed",
+                "session-postponed",
+                model
+        );
+        emailQueueProducer.queueEmail(payload, NotificationType.SESSION_POSTPONED);
     }
 }

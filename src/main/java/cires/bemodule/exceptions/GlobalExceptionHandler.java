@@ -24,7 +24,6 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.Optional;
 
-
 /**
  * Global exception handler for the application.
  * <p>
