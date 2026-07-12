@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>Welcome Email</title>
+    <title>Bienvenue</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
         .container { max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 8px; padding: 40px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
@@ -16,22 +16,22 @@
 <body>
 <div class="container">
 
-    <div class="header">Welcome aboard! 🎉</div>
+    <div class="header">Bienvenue à bord ! 🎉</div>
 
-    <p>Hi <strong th:text="${recipientName}"></strong>,</p>
-    <p>Your account has been successfully created. Here are your account details:</p>
+    <p>Bonjour <strong th:text="${recipientName}"></strong>,</p>
+    <p>Votre compte a été créé avec succès. Voici vos informations de connexion :</p>
 
     <div class="highlight-box">
-        <span>Username: </span>
+        <span>Nom d'utilisateur : </span>
         <span th:text="${username}"></span>
     </div>
 
     <p th:text="${body}"></p>
 
-    <p class="warning">If you didn't create this account, please contact our support team immediately.</p>
+    <p class="warning">Si vous n'avez pas créé ce compte, veuillez contacter notre équipe d'assistance immédiatement.</p>
 
     <div class="footer">
-        This is an automated message, please do not reply.<br/>
+        Ceci est un message automatique, merci de ne pas répondre.<br/>
         &copy; Cires Technology
     </div>
 

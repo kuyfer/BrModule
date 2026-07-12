@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Session Postponed</title>
+    <title>Session reportée</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -261,68 +261,68 @@
                       stroke-linecap="round"/>
             </svg>
         </div>
-        <h1>Session Postponed</h1>
-        <p th:text="${sessionTitle}">Session Title</p>
+        <h1>Session reportée</h1>
+        <p th:text="${sessionTitle}">Titre de la session</p>
     </div>
 
     <!-- ── Card ── -->
     <div class="card">
 
         <p class="greeting">
-            This email confirms that the following training session has been
-            <strong>postponed</strong>. Please review the updated schedule below.
+            Cet e-mail confirme que la session de formation suivante a été
+            <strong>reportée</strong>. Veuillez consulter le nouveau planning ci-dessous.
         </p>
 
         <!-- ── Postponement reason ── -->
         <div class="reason-banner">
-            <div class="reason-label">Reason for postponement</div>
+            <div class="reason-label">Motif du report</div>
             <div class="reason-text"
                  th:if="${postponementReason != null and !#strings.isEmpty(postponementReason)}"
-                 th:text="${postponementReason}">Reason provided</div>
+                 th:text="${postponementReason}">Motif fourni</div>
             <div class="reason-text"
                  th:unless="${postponementReason != null and !#strings.isEmpty(postponementReason)}">
-                No reason provided.
+                Aucune raison fournie.
             </div>
         </div>
 
         <!-- ── Session details ── -->
-        <div class="section-title">Session details</div>
+        <div class="section-title">Détails de la session</div>
 
         <div class="detail-grid">
 
             <div class="detail-row">
                 <span class="icon">📋</span>
-                <span class="label">Title</span>
+                <span class="label">Titre</span>
                 <span class="value" th:text="${sessionTitle}">—</span>
             </div>
 
             <!-- Old schedule -->
             <div class="detail-row">
                 <span class="icon">⏪</span>
-                <span class="label">Old start</span>
+                <span class="label">Ancien début</span>
                 <span class="value" th:text="${oldStartDate}">—</span>
             </div>
             <div class="detail-row">
                 <span class="icon">⏪</span>
-                <span class="label">Old end</span>
+                <span class="label">Ancienne fin</span>
                 <span class="value" th:text="${oldEndDate}">—</span>
             </div>
 
             <!-- New schedule highlighted -->
             <div class="detail-row new-schedule" style="border-bottom: 1px solid #fde68a;">
                 <span class="icon">📅</span>
-                <span class="label">New start</span>
+                <span class="label">Nouveau début</span>
                 <span class="value" th:text="${newStartDate}">—</span>
             </div>
             <div class="detail-row new-schedule">
                 <span class="icon">📅</span>
-                <span class="label">New end</span>
+                <span class="label">Nouvelle fin</span>
                 <span class="value" th:text="${newEndDate}">—</span>
             </div>
 
             <div class="detail-row">
                 <span class="icon">📍</span>
-                <span class="label">Location</span>
+                <span class="label">Lieu</span>
                 <span class="value" th:text="${location}">—</span>
             </div>
 
@@ -338,9 +338,9 @@
 
             <div class="detail-row">
                 <span class="icon">🔖</span>
-                <span class="label">Status</span>
+                <span class="label">Statut</span>
                 <span class="value">
-                    <span class="badge badge-postponed">Postponed</span>
+                    <span class="badge badge-postponed">Reportée</span>
                 </span>
             </div>
 
@@ -348,7 +348,7 @@
 
         <!-- ── Description ── -->
         <div th:if="${sessionDescription != null and !#strings.isEmpty(sessionDescription)}">
-            <div class="section-title">About this session</div>
+            <div class="section-title">À propos de cette session</div>
             <div class="description-box">
                 <p th:text="${sessionDescription}">—</p>
             </div>
@@ -359,8 +359,8 @@
         <!-- ── Help note ── -->
         <div class="help-note">
             <p>
-                If you have any questions about the new schedule or need further
-                assistance, please contact your training administrator.
+                Si vous avez des questions concernant le nouveau planning ou si vous avez
+                besoin d'aide, veuillez contacter votre administrateur de formation.
             </p>
         </div>
 
@@ -369,9 +369,9 @@
     <!-- ── Footer ── -->
     <div class="footer">
         <p>
-            This is an automated notification from
+            Ceci est une notification automatique envoyée par
             <span class="company">Cires Tech</span>.<br/>
-            Please do not reply to this email.
+            Merci de ne pas répondre à cet e-mail.
         </p>
     </div>
 

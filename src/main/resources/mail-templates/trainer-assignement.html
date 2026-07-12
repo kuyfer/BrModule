@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>Trainer Assignement Email</title>
+    <title>Attribution d'une formation</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
         .container { max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 8px; padding: 40px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
@@ -17,46 +17,46 @@
 <body>
 <div class="container">
 
-    <div class="header">🎓 New Training Session Assigned to You</div>
+    <div class="header">🎓 Nouvelle session de formation qui vous est attribuée</div>
 
-    <p>Hi <strong th:text="${trainerName}"></strong>,</p>
-    <p>You have been assigned as the trainer for the following session:</p>
+    <p>Bonjour <strong th:text="${trainerName}"></strong>,</p>
+    <p>Vous avez été désigné(e) comme formateur(rice) pour la session suivante :</p>
 
     <div class="info-box">
         <div class="detail-row">
-            <span>Session: </span>
+            <span>Session : </span>
             <span th:text="${sessionTitle}"></span>
         </div>
         <div th:if="${sessionDescription}" class="detail-row">
-            <span>Description: </span>
+            <span>Description : </span>
             <span th:text="${sessionDescription}"></span>
         </div>
         <div class="detail-row">
-            <span>Date: </span>
+            <span>Date : </span>
             <span th:text="${startDate}"></span> – <span th:text="${endDate}"></span>
         </div>
         <div th:if="${location}" class="detail-row">
-            <span>Location: </span>
+            <span>Lieu : </span>
             <span th:text="${location}"></span>
         </div>
         <div th:if="${mode}" class="detail-row">
-            <span>Mode: </span>
+            <span>Mode : </span>
             <span th:text="${mode}"></span>
         </div>
         <div th:if="${subsidiary}" class="detail-row">
-            <span>Subsidiary: </span>
+            <span>Filiale : </span>
             <span th:text="${subsidiary}"></span>
         </div>
     </div>
 
-    <p>Please review the session details and prepare any necessary materials.</p>
+    <p>Veuillez prendre connaissance des détails de la session et préparer le matériel nécessaire.</p>
 
     <p class="warning">
-        If you believe this assignment is an error or you have a scheduling conflict, please contact the training coordinator.
+        Si vous pensez qu'il s'agit d'une erreur ou si vous avez un conflit d'horaire, veuillez contacter le coordinateur de formation.
     </p>
 
     <div class="footer">
-        This is an automated message, please do not reply.<br/>
+        Ceci est un message automatique, merci de ne pas répondre.<br/>
         &copy; Cires Technology
     </div>
 

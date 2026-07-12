@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Session Cancelled</title>
+    <title>Session annulée</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -230,61 +230,60 @@
     <!-- ── Header ── -->
     <div class="header">
         <div class="header-icon">
-            <!-- simple X icon via inline SVG, no external deps -->
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                  xmlns="http://www.w3.org/2000/svg">
                 <path d="M18 6L6 18M6 6l12 12" stroke="white" stroke-width="2.5"
                       stroke-linecap="round"/>
             </svg>
         </div>
-        <h1>Session Cancelled</h1>
-        <p th:text="${sessionTitle}">Session Title</p>
+        <h1>Session annulée</h1>
+        <p th:text="${sessionTitle}">Titre de la session</p>
     </div>
 
     <!-- ── Card ── -->
     <div class="card">
 
         <p class="greeting">
-            This email confirms that the following training session has been
-            <strong>cancelled</strong>. Please review the details below and
-            contact your administrator if you have any questions.
+            Cet e-mail confirme que la session de formation suivante a été
+            <strong>annulée</strong>. Veuillez consulter les détails ci-dessous et
+            contacter votre administrateur si vous avez des questions.
         </p>
 
         <!-- ── Cancellation reason ── -->
         <div class="reason-banner">
-            <div class="reason-label">Reason for cancellation</div>
+            <div class="reason-label">Motif de l’annulation</div>
             <div class="reason-text"
-                 th:text="${'Reason for cancellation'} ? ${cancellationReason} : 'No reason provided.'">
-                No reason provided.
+                 th:text="${'Reason for cancellation'} ? ${cancellationReason} : 'Aucune raison fournie.'">
+                Aucune raison fournie.
             </div>
         </div>
 
         <!-- ── Session details ── -->
-        <div class="section-title">Session details</div>
+        <div class="section-title">Détails de la session</div>
 
         <div class="detail-grid">
 
             <div class="detail-row">
                 <span class="icon">📋</span>
-                <span class="label">Title</span>
+                <span class="label">Titre</span>
                 <span class="value" th:text="${sessionTitle}">—</span>
             </div>
 
             <div class="detail-row">
                 <span class="icon">📅</span>
-                <span class="label">Start date</span>
+                <span class="label">Date de début</span>
                 <span class="value" th:text="${startDate}">—</span>
             </div>
 
             <div class="detail-row">
                 <span class="icon">📅</span>
-                <span class="label">End date</span>
+                <span class="label">Date de fin</span>
                 <span class="value" th:text="${endDate}">—</span>
             </div>
 
             <div class="detail-row">
                 <span class="icon">📍</span>
-                <span class="label">Location</span>
+                <span class="label">Lieu</span>
                 <span class="value" th:text="${location}">—</span>
             </div>
 
@@ -300,9 +299,9 @@
 
             <div class="detail-row">
                 <span class="icon">🔖</span>
-                <span class="label">Status</span>
+                <span class="label">Statut</span>
                 <span class="value">
-                    <span class="badge badge-cancelled">Cancelled</span>
+                    <span class="badge badge-cancelled">Annulé</span>
                 </span>
             </div>
 
@@ -310,7 +309,7 @@
 
         <!-- ── Description ── -->
         <div th:if="${sessionDescription != null and !#strings.isEmpty(sessionDescription)}">
-            <div class="section-title">About this session</div>
+            <div class="section-title">À propos de cette session</div>
             <div class="description-box">
                 <p th:text="${sessionDescription}">—</p>
             </div>
@@ -321,8 +320,9 @@
         <!-- ── Help note ── -->
         <div class="help-note">
             <p>
-                If you believe this cancellation was made in error or need further
-                information, please reach out to your training administrator directly.
+                Si vous pensez que cette annulation est une erreur ou si vous avez besoin
+                d'informations complémentaires, veuillez contacter directement votre
+                administrateur de formation.
             </p>
         </div>
 
@@ -331,9 +331,9 @@
     <!-- ── Footer ── -->
     <div class="footer">
         <p>
-            This is an automated notification from
+            Ceci est une notification automatique envoyée par
             <span class="company">Cires Tech</span>.<br/>
-            Please do not reply to this email.
+            Merci de ne pas répondre à cet e-mail.
         </p>
     </div>
 
