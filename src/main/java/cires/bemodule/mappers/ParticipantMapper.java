@@ -22,4 +22,3 @@ public interface ParticipantMapper {
     void patchParticipantFromRequest(PatchParticipantRequest request, @MappingTarget Participant participant);
 
 }
-
