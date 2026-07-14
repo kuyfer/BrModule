@@ -10,7 +10,7 @@ import java.util.Set;
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Table(name = "organizations")
-public class Organization {
+public class Organization extends Auditable {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,4 +25,3 @@ public class Organization {
     private String contactEmail;
     private String phone;
 }
-
