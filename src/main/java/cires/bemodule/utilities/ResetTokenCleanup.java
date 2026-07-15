@@ -6,6 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -15,10 +18,11 @@ public class ResetTokenCleanup {
 
     private final ResetTokenRepository resetTokenRepository;
 
-
-    @Scheduled(fixedRate = 3_600_000) // runs every hour
+    @Transactional
+    @Scheduled(fixedDelay = 3_600_000) // 1 hour
     public void clearExpiredTokens() {
-        log.info("Clearing expired reset tokens");
-        resetTokenRepository.deleteAll();
+        LocalDateTime now = LocalDateTime.now();
+        int deletedCount = resetTokenRepository.deleteByExpiresAtBefore(now);
+        log.info("Cleared {} expired reset tokens", deletedCount);
     }
 }
