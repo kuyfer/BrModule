@@ -7,6 +7,7 @@ import org.hibernate.envers.Audited;
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 @Audited @Entity
 @Getter
 @Setter

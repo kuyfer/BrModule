@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.envers.Audited;
 
+@Builder
 @Audited @Entity
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor

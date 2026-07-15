@@ -6,6 +6,7 @@ import org.hibernate.envers.Audited;
 import java.util.HashSet;
 import java.util.Set;
 
+@Builder
 @Audited @Entity
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor

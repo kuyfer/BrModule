@@ -8,8 +8,8 @@ import org.hibernate.envers.Audited;
 import java.util.HashSet;
 import java.util.Set;
 
-@Audited
-@Entity
+@Builder
+@Audited @Entity
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Table(name = "roles")

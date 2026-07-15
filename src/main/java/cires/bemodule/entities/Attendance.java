@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Table(name = "attendance")
-public class Attendance {
+public class Attendance extends Auditable{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -63,7 +63,5 @@ public class Attendance {
     private String correctionReason;
 
     @Column(name = "audit_note", columnDefinition = "TEXT")
-    private String auditNote;       // immutable trail of all corrections
-
-
+    private String auditNote;
 }

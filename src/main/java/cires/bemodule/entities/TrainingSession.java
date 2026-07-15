@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 @Audited @Entity
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
@@ -45,9 +46,9 @@ public class TrainingSession extends Auditable  {
     @JoinColumn(name = "trainer_id")
     private Trainer trainer;
 
-//    @ManyToOne
-//    @JoinColumn(name = "subsidiary_id")
-//    private Subsidiary subsidiary;
+    @ManyToOne
+    @JoinColumn(name = "subsidiary_id")
+    private Subsidiary subsidiary;
 
     @OneToMany(mappedBy = "trainingSession")
     private List<SessionParticipant> sessionParticipants = new ArrayList<>();
