@@ -5,6 +5,7 @@ import cires.bemodule.dtos.requests.RegisterRequest;
 import cires.bemodule.entities.Notification;
 import cires.bemodule.entities.Trainer;
 import cires.bemodule.entities.TrainingSession;
+import cires.bemodule.entities.User;
 import cires.bemodule.enums.NotificationStatus;
 import cires.bemodule.enums.NotificationType;
 import cires.bemodule.exceptions.notfound.NotificationNotFoundException;
@@ -70,6 +71,23 @@ public class NotificationService {
                 model
         );
         emailQueueProducer.queueEmail(payload, NotificationType.TRAINER_ASSIGNMENT);
+    }
+
+    public void sendPasswordSetupEmail(User user, String setupLink) {
+        Map<String, Object> model = new HashMap<>();
+        model.put("recipientName", user.getFirstName());
+        model.put("username", user.getUsername());
+        model.put("setupLink", setupLink);
+        model.put("expiryHours", 24);
+
+        EmailPayload payload = new EmailPayload(
+                user.getEmail(),
+                "Set Up Your Password",
+                "password-setup",
+                model
+        );
+
+        emailQueueProducer.queueEmail(payload, NotificationType.PASSWORD_SETUP);
     }
 
     public void sendSessionCancelledEmail(TrainingSession session, String reason) {
