@@ -24,6 +24,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -49,7 +50,7 @@ public class TrainerService {
         trainer.setSpeciality(request.getSpeciality());
         Role trainerRole = roleRepository.findByRoleName(RoleType.TRAINER)
                 .orElseThrow(RoleNotFoundException::new);
-        user.setRoles(List.of(trainerRole));
+        user.setRoles(Set.of(trainerRole));
         trainer.setUser(user);
         Trainer savedTrainer = trainerRepository.save(trainer);
         return trainerMapper.toTrainerDTO(savedTrainer);

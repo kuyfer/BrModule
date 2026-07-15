@@ -33,14 +33,12 @@ public class RoleService {
 
     @Transactional
     public RoleDTO createRole(CreateRoleRequest request) {
-        // Check uniqueness
         if (roleRepository.existsByRoleName(request.getRoleName())) {
             throw new ConflictException("Role with name '" + request.getRoleName() + "' already exists.");
         }
 
         Role role = roleMapper.toEntity(request);
 
-        // Assign permissions if provided
         if (request.getPermissionIds() != null && !request.getPermissionIds().isEmpty()) {
             Set<Permission> permissions = resolvePermissions(request.getPermissionIds());
             role.setPermissions(permissions);
@@ -74,7 +72,6 @@ public class RoleService {
     public RoleDTO patchRole(Long id, PatchRoleRequest request) {
         Role existing = getRoleOrThrow(id);
 
-        // Update name if provided and changed
         if (request.getRoleName() != null && request.getRoleName() != existing.getRoleName()) {
             if (roleRepository.existsByRoleName(request.getRoleName())) {
                 throw new ConflictException("Role with name '" + request.getRoleName() + "' already exists.");
@@ -82,7 +79,6 @@ public class RoleService {
             existing.setRoleName(request.getRoleName());
         }
 
-        // Update permissions if provided (replace entire set)
         if (request.getPermissionIds() != null) {
             Set<Permission> permissions = resolvePermissions(request.getPermissionIds());
             existing.setPermissions(permissions);
@@ -97,10 +93,6 @@ public class RoleService {
     @Transactional
     public void deleteRole(Long id) {
         Role role = getRoleOrThrow(id);
-        // Optional: prevent deletion of system roles (e.g., SUPER_ADMIN)
-        // if (role.getRoleName() == RoleType.SUPER_ADMIN) {
-        //     throw new ConflictException("Cannot delete the SUPER_ADMIN role.");
-        // }
         roleRepository.delete(role);
     }
 
