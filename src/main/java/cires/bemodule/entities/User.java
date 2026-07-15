@@ -4,8 +4,11 @@ import cires.bemodule.enums.AccountStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.envers.Audited;
-import java.util.Collection;
 
+import java.util.HashSet;
+import java.util.Set;
+
+@Builder
 @Audited @Entity
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
@@ -15,19 +18,19 @@ public class User extends Auditable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 50)
     private String username;
 
-    @Column(nullable = false)
+    @Column(comment = "NULL until user sets password via setup token")
     private String password;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String firstName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String lastName;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true,  length = 100)
     private String email;
 
     @Enumerated(EnumType.STRING)
@@ -35,6 +38,6 @@ public class User extends Auditable {
     private AccountStatus accountStatus;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private Collection<Role> roles;
-
+    @Builder.Default
+    private Set<Role> roles = new HashSet<>();
 }

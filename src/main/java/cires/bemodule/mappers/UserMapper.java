@@ -5,7 +5,10 @@ import cires.bemodule.dtos.views.UserDTO;
 import cires.bemodule.entities.User;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring")
+@Mapper(
+        componentModel = "spring",
+        unmappedTargetPolicy = ReportingPolicy.IGNORE
+)
 public interface UserMapper {
 
     UserDTO toUserDto(User user);

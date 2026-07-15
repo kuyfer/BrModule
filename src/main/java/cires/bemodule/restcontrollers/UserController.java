@@ -1,5 +1,6 @@
 package cires.bemodule.restcontrollers;
 
+import cires.bemodule.dtos.requests.CreateUserRequest;
 import cires.bemodule.dtos.requests.PatchUserRequest;
 import cires.bemodule.dtos.views.UserDTO;
 import cires.bemodule.enums.AccountStatus;
@@ -9,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +28,9 @@ public class UserController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('user:create')")
-    public void createUser(@RequestBody Object user) {
-        // placeholder – no implementation
+    public ResponseEntity<UserDTO> createUser(@RequestBody @Valid CreateUserRequest request) {
+        UserDTO createdUser = userService.createUser(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
     // ################################# READ ######################################

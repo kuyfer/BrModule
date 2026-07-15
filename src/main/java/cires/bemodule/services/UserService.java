@@ -1,5 +1,6 @@
 package cires.bemodule.services;
 
+import cires.bemodule.dtos.requests.CreateUserRequest;
 import cires.bemodule.dtos.requests.PatchUserRequest;
 import cires.bemodule.dtos.requests.RegisterRequest;
 import cires.bemodule.dtos.views.UserDTO;
@@ -38,35 +39,62 @@ public class UserService {
     private final UserMapper userMapper;
     private final RoleRepository roleRepository;
     private final NotificationService notificationService;
+    private final PasswordResetService passwordResetService;
 
-    // ################################# CREATE ######################################
+// ################################# CREATE ######################################
 
     public User registerUser(RegisterRequest request) {
-
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
             throw new DuplicateUsernameException("Username already exists");
         }
-
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new DuplicateEmailException("Email already exists");
         }
 
-        User user = new User();
-        user.setUsername(request.getUsername());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
         Role adminRole = roleRepository.findByRoleName(RoleType.SUPER_ADMIN)
                 .orElseThrow(() -> new RuntimeException("Role not found"));
-        user.setRoles(List.of(adminRole));
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setEmail(request.getEmail());
-        user.setAccountStatus(AccountStatus.ACTIVE);
+
+        User user = User.builder()
+                .username(request.getUsername())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .email(request.getEmail())
+                .accountStatus(AccountStatus.ACTIVE)
+                .roles(Set.of(adminRole))
+                .build();
 
         User savedUser = userRepository.save(user);
-
         notificationService.sendRegistrationEmail(request);
-
         return savedUser;
+    }
+
+    public UserDTO createUser(CreateUserRequest request) {
+        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+            throw new DuplicateUsernameException("Username already exists");
+        }
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new DuplicateEmailException("Email already exists");
+        }
+
+        Set<Role> roles = null;
+        if (request.getRoleIds() != null && !request.getRoleIds().isEmpty()) {
+            roles = new HashSet<>(roleRepository.findAllById(request.getRoleIds()));
+        }
+
+        User user = User.builder()
+                .username(request.getUsername())
+                .email(request.getEmail())
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .accountStatus(AccountStatus.PENDING)
+                .password(null)
+                .roles(roles)
+                .build();
+
+        User saved = userRepository.save(user);
+        passwordResetService.generateAndSendPasswordSetupToken(saved);
+        return userMapper.toUserDto(saved);
     }
 
     // ################################# READ ######################################
