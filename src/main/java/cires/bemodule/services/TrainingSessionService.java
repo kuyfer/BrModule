@@ -45,21 +45,23 @@ public class TrainingSessionService {
 
     public TrainingSessionDTO createTrainingSession(CreateTrainingSessionRequest request) {
         log.info("Creating training session with title: {}, trainerId: {}", request.getTitle(), request.getTrainerId());
+
         Trainer trainer = trainerRepository.findById(request.getTrainerId())
                 .orElseThrow(() -> {
                     log.error("Trainer not found with id: {}", request.getTrainerId());
                     return new TrainerNotFoundException(request.getTrainerId());
                 });
 
-        TrainingSession session = new TrainingSession();
-        session.setStartDate(request.getStartDate());
-        session.setEndDate(request.getEndDate());
-        session.setTitle(request.getTitle());
-        session.setStatus(TrainingSessionStatus.DRAFT);
-        session.setLocation(request.getLocation());
-        session.setMode(request.getMode());
-        session.setDescription(request.getDescription());
-        session.setTrainer(trainer);
+        TrainingSession session = TrainingSession.builder()
+                .startDate(request.getStartDate())
+                .endDate(request.getEndDate())
+                .title(request.getTitle())
+                .status(TrainingSessionStatus.DRAFT)
+                .location(request.getLocation())
+                .mode(request.getMode())
+                .description(request.getDescription())
+                .trainer(trainer)
+                .build();
 
         TrainingSession savedSession = trainingSessionRepository.save(session);
         log.info("Training session created with id: {}", savedSession.getId());
@@ -72,9 +74,9 @@ public class TrainingSessionService {
         TrainingSession session = getSessionIdOrThrow(id);
 
         changeStatus(id, TrainingSessionStatus.SCHEDULED);
-
         notificationService.sendTrainerAssignmentEmail(session, session.getTrainer());
         log.info("Session published id: {}", id);
+
         return trainingSessionMapper.toTrainingSessionDto(session);
     }
 
@@ -83,9 +85,10 @@ public class TrainingSessionService {
         List<Participant> participants = participantRepository.findAllById(participantIds);
 
         for (Participant participant : participants) {
-            SessionParticipant sp = new SessionParticipant();
-            sp.setTrainingSession(session);
-            sp.setParticipant(participant);
+            SessionParticipant sp = SessionParticipant.builder()
+                    .trainingSession(session)
+                    .participant(participant)
+                    .build();
             sessionParticipantRepository.save(sp);
         }
     }
