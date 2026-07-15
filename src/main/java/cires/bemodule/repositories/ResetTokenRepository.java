@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface ResetTokenRepository extends JpaRepository<ResetToken, Long> {
 
-    void deleteAllByExpiresAtBefore(LocalDateTime now);
+    int deleteByExpiresAtBefore(LocalDateTime now);
 
     Optional<ResetToken> findByToken(String token);
 }

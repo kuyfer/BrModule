@@ -31,15 +31,17 @@ spring:
 server:
   port: 8081
 
-
 jwt:
   secret: mySecretKey1234567890123456789012345678901234567890
-  expiration: 86400000 # 24 h
-  refresh-expiration: 604800000 # 7 days in milliseconds
-
+  expiration: 86400000         # 24 h
+  refresh-expiration: 604800000  # 7 days
 
 management:
   endpoints:
     web:
       exposure:
         include: [ "prometheus" ]
+
+
+app:
+  frontend-url: http://localhost:5173

@@ -3,16 +3,20 @@ package cires.bemodule.restcontrollers;
 import cires.bemodule.dtos.requests.LoginRequest;
 import cires.bemodule.dtos.requests.RefreshTokenRequest;
 import cires.bemodule.dtos.requests.RegisterRequest;
+import cires.bemodule.dtos.requests.SetPasswordRequest;
 import cires.bemodule.dtos.responses.AuthResponse;
 import cires.bemodule.dtos.responses.RegisterResponse;
 import cires.bemodule.entities.User;
 import cires.bemodule.security.services.AuthService;
+import cires.bemodule.services.PasswordResetService;
 import cires.bemodule.services.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @AllArgsConstructor
 @RestController
@@ -21,6 +25,7 @@ public class AuthController {
 
     private final AuthService authService;
     private final UserService userService;
+    private final PasswordResetService passwordResetService;
 
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
@@ -43,6 +48,26 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout() {
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Verify if a password setup token is valid (not expired and exists in DB).
+     * Called by the frontend when the user lands on the set-password page.
+     */
+    @GetMapping("/verify-token")
+    public ResponseEntity<Map<String, Boolean>> verifyToken(@RequestParam String token) {
+        boolean isValid = passwordResetService.isTokenValid(token);
+        return ResponseEntity.ok(Map.of("valid", isValid));
+    }
+
+    /**
+     * Set up a new password for the user.
+     * Activates the account if it was in PENDING status.
+     */
+    @PostMapping("/setup-password")
+    public ResponseEntity<Void> setupPassword(@RequestBody @Valid SetPasswordRequest request) {
+        passwordResetService.setupPassword(request.getToken(), request.getPassword());
         return ResponseEntity.ok().build();
     }
 }
