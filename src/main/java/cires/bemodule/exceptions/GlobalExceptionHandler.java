@@ -21,7 +21,10 @@ import cires.bemodule.exceptions.security.SecurityException;
 
 import java.net.URI;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -262,6 +265,27 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                         .reduce("Please make sure to provide a valid request, ", (a, b) -> a + " " + b)
                 )
                 .orElse("").toString();
+    }
+
+    // ─── Fallback (500) – catch-all for any unhandled exception ──────────
+
+    /**
+     * Fallback handler for any exception not explicitly handled above.
+     * <p>
+     * Returns HTTP 500 Internal Server Error with a generic message.
+     * The original exception is logged server‑side for debugging.
+     * </p>
+     *
+     * @param ex      the thrown exception
+     * @param request the current HTTP request
+     * @return a 500 problem detail
+     */
+    @ExceptionHandler(Exception.class)
+    public ProblemDetail handleAllUnhandledExceptions(Exception ex, HttpServletRequest request) {
+        return build(HttpStatus.INTERNAL_SERVER_ERROR,
+                "internal-server-error",
+                "An unexpected error occurred. Please contact support.",
+                request);
     }
 
     // ─── Private Helpers ──────────────────────────────────────────────────────
