@@ -212,23 +212,25 @@ public class ParticipantImportService {
 
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));
-             CSVParser parser = CSVFormat.DEFAULT
-                     .withFirstRecordAsHeader()
-                     .withIgnoreHeaderCase()
-                     .withTrim()
+             CSVParser parser = CSVFormat.DEFAULT.builder()
+                     .setHeader()
+                     .setSkipHeaderRecord(true)
+                     .setIgnoreHeaderCase(true)
+                     .setTrim(true)
+                     .build()
                      .parse(reader)) {
 
             validateHeaders(parser.getHeaderNames());
 
             int rowNum = 2; // row 1 = header
-            for (CSVRecord record : parser) {
+            for (CSVRecord rec : parser) {
                 rows.add(RawImportRow.builder()
                         .rowNumber(rowNum++)
-                        .firstName(record.get("firstName"))
-                        .lastName(record.get("lastName"))
-                        .email(record.get("email"))
-                        .phone(safeGet(record, "phone"))
-                        .formationRaw(record.get("formation"))
+                        .firstName(rec.get("firstName"))
+                        .lastName(rec.get("lastName"))
+                        .email(rec.get("email"))
+                        .phone(safeGet(rec, "phone"))
+                        .formationRaw(rec.get("formation"))
                         .build());
             }
 
@@ -347,8 +349,8 @@ public class ParticipantImportService {
         };
     }
 
-    private String safeGet(CSVRecord record, String column) {
-        return record.isMapped(column) ? record.get(column) : null;
+    private String safeGet(CSVRecord rec, String column) {
+        return rec.isMapped(column) ? rec.get(column) : null;
     }
 
     private boolean isRowBlank(Row row) {
@@ -365,9 +367,4 @@ public class ParticipantImportService {
         style.setFont(font);
         return style;
     }
-
-//    // Caught per row — never aborts the whole import
-//    static class ImportRowException extends RuntimeException {
-//        public ImportRowException(String msg) { super(msg); }
-//    }
 }
