@@ -18,8 +18,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/audit")
 @RequiredArgsConstructor
+@RequestMapping("/api/audit")
 public class AuditController {
 
     private final AuditService auditService;
@@ -42,7 +42,7 @@ public class AuditController {
 
     @GetMapping("/{entityType}/{id}/revision/{rev}")
    // @PreAuthorize("hasAuthority('audit:read') or hasRole('ADMIN')")
-    public ResponseEntity<?> getSnapshot(
+    public ResponseEntity<Object> getSnapshot(
             @PathVariable String entityType,
             @PathVariable Long id,
             @PathVariable int rev) {

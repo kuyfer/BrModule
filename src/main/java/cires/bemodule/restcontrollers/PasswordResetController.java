@@ -1,32 +1,22 @@
 package cires.bemodule.restcontrollers;
 
+import cires.bemodule.dtos.requests.ResetPasswordRequest;
 import cires.bemodule.dtos.requests.ResetRequest;
-import cires.bemodule.repositories.ResetTokenRepository;
-import cires.bemodule.repositories.UserRepository;
 import cires.bemodule.services.PasswordResetService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.Optional;
-import cires.bemodule.dtos.requests.ResetPasswordRequest;
-import cires.bemodule.entities.ResetToken;
-import cires.bemodule.entities.User;
-import org.springframework.http.HttpStatus;
 
-@AllArgsConstructor
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/passwd")
 public class PasswordResetController {
 
     private final PasswordResetService resetService;
-    private final ResetTokenRepository resetTokenRepository;
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/reset-password")
     public ResponseEntity<String> requestReset(@Valid @RequestBody ResetRequest request) {
@@ -36,19 +26,7 @@ public class PasswordResetController {
 
     @PostMapping("/reset-password/confirm")
     public ResponseEntity<String> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
-        Optional<ResetToken> tokenOpt = resetTokenRepository.findByToken(request.getToken());
-
-        if (tokenOpt.isEmpty() || tokenOpt.get().isExpired()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token is invalid or expired");
-        }
-
-        ResetToken tokenRecord = tokenOpt.get();
-        User user = tokenRecord.getUser();
-
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        userRepository.save(user);
-        resetTokenRepository.delete(tokenRecord);
-
+        resetService.resetPassword(request.getToken(), request.getPassword());
         return ResponseEntity.ok("Password updated");
     }
 }

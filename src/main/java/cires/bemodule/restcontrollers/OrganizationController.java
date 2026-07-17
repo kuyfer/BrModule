@@ -14,17 +14,21 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/organizations")
 @RequiredArgsConstructor
+@RequestMapping("/api/organizations")
 public class OrganizationController {
 
     private final OrganizationService organizationService;
+
+    // ################################# CREATE ######################################
 
     @PostMapping
     @PreAuthorize("hasAuthority('organization:create')")
     public ResponseEntity<OrganizationDTO> create(@Valid @RequestBody CreateOrganizationRequest request) {
         return ResponseEntity.ok(organizationService.createOrganization(request));
     }
+
+    // ################################# READ ########################################
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('organization:read')")
@@ -40,6 +44,8 @@ public class OrganizationController {
         return ResponseEntity.ok(organizationService.findAll(pageable, name));
     }
 
+    // ################################# UPDATE ######################################
+
     @PatchMapping("/{id}")
     @PreAuthorize("hasAuthority('organization:update')")
     public ResponseEntity<OrganizationDTO> patch(
@@ -47,6 +53,8 @@ public class OrganizationController {
             @Valid @RequestBody PatchOrganizationRequest request) {
         return ResponseEntity.ok(organizationService.patchOrganization(id, request));
     }
+
+    // ################################# DELETE ######################################
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('organization:delete')")

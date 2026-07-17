@@ -3,7 +3,6 @@ package cires.bemodule.restcontrollers;
 import cires.bemodule.dtos.imports.ImportResult;
 import cires.bemodule.services.ParticipantImportService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +10,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@Slf4j
 @RestController
-@RequestMapping("/api/participants/import")
 @RequiredArgsConstructor
+@RequestMapping("/api/participants/import")
 public class ParticipantImportController {
 
     private final ParticipantImportService importService;

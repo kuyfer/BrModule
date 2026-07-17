@@ -14,17 +14,21 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/subsidiaries")
 @RequiredArgsConstructor
+@RequestMapping("/api/subsidiaries")
 public class SubsidiaryController {
 
     private final SubsidiaryService subsidiaryService;
+
+    // ################################# CREATE ######################################
 
     @PostMapping
     @PreAuthorize("hasAuthority('subsidiary:create')")
     public ResponseEntity<SubsidiaryDTO> create(@Valid @RequestBody CreateSubsidiaryRequest request) {
         return ResponseEntity.ok(subsidiaryService.createSubsidiary(request));
     }
+
+    // ################################# READ ########################################
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('subsidiary:read')")
@@ -40,6 +44,8 @@ public class SubsidiaryController {
         return ResponseEntity.ok(subsidiaryService.findAll(pageable, name));
     }
 
+    // ################################# UPDATE ######################################
+
     @PatchMapping("/{id}")
     @PreAuthorize("hasAuthority('subsidiary:update')")
     public ResponseEntity<SubsidiaryDTO> update(
@@ -47,6 +53,8 @@ public class SubsidiaryController {
             @Valid @RequestBody PatchSubsidiaryRequest request) {
         return ResponseEntity.ok(subsidiaryService.patchSubsidiary(id, request));
     }
+
+    // ################################# DELETE ######################################
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('subsidiary:delete')")

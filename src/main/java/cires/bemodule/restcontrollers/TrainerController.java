@@ -5,7 +5,7 @@ import cires.bemodule.dtos.views.TrainerDTO;
 import cires.bemodule.dtos.requests.CreateTrainerRequest;
 import cires.bemodule.services.TrainerService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -14,12 +14,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-
-@AllArgsConstructor
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/trainers")
 public class TrainerController {
     private final TrainerService trainerService;
+
+    // ################################# CREATE ######################################
+
+    @PostMapping("/{userId}")
+    @PreAuthorize("hasAuthority('trainer:create')")
+    public ResponseEntity<TrainerDTO> createTrainer(@Valid @RequestBody CreateTrainerRequest request, @PathVariable Long userId){
+        TrainerDTO trainer = trainerService.createTrainer(request, userId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(trainer);
+    }
+
+    // ################################# READ ########################################
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('trainer:read')")
@@ -36,24 +46,21 @@ public class TrainerController {
         return ResponseEntity.ok(trainers);
     }
 
-    @PostMapping("/{userId}")
-    @PreAuthorize("hasAuthority('trainer:create')")
-    public ResponseEntity<TrainerDTO> createTrainer(@Valid @RequestBody CreateTrainerRequest request, @PathVariable Long userId){
-        TrainerDTO trainer = trainerService.createTrainer(request, userId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(trainer);
-    }
-
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('trainer:delete')")
-    ResponseEntity<Void> deleteTrainer(@PathVariable Long id){
-        trainerService.deleteTrainer(id);
-        return ResponseEntity.noContent().build();
-    }
+    // ################################# UPDATE ######################################
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasAuthority('trainer:update')")
     public ResponseEntity<TrainerDTO> patch(@PathVariable Long id,
                                             @RequestBody @Valid PatchTrainerRequest request) {
         return ResponseEntity.ok(trainerService.patchTrainer(id, request));
+    }
+
+    // ################################# DELETE ######################################
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('trainer:delete')")
+    public ResponseEntity<Void> deleteTrainer(@PathVariable Long id){
+        trainerService.deleteTrainer(id);
+        return ResponseEntity.noContent().build();
     }
 }

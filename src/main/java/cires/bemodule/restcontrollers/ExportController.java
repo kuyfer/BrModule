@@ -4,17 +4,15 @@ import cires.bemodule.dtos.views.*;
 import cires.bemodule.enums.*;
 import cires.bemodule.services.*;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
 
-@AllArgsConstructor
 @RestController
-@Slf4j
+@RequiredArgsConstructor
 @RequestMapping("/api/exports")
 public class ExportController {
 

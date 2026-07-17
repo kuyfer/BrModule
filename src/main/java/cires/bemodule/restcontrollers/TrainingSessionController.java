@@ -9,7 +9,7 @@ import cires.bemodule.enums.TrainingSessionMode;
 import cires.bemodule.enums.TrainingSessionStatus;
 import cires.bemodule.services.TrainingSessionService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -20,12 +20,23 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@AllArgsConstructor
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/sessions")
 public class TrainingSessionController {
 
     private final TrainingSessionService trainingSessionService;
+
+    // ################################# CREATE ######################################
+
+    @PostMapping
+    @PreAuthorize("hasAuthority('session:create')")
+    public ResponseEntity<TrainingSessionDTO> createSession(@Valid @RequestBody CreateTrainingSessionRequest request) {
+        TrainingSessionDTO session = trainingSessionService.createTrainingSession(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(session);
+    }
+
+    // ################################# READ ########################################
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('session:read')")
@@ -33,7 +44,6 @@ public class TrainingSessionController {
         TrainingSessionDTO session = trainingSessionService.findTrainingSessionById(id);
         return ResponseEntity.ok(session);
     }
-
     @GetMapping
     @PreAuthorize("hasAuthority('session:read')")
     public ResponseEntity<Page<TrainingSessionDTO>> getAllTrainingSessions(
@@ -45,19 +55,7 @@ public class TrainingSessionController {
         return ResponseEntity.ok(sessions);
     }
 
-    @PostMapping
-    @PreAuthorize("hasAuthority('session:create')")
-    public ResponseEntity<TrainingSessionDTO> createSession(@Valid @RequestBody CreateTrainingSessionRequest request) {
-        TrainingSessionDTO session = trainingSessionService.createTrainingSession(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(session);
-    }
-
-    @PostMapping("/{id}")
-    @PreAuthorize("hasAuthority('session:update')")
-    public ResponseEntity<Void> cancelSession(@PathVariable Long id,@Valid @RequestBody CancelTrainingSessionRequest request) {
-        trainingSessionService.cancelSession(id, request);
-        return ResponseEntity.ok().build();
-    }
+    // ################################# UPDATE ######################################
 
     @PostMapping("/{id}/postpone")
     @PreAuthorize("hasAuthority('session:update')")
@@ -67,9 +65,16 @@ public class TrainingSessionController {
         return ResponseEntity.ok(trainingSessionService.postponeSession(id, request));
     }
 
+    @PostMapping("/{id}/cancel")
+    @PreAuthorize("hasAuthority('session:update')")
+    public ResponseEntity<Void> cancelSession(@PathVariable Long id,@Valid @RequestBody CancelTrainingSessionRequest request) {
+        trainingSessionService.cancelSession(id, request);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/{id}/status")
     @PreAuthorize("hasAuthority('session:update')")
-    public ResponseEntity<Void> updateSession(@PathVariable Long id, @RequestBody UpdateTrainingSessionsRequest request ) {
+    public ResponseEntity<Void> updateSession(@PathVariable Long id, @Valid @RequestBody UpdateTrainingSessionsRequest request ) {
         trainingSessionService.changeStatus(id, request.getStatus());
         return ResponseEntity.ok().build();
     }
@@ -78,6 +83,7 @@ public class TrainingSessionController {
     @PreAuthorize("hasAuthority('session:update')")
     public ResponseEntity<TrainingSessionDTO> publishSession(@PathVariable Long id) {
         return ResponseEntity.ok(trainingSessionService.publishSession(id));
+
     }
 
     @PostMapping("/{id}/participants")
@@ -89,6 +95,8 @@ public class TrainingSessionController {
         trainingSessionService.addParticipants(id, participantIds);
         return ResponseEntity.noContent().build();
     }
+
+    // ################################# DELETE ######################################
 
     @DeleteMapping("{id}")
     @PreAuthorize("hasAuthority('session:delete')")

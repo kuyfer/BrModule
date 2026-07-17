@@ -5,10 +5,9 @@ import cires.bemodule.dtos.views.ParticipantDTO;
 import cires.bemodule.dtos.responses.CreateParticipantResponse;
 import cires.bemodule.dtos.requests.PatchParticipantRequest;
 import cires.bemodule.enums.RegistrationSource;
-import cires.bemodule.mappers.ParticipantMapper;
 import cires.bemodule.services.ParticipantService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,13 +15,24 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@AllArgsConstructor
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/participants")
 public class ParticipantController {
 
     private final ParticipantService participantService;
-    private final ParticipantMapper participantMapper;
+
+    // ################################# CREATE ######################################
+
+    @PostMapping
+    @PreAuthorize("hasAuthority('participant:create')")
+    public ResponseEntity<CreateParticipantResponse> createParticipant(
+            @Valid @RequestBody CreateParticipantRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(participantService.createParticipant(request));
+    }
+
+    // ################################# READ ########################################
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('participant:read')")
@@ -39,6 +49,8 @@ public class ParticipantController {
         return ResponseEntity.ok(participants);
     }
 
+    // ################################# UPDATE ######################################
+
     @PatchMapping("/{id}")
     @PreAuthorize("hasAuthority('participant:update')")
     public ResponseEntity<ParticipantDTO> patch(@PathVariable Long id,
@@ -46,13 +58,7 @@ public class ParticipantController {
         return ResponseEntity.ok(participantService.patchParticipant(id, request));
     }
 
-    @PostMapping
-    @PreAuthorize("hasAuthority('participant:create')")
-    public ResponseEntity<CreateParticipantResponse> createParticipant(
-            @Valid @RequestBody CreateParticipantRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(participantService.createParticipant(request));
-    }
+    // ################################# DELETE ######################################
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('participant:delete')")
