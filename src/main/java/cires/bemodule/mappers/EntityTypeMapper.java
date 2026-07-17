@@ -6,6 +6,10 @@ import java.util.Map;
 
 public class EntityTypeMapper {
 
+    private EntityTypeMapper() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
+
     private static final Map<String, Class<?>> MAP = Map.ofEntries(
             Map.entry("user", User.class),
             Map.entry("session", TrainingSession.class),
