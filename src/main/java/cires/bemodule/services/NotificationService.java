@@ -1,7 +1,6 @@
 package cires.bemodule.services;
 
 import cires.bemodule.dtos.views.NotificationDTO;
-import cires.bemodule.dtos.requests.RegisterRequest;
 import cires.bemodule.entities.Notification;
 import cires.bemodule.entities.Trainer;
 import cires.bemodule.entities.TrainingSession;
@@ -107,22 +106,6 @@ public class NotificationService {
                 model
         );
         emailQueueProducer.queueEmail(payload, NotificationType.SESSION_CANCELLATION);
-    }
-
-    public void sendRegistrationEmail(RegisterRequest request) {
-        Map<String, Object> model = new HashMap<>();
-        model.put("recipientName", request.getFirstName());
-        model.put("username", request.getUsername());
-        model.put("body", "Hope you are doing well.");
-
-        EmailPayload payload = new EmailPayload(
-                request.getEmail(),
-                "Welcome " + request.getUsername(),
-                "welcome",
-                model
-        );
-
-        emailQueueProducer.queueEmail(payload, NotificationType.ACCOUNT_CREATION);
     }
 
     public void sendResetEmail(String email, String token) {

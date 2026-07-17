@@ -6,7 +6,7 @@ import cires.bemodule.dtos.views.UserDTO;
 import cires.bemodule.enums.AccountStatus;
 import cires.bemodule.services.UserService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
-@AllArgsConstructor
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/users")
 public class UserController {
 
