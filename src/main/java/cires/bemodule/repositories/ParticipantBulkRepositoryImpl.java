@@ -59,7 +59,7 @@ public class ParticipantBulkRepositoryImpl implements ParticipantBulkRepository 
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 SessionParticipantLink link = links.get(i);
-                ps.setLong(1, link.getSessionId());      // maps to training_session_id
+                ps.setLong(1, link.getSessionId());
                 ps.setString(2, link.getEmail());
             }
             @Override

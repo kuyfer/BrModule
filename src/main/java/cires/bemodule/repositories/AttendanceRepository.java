@@ -18,7 +18,6 @@ import java.util.Optional;
 @Repository
 public interface AttendanceRepository extends JpaRepository<Attendance, Long>, JpaSpecificationExecutor<Attendance> {
 
-
     List<Attendance> findBySessionIdAndPeriod(Long sessionId, String period);
 
     Optional<Attendance> findBySessionIdAndParticipantIdAndDateAndSlot(

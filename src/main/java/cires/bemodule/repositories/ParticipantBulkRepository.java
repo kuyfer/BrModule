@@ -8,5 +8,6 @@ import java.util.List;
 public interface ParticipantBulkRepository {
 
     int[] bulkInsertParticipants(List<ValidatedImportRow> rows);
+
     int[] bulkInsertSessionLinks(List<SessionParticipantLink> links);
 }

@@ -16,5 +16,4 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
     boolean existsByName(String name);
 
     Page<Organization> findByNameContainingIgnoreCase(String name, Pageable pageable);
-
 }

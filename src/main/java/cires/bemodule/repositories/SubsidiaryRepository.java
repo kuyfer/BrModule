@@ -11,10 +11,9 @@ import java.util.Optional;
 @Repository
 public interface SubsidiaryRepository extends JpaRepository<Subsidiary, Long> {
 
-
    Optional<Subsidiary> findByName(String name);
-    boolean existsByName(String name);
-    // For pagination with filtering
-    Page<Subsidiary> findByNameContainingIgnoreCase(String name, Pageable pageable);
 
+    boolean existsByName(String name);
+
+    Page<Subsidiary> findByNameContainingIgnoreCase(String name, Pageable pageable);
 }
