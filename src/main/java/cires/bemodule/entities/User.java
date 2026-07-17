@@ -1,6 +1,7 @@
 package cires.bemodule.entities;
 
 import cires.bemodule.enums.AccountStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.envers.Audited;
@@ -22,6 +23,7 @@ public class User extends Auditable {
     private String username;
 
     @Column(comment = "NULL until user sets password via setup token")
+    @JsonIgnore
     private String password;
 
     @Column(nullable = false, length = 50)
