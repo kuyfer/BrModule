@@ -6,6 +6,7 @@ import cires.bemodule.repositories.TrainingSessionRepository;
 import cires.bemodule.services.NotificationService;
 import cires.bemodule.services.TrainingSessionService;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,26 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Scheduled component responsible for automating the lifecycle of
+ * {@link TrainingSession} instances.
+ * <p>
+ * Three recurring tasks are performed:
+ * <ol>
+ *   <li><b>Start sessions</b> – sessions whose {@code startDate} has passed
+ *       are moved from {@code SCHEDULED} to {@code ONGOING}.</li>
+ *   <li><b>Complete sessions</b> – sessions whose {@code endDate} has passed
+ *       are moved from {@code ONGOING} to {@code COMPLETED}.</li>
+ *   <li><b>Send reminders</b> – for sessions starting within the next 24
+ *       hours, a reminder email is sent to the assigned trainer.</li>
+ * </ol>
+ * <p>
+ * All tasks are wrapped in try‑catch blocks so that a failure on one session
+ * does not affect the processing of other sessions.
+ * </p>
+ */
 @Slf4j
+@RequiredArgsConstructor
 @Component
 public class SessionStatusScheduler {
 
@@ -21,13 +41,15 @@ public class SessionStatusScheduler {
     private final TrainingSessionService sessionService;
     private final NotificationService notificationService;
 
-    public SessionStatusScheduler(TrainingSessionRepository sessionRepository, TrainingSessionService sessionService, NotificationService notificationService) {
-        this.sessionRepository = sessionRepository;
-        this.sessionService = sessionService;
-        this.notificationService = notificationService;
-    }
-
-    @Scheduled(fixedRate = 5 * 60 * 1000) // runs every 5 minutes
+    /**
+     * Transitions all {@code SCHEDULED} sessions whose {@code startDate} is
+     * earlier than or equal to the current moment into {@code ONGOING}.
+     * <p>
+     * Runs every 5 minutes. If a session's status change fails, the error is
+     * logged and the scheduler continues with the next session.
+     * </p>
+     */
+    @Scheduled(fixedRate = 5 * 60 * 1000)
     public void startScheduledSessions() {
         List<TrainingSession> due = sessionRepository
                 .findByStatusAndStartDateLessThanEqual(
@@ -45,6 +67,15 @@ public class SessionStatusScheduler {
         }
     }
 
+    /**
+     * Completes all {@code ONGOING} sessions whose {@code endDate} is earlier
+     * than or equal to the current moment by moving them to
+     * {@code COMPLETED}.
+     * <p>
+     * Runs every 5 minutes. Failures are logged individually without
+     * interrupting the processing of the remaining sessions.
+     * </p>
+     */
     @Scheduled(fixedRate = 5 * 60 * 1000)
     public void completeOngoingSessions() {
         List<TrainingSession> due = sessionRepository
@@ -63,7 +94,17 @@ public class SessionStatusScheduler {
         }
     }
 
-    @Scheduled(cron = "0 0 * * * *") // every hour on the hour
+    /**
+     * Sends reminder emails to the trainers of all {@code SCHEDULED} sessions
+     * that are due to start within the next 24 hours.
+     * <p>
+     * Runs every hour on the hour ({@code 0 0 * * * *}). The method is
+     * transactional; if sending an email fails, the error is logged and the
+     * scheduler continues with the next session without rolling back the
+     * entire task.
+     * </p>
+     */
+    @Scheduled(cron = "0 0 * * * *")
     @Transactional
     public void sendSessionReminders() {
         log.debug("Scheduler running: checking for upcoming session reminders");
@@ -85,5 +126,4 @@ public class SessionStatusScheduler {
             }
         }
     }
-
 }
