@@ -2,11 +2,15 @@ package cires.bemodule.dev;
 
 import cires.bemodule.entities.Permission;
 import cires.bemodule.entities.Role;
+import cires.bemodule.entities.User;
+import cires.bemodule.enums.AccountStatus;
 import cires.bemodule.enums.RoleType;
 import cires.bemodule.repositories.PermissionRepository;
 import cires.bemodule.repositories.RoleRepository;
+import cires.bemodule.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +24,8 @@ public class DatabaseInitializer implements CommandLineRunner {
 
     private final RoleRepository roleRepository;
     private final PermissionRepository permissionRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -55,6 +61,7 @@ public class DatabaseInitializer implements CommandLineRunner {
                 createPermission("report:export", "report", "export"),
                 createPermission("report:create", "report", "create"),
                 createPermission("report:delete", "report", "delete"),
+                createPermission("report:read", "report", "read"),   // NEW
 
                 // Trainer
                 createPermission("trainer:create", "trainer", "create"),
@@ -84,7 +91,7 @@ public class DatabaseInitializer implements CommandLineRunner {
                 // Bulk import
                 createPermission("import:execute", "import", "execute"),
 
-                // ─── Attendance (NEW) ────────────────────────────────────────────
+                // ─── Attendance ────────────────────────────────────────────
                 createPermission("attendance:mark", "attendance", "mark"),
                 createPermission("attendance:validate", "attendance", "validate"),
                 createPermission("attendance:correct", "attendance", "correct"),
@@ -97,7 +104,13 @@ public class DatabaseInitializer implements CommandLineRunner {
                 createPermission("dashboard:executive", "dashboard", "executive"),
                 createPermission("dashboard:operational", "dashboard", "operational"),
                 createPermission("dashboard:trainer", "dashboard", "trainer"),
-                createPermission("dashboard:audit", "dashboard", "audit")
+                createPermission("dashboard:audit", "dashboard", "audit"),
+
+                // Permissions (to list/read permissions themselves)
+                createPermission("permission:read", "permission", "read"),   // NEW
+
+                // Audit
+                createPermission("audit:read", "audit", "read")              // NEW
         );
 
         // ─── Save all permissions if they don't exist ──────────────────────
@@ -127,6 +140,7 @@ public class DatabaseInitializer implements CommandLineRunner {
         Permission reportExport = permissionRepository.findByName("report:export");
         Permission reportCreate = permissionRepository.findByName("report:create");
         Permission reportDelete = permissionRepository.findByName("report:delete");
+        Permission reportRead = permissionRepository.findByName("report:read");  // NEW
 
         Permission trainerCreate = permissionRepository.findByName("trainer:create");
         Permission trainerRead = permissionRepository.findByName("trainer:read");
@@ -166,7 +180,9 @@ public class DatabaseInitializer implements CommandLineRunner {
         Permission dashboardTrainer = permissionRepository.findByName("dashboard:trainer");
         Permission dashboardAudit = permissionRepository.findByName("dashboard:audit");
 
-
+        // NEW permissions
+        Permission permissionRead = permissionRepository.findByName("permission:read");
+        Permission auditRead = permissionRepository.findByName("audit:read");
 
         // ─── Define permissions per role ────────────────────────────────────
         Map<RoleType, Set<Permission>> rolePermissions = Map.of(
@@ -176,15 +192,18 @@ public class DatabaseInitializer implements CommandLineRunner {
                         userCreate, userRead, userUpdate, userDelete,
                         roleCreate, roleRead, roleUpdate, roleDelete,
                         sessionCreate, sessionRead, sessionUpdate, sessionDelete,
-                        reportView, reportExport, reportCreate, reportDelete,
+                        reportView, reportExport, reportCreate, reportDelete, reportRead,
                         trainerCreate, trainerRead, trainerUpdate, trainerDelete, trainerAssign,
                         subsidiaryCreate, subsidiaryRead, subsidiaryUpdate, subsidiaryDelete,
                         organizationCreate, organizationRead, organizationUpdate, organizationDelete,
                         participantCreate, participantRead, participantUpdate, participantDelete,
                         importExecute,
                         // Attendance
-                        attendanceMark, attendanceValidate, attendanceCorrect, attendanceRead , notificationRead ,
-                        dashboardExecutive, dashboardOperational, dashboardTrainer, dashboardAudit
+                        attendanceMark, attendanceValidate, attendanceCorrect, attendanceRead,
+                        notificationRead,
+                        dashboardExecutive, dashboardOperational, dashboardTrainer, dashboardAudit,
+                        permissionRead,  // NEW
+                        auditRead         // NEW
                 ),
 
                 // OPERATIONAL_ADMIN – full attendance rights too
@@ -193,15 +212,18 @@ public class DatabaseInitializer implements CommandLineRunner {
                         userRead, userUpdate,
                         roleRead,
                         sessionCreate, sessionRead, sessionUpdate, sessionDelete,
-                        reportView, reportExport, reportCreate, reportDelete,
+                        reportView, reportExport, reportCreate, reportDelete, reportRead,
                         trainerCreate, trainerRead, trainerUpdate, trainerAssign,
                         subsidiaryCreate, subsidiaryRead, subsidiaryUpdate, subsidiaryDelete,
                         organizationCreate, organizationRead, organizationUpdate, organizationDelete,
                         participantRead, participantUpdate,
                         importExecute,
                         // Attendance – all
-                        attendanceMark, attendanceValidate, attendanceCorrect, attendanceRead , notificationRead,
-                        dashboardOperational
+                        attendanceMark, attendanceValidate, attendanceCorrect, attendanceRead,
+                        notificationRead,
+                        dashboardOperational,
+                        permissionRead,  // NEW
+                        auditRead         // NEW
                 ),
 
                 // TRAINING_MANAGER – can mark, validate, read; but not correct
@@ -209,14 +231,16 @@ public class DatabaseInitializer implements CommandLineRunner {
                 Set.of(
                         userRead,
                         sessionCreate, sessionRead, sessionUpdate, sessionDelete,
-                        reportView, reportExport, reportCreate,
+                        reportView, reportExport, reportCreate, reportRead,
                         trainerRead, trainerAssign,
                         participantCreate, participantRead, participantUpdate,
                         subsidiaryRead,
                         organizationRead,
                         // Attendance – mark, validate, read (no correct)
-                        attendanceMark, attendanceValidate, attendanceRead, notificationRead,
-                        dashboardTrainer
+                        attendanceMark, attendanceValidate, attendanceRead,
+                        notificationRead,
+                        dashboardTrainer,
+                        permissionRead  // NEW (so they can see permissions list if needed)
                 ),
 
                 // TRAINER – can mark, validate, read; no correct
@@ -224,11 +248,12 @@ public class DatabaseInitializer implements CommandLineRunner {
                 Set.of(
                         userRead,
                         sessionRead, sessionUpdate,
-                        reportView,
+                        reportView, reportRead,
                         participantRead,
                         // Attendance – mark, validate, read (no correct)
                         attendanceMark, attendanceValidate, attendanceRead,
                         dashboardTrainer
+                        // no permissionRead for trainer usually
                 ),
 
                 // READ_ONLY – can only read attendance
@@ -236,7 +261,7 @@ public class DatabaseInitializer implements CommandLineRunner {
                 Set.of(
                         userRead,
                         sessionRead,
-                        reportView,
+                        reportView, reportRead,
                         trainerRead,
                         subsidiaryRead,
                         organizationRead,
@@ -244,6 +269,7 @@ public class DatabaseInitializer implements CommandLineRunner {
                         // Attendance – read only
                         attendanceRead,
                         notificationRead
+                        // no permissionRead for read-only usually
                 )
         );
 
