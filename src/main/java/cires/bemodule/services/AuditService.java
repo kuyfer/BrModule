@@ -194,16 +194,12 @@ public class AuditService {
         return dt.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
-    // ---------- Counting (real COUNT, not getResultList().size()) ----------
-    //
-    // NOTE: AuditEntity.id().count() assumes Envers' projection API exposes
-    // .count() on a property expression the same way it does in recent
-    // Hibernate versions - verify this compiles against your exact Envers
-    // version; if it doesn't, count(distinct revisionNumber) via
-    // AuditEntity.revisionNumber().count() is the fallback.
-
-    private long countEntityRevisions(Class<?> clazz, Long entityId, String username, String ipAddress) {
-        AuditQuery query = buildEntityQuery(clazz, entityId, username, ipAddress);
+    private long countEntityRevisions(Class<?> clazz, Long entityId,
+                                      String username, String ipAddress) {
+        AuditQuery query = getReader().createQuery()
+                .forRevisionsOfEntity(clazz, false, true)
+                .add(AuditEntity.id().eq(entityId));
+        applyCommonFilters(query, username, ipAddress);
         query.addProjection(AuditEntity.id().count());
         Object result = query.getSingleResult();
         return ((Number) result).longValue();
