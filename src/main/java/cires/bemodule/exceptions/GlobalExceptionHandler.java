@@ -267,6 +267,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .orElse("").toString();
     }
 
+    @ExceptionHandler(ReportGenerationException.class)
+    public ProblemDetail handleReportGeneration(ReportGenerationException ex) {
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+        problem.setTitle("Échec de génération du rapport");
+        problem.setDetail(ex.getMessage());
+        return problem;
+    }
+
     // ─── Fallback (500) – catch-all for any unhandled exception ──────────
 
     /**

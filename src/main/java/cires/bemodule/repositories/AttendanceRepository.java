@@ -65,4 +65,45 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long>, J
             @Param("date")       LocalDate startDate,
             @Param("trainerId")  Long trainerId,
             @Param("validatedAt") LocalDateTime validatedAt);
+
+    @Query("""
+    SELECT a.session.id, a.session.title,
+           a.session.trainer.user.firstName, a.session.trainer.user.lastName,
+           a.session.subsidiary.name,
+           COUNT(DISTINCT a.participant.id),
+           COUNT(a),
+           SUM(CASE WHEN a.status = cires.bemodule.enums.AttendanceStatus.PRESENT
+                      OR a.status = cires.bemodule.enums.AttendanceStatus.LATE
+                    THEN 1 ELSE 0 END)
+    FROM Attendance a
+    WHERE a.date BETWEEN :startDate AND :endDate
+      AND (:subsidiaryId IS NULL OR a.session.subsidiary.id = :subsidiaryId)
+      AND (:trainerId IS NULL OR a.session.trainer.id = :trainerId)
+    GROUP BY a.session.id, a.session.title,
+             a.session.trainer.user.firstName, a.session.trainer.user.lastName,
+             a.session.subsidiary.name
+    ORDER BY a.session.title
+    """)
+    List<Object[]> findAttendanceStatsBySession(
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("subsidiaryId") Long subsidiaryId,
+            @Param("trainerId") Long trainerId);
+
+    @Query("""
+    SELECT a.participant.firstName, a.participant.lastName,
+           a.session.title, a.date, a.slot, a.status, a.comment
+    FROM Attendance a
+    WHERE a.date BETWEEN :startDate AND :endDate
+      AND (a.status = cires.bemodule.enums.AttendanceStatus.ABSENT
+           OR a.status = cires.bemodule.enums.AttendanceStatus.JUSTIFIED_ABSENCE)
+      AND (:subsidiaryId IS NULL OR a.session.subsidiary.id = :subsidiaryId)
+      AND (:trainerId IS NULL OR a.session.trainer.id = :trainerId)
+    ORDER BY a.date DESC
+    """)
+    List<Object[]> findAbsences(
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("subsidiaryId") Long subsidiaryId,
+            @Param("trainerId") Long trainerId);
 }
