@@ -13,8 +13,10 @@ import org.springframework.stereotype.Repository;
 import cires.bemodule.dtos.internal.TodayAttendanceRow;
 import cires.bemodule.enums.AttendanceSlot;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
@@ -74,7 +76,10 @@ public class DashboardRepository {
         long present = 0, late = 0, absent = 0, justified = 0;
         for (Object[] row : rows) {
             AttendanceStatus status = (AttendanceStatus) row[0];
-            long count = (Long) row[1];
+            long count = Optional.ofNullable(row[1])
+                    .map(Number.class::cast)
+                    .map(Number::longValue)
+                    .orElse(0L);
             switch (status) {
                 case PRESENT            -> present   = count;
                 case LATE               -> late      = count;
@@ -105,8 +110,8 @@ public class DashboardRepository {
 
         return rows.stream()
                 .map(r -> {
-                    long total   = ((Number) r[1]).longValue();
-                    long present = ((Number) r[2]).longValue();
+                    long total   = Optional.ofNullable(r[1]).map(Number.class::cast).map(Number::longValue).orElse(0L);
+                    long present = Optional.ofNullable(r[2]).map(Number.class::cast).map(Number::longValue).orElse(0L);
                     return MonthlyAttendanceStat.builder()
                             .yearMonth((String) r[0])
                             .totalSlots(total)
@@ -146,13 +151,14 @@ public class DashboardRepository {
 
         return rows.stream()
                 .map(r -> {
-                    long total   = ((Number) r[3]).longValue();
-                    long present = ((Number) r[4]).longValue();
+                    long total   = Optional.ofNullable(r[3]).map(Number.class::cast).map(Number::longValue).orElse(0L);
+                    long present = Optional.ofNullable(r[4]).map(Number.class::cast).map(Number::longValue).orElse(0L);
+                    long participants = Optional.ofNullable(r[5]).map(Number.class::cast).map(Number::longValue).orElse(0L);
                     return SessionPresenceStat.builder()
                             .sessionId((Long) r[0])
                             .sessionTitle((String) r[1])
                             .trainerName((String) r[2])
-                            .totalParticipants(((Number) r[5]).longValue())
+                            .totalParticipants(participants)
                             .presenceRate(total > 0
                                     ? Math.round((double) present / total * 1000.0) / 10.0
                                     : 0.0)
@@ -181,8 +187,8 @@ public class DashboardRepository {
                         GROUP BY s.id, s.title, u.firstName, u.lastName, s.startDate, s.endDate, s.status
                         ORDER BY s.startDate
                         """, Object[].class)
-                .setParameter("today",   today)
-                .setParameter("endWeek", endWeek)
+                .setParameter("today",   today.atStartOfDay())           // LocalDateTime
+                .setParameter("endWeek", endWeek.atTime(23, 59, 59, 999999999)) // LocalDateTime end of day
                 .getResultList()
                 .stream()
                 .map(this::toSessionSummaryRow)
@@ -221,10 +227,10 @@ public class DashboardRepository {
                             CONCAT(u.first_name, ' ', u.last_name)  AS trainer_name,
                             COUNT(DISTINCT sp.participant_id) -
                             COUNT(DISTINCT a.participant_id)         AS unmarked_count
-                        FROM training_sessions s
+                        FROM session s
                         JOIN trainers t     ON t.id = s.trainer_id
                         JOIN users u        ON u.id = t.user_id
-                        JOIN session_participants sp ON sp.session_id = s.id
+                        JOIN session_participants sp ON sp.training_session_id = s.id
                         LEFT JOIN attendance a ON a.session_id = s.id
                             AND a.validated = false
                         WHERE s.status = 'ONGOING'
@@ -237,12 +243,14 @@ public class DashboardRepository {
                 .stream()
                 .map(r -> {
                     Object[] row = (Object[]) r;
+                    long sessionId = Optional.ofNullable(row[0]).map(Number.class::cast).map(Number::longValue).orElse(0L);
+                    long unmarked  = Optional.ofNullable(row[4]).map(Number.class::cast).map(Number::longValue).orElse(0L);
                     return UnvalidatedDayRow.builder()
-                            .sessionId(((Number) row[0]).longValue())
+                            .sessionId(sessionId)
                             .sessionTitle((String) row[1])
                             .date(((java.sql.Date) row[2]).toLocalDate())
                             .trainerName((String) row[3])
-                            .unmarkedCount(((Number) row[4]).longValue())
+                            .unmarkedCount(unmarked)
                             .build();
                 })
                 .toList();
@@ -264,6 +272,8 @@ public class DashboardRepository {
 
     public List<TodayAttendanceRow> todayAttendanceForTrainer(Long trainerId) {
         LocalDate today = LocalDate.now();
+        LocalDateTime todayStart = today.atStartOfDay();
+        LocalDateTime todayEnd   = today.atTime(23, 59, 59, 999999999);
 
         return em.createQuery(
                         """
@@ -272,17 +282,19 @@ public class DashboardRepository {
                         JOIN SessionParticipant sp ON sp.trainingSession = s
                         WHERE s.trainer.id = :trainerId
                         AND s.status = 'ONGOING'
-                        AND s.startDate <= :today AND s.endDate >= :today
+                        AND s.startDate <= :todayEnd
+                        AND s.endDate   >= :todayStart
                         GROUP BY s.id, s.title
                         """, Object[].class)
                 .setParameter("trainerId", trainerId)
-                .setParameter("today", today)
+                .setParameter("todayStart", todayStart)
+                .setParameter("todayEnd",   todayEnd)
                 .getResultList()
                 .stream()
                 .map(r -> {
-                    Long   sid        = (Long)   r[0];
-                    String title      = (String) r[1];
-                    long   total      = ((Number) r[2]).longValue();
+                    Long   sid   = (Long)   r[0];
+                    String title = (String) r[1];
+                    long   total = Optional.ofNullable(r[2]).map(Number.class::cast).map(Number::longValue).orElse(0L);
 
                     long amMarked = countMarkedForSlot(sid, today, AttendanceSlot.AM);
                     long pmMarked = countMarkedForSlot(sid, today, AttendanceSlot.PM);
@@ -314,7 +326,10 @@ public class DashboardRepository {
                 .setParameter("trainerId", trainerId)
                 .getResultList()
                 .stream()
-                .map(r -> new Long[]{((Number) r[0]).longValue(), ((Number) r[1]).longValue()})
+                .map(r -> new Long[]{
+                        Optional.ofNullable(r[0]).map(Number.class::cast).map(Number::longValue).orElse(0L),
+                        Optional.ofNullable(r[1]).map(Number.class::cast).map(Number::longValue).orElse(0L)
+                })
                 .findFirst()
                 .orElse(new Long[]{0L, 0L});
 
@@ -346,59 +361,6 @@ public class DashboardRepository {
                 .toList();
     }
 
-    // ─── AUDIT DASHBOARD ──────────────────────────────────────────────────────
-
-//    public long countAuditEventsThisWeek() {
-//        return em.createQuery(
-//                        """
-//                        SELECT COUNT(a) FROM AuditLog a
-//                        WHERE a.createdAt >= :since
-//                        """, Long.class)
-//                .setParameter("since", LocalDateTime.now().minusDays(7))
-//                .getSingleResult();
-//    }
-
-//    public List<AuditEventRow> recentAuditEvents(int limit) {
-//        return em.createQuery(
-//                        """
-//                        SELECT a.userEmail, a.action, a.module, a.entityType, a.createdAt
-//                        FROM AuditLog a
-//                        ORDER BY a.createdAt DESC
-//                        """, Object[].class)
-//                .setMaxResults(limit)
-//                .getResultList()
-//                .stream()
-//                .map(r -> AuditEventRow.builder()
-//                        .userEmail((String) r[0])
-//                        .action((String) r[1])
-//                        .module((String) r[2])
-//                        .entityType((String) r[3])
-//                        .createdAt((LocalDateTime) r[4])
-//                        .build())
-//                .toList();
-//    }
-
-//    public List<UserActivityRow> topActiveUsers(int limit) {
-//        return em.createQuery(
-//                        """
-//                        SELECT a.userId, a.userEmail, COUNT(a)
-//                        FROM AuditLog a
-//                        WHERE a.createdAt >= :since
-//                        GROUP BY a.userId, a.userEmail
-//                        ORDER BY COUNT(a) DESC
-//                        """, Object[].class)
-//                .setParameter("since", LocalDateTime.now().minusDays(30))
-//                .setMaxResults(limit)
-//                .getResultList()
-//                .stream()
-//                .map(r -> UserActivityRow.builder()
-//                        .userId((Long) r[0])
-//                        .email((String) r[1])
-//                        .eventCount((Long) r[2])
-//                        .build())
-//                .toList();
-//    }
-
     // ─── PRIVATE HELPERS ──────────────────────────────────────────────────────
 
     private long countMarkedForSlot(Long sessionId, LocalDate date, AttendanceSlot slot) {
@@ -428,14 +390,37 @@ public class DashboardRepository {
     }
 
     private SessionSummaryRow toSessionSummaryRow(Object[] r) {
+        LocalDate start = null;
+        LocalDate end   = null;
+
+        if (r[3] != null) {
+            if (r[3] instanceof java.sql.Date sd) {
+                start = sd.toLocalDate();
+            } else if (r[3] instanceof LocalDateTime ldt) {
+                start = ldt.toLocalDate();
+            } else if (r[3] instanceof LocalDate ld) {
+                start = ld;
+            }
+        }
+
+        if (r[4] != null) {
+            if (r[4] instanceof java.sql.Date sd) {
+                end = sd.toLocalDate();
+            } else if (r[4] instanceof LocalDateTime ldt) {
+                end = ldt.toLocalDate();
+            } else if (r[4] instanceof LocalDate ld) {
+                end = ld;
+            }
+        }
+
         return SessionSummaryRow.builder()
                 .sessionId((Long) r[0])
                 .title((String) r[1])
                 .trainerName((String) r[2])
-                .startDate(r[3] instanceof java.sql.Date d ? d.toLocalDate() : (LocalDate) r[3])
-                .endDate(r[4] instanceof java.sql.Date d ? d.toLocalDate() : (LocalDate) r[4])
+                .startDate(start)
+                .endDate(end)
                 .status((TrainingSessionStatus) r[5])
-                .participantCount(((Number) r[6]).longValue())
+                .participantCount(Optional.ofNullable(r[6]).map(Number.class::cast).map(Number::longValue).orElse(0L))
                 .build();
     }
 }

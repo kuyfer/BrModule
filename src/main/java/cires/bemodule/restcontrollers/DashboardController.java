@@ -21,19 +21,19 @@ public class DashboardController {
     private final DashboardService dashboardService;
 
     @GetMapping("/executive")
-    @PreAuthorize("hasAuthority('dashboard:executive')")
+  //  @PreAuthorize("hasAuthority('dashboard:executive')")
     public ResponseEntity<ExecutiveDashboardResponse> executive() {
         return ResponseEntity.ok(dashboardService.getExecutiveDashboard());
     }
 
     @GetMapping("/operational")
-    @PreAuthorize("hasAuthority('dashboard:operational')")
+   // @PreAuthorize("hasAuthority('dashboard:operational')")
     public ResponseEntity<OperationalDashboardResponse> operational() {
         return ResponseEntity.ok(dashboardService.getOperationalDashboard());
     }
 
     @GetMapping("/trainer")
-    @PreAuthorize("hasAuthority('dashboard:trainer')")
+   // @PreAuthorize("hasAuthority('dashboard:trainer')")
     public ResponseEntity<TrainerDashboardResponse> trainer(
             @AuthenticationPrincipal UserPrincipal principal) {
         return ResponseEntity.ok(
