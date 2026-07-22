@@ -1,27 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="INFO">
     <Appenders>
+        <!-- Console appender -->
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
 
-        <File name="LogFile"
-              fileName="logs/application.log"
-              immediateFlush="false"
-              append="true">
+        <!-- All levels combined – no level filter -->
+        <RollingFile name="FileAll" fileName="logs/application-all.log"
+                     filePattern="logs/application-all-%i.log.gz"
+                     immediateFlush="false" append="true">
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-        </File>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="2.56 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+
+        <!-- DEBUG level – only DEBUG messages -->
+        <RollingFile name="FileDebug" fileName="logs/application-debug.log"
+                     filePattern="logs/application-debug-%i.log.gz"
+                     immediateFlush="false" append="true">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <LevelRangeFilter minLevel="DEBUG" maxLevel="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="2.56 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+
+        <!-- INFO level -->
+        <RollingFile name="FileInfo" fileName="logs/application-info.log"
+                     filePattern="logs/application-info-%i.log.gz"
+                     immediateFlush="false" append="true">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <LevelRangeFilter minLevel="INFO" maxLevel="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="2.56 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+
+        <!-- WARN level -->
+        <RollingFile name="FileWarn" fileName="logs/application-warn.log"
+                     filePattern="logs/application-warn-%i.log.gz"
+                     immediateFlush="false" append="true">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <LevelRangeFilter minLevel="WARN" maxLevel="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="2.56 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+
+        <!-- ERROR level -->
+        <RollingFile name="FileError" fileName="logs/application-error.log"
+                     filePattern="logs/application-error-%i.log.gz"
+                     immediateFlush="false" append="true">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <LevelRangeFilter minLevel="ERROR" maxLevel="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="2.56 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+
+        <!-- FATAL level -->
+        <RollingFile name="FileFatal" fileName="logs/application-fatal.log"
+                     filePattern="logs/application-fatal-%i.log.gz"
+                     immediateFlush="false" append="true">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <LevelRangeFilter minLevel="FATAL" maxLevel="FATAL" onMatch="ACCEPT" onMismatch="DENY"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="2.56 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
     </Appenders>
 
     <Loggers>
         <Logger name="cires.bemodule" level="debug" additivity="false">
             <AppenderRef ref="Console"/>
-            <AppenderRef ref="LogFile"/>
+            <AppenderRef ref="FileAll"/>
+            <AppenderRef ref="FileDebug"/>
+            <AppenderRef ref="FileInfo"/>
+            <AppenderRef ref="FileWarn"/>
+            <AppenderRef ref="FileError"/>
+            <AppenderRef ref="FileFatal"/>
         </Logger>
 
         <Root level="info">
             <AppenderRef ref="Console"/>
-            <AppenderRef ref="LogFile"/>
+            <AppenderRef ref="FileAll"/>
+            <AppenderRef ref="FileDebug"/>
+            <AppenderRef ref="FileInfo"/>
+            <AppenderRef ref="FileWarn"/>
+            <AppenderRef ref="FileError"/>
+            <AppenderRef ref="FileFatal"/>
         </Root>
     </Loggers>
 </Configuration>
