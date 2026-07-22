@@ -27,6 +27,6 @@ public class MarkAttendanceRequest {
     @NotNull(message = "Status is required")
     private AttendanceStatus status;
 
-    private String delayReason;  // required only when status = LATE
+    private String delayReason;
     private String comment;
 }

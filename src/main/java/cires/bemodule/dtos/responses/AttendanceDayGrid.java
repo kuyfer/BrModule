@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class AttendanceDayGrid {
     private LocalDate date;
-    private boolean   dayValidated;   // true if trainer signed off both AM and PM
+    private boolean   dayValidated;
     private int       totalEnrolled;
     private SlotGrid  amSlot;
     private SlotGrid  pmSlot;

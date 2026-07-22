@@ -17,7 +17,7 @@
             <DefaultRolloverStrategy max="10"/>
         </RollingFile>
 
-        <!-- DEBUG level – only DEBUG messages -->
+        <!-- DEBUG level -->
         <RollingFile name="FileDebug" fileName="logs/application-debug.log"
                      filePattern="logs/application-debug-%i.log.gz"
                      immediateFlush="false" append="true">
