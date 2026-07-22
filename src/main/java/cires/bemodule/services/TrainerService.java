@@ -39,38 +39,51 @@ public class TrainerService {
     // ################################# CREATE ######################################
 
     public TrainerDTO createTrainer(CreateTrainerRequest request, Long userId) {
+        log.info("Creating trainer for user id: {}, speciality: {}", userId, request.getSpeciality());
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
+                .orElseThrow(() -> {
+                    log.warn("User not found with id: {}", userId);
+                    return new UserNotFoundException(userId);
+                });
 
         if (trainerRepository.existsByUserId(user.getId())) {
+            log.warn("Trainer already exists for user id: {}", userId);
             throw new ConflictException("Trainer already exists for this user");
         }
 
         Trainer trainer = trainerMapper.toTrainer(request);
         trainer.setSpeciality(request.getSpeciality());
         Role trainerRole = roleRepository.findByRoleName(RoleType.TRAINER)
-                .orElseThrow(RoleNotFoundException::new);
+                .orElseThrow(() -> {
+                    log.error("Trainer role not found");
+                    return new RoleNotFoundException();
+                });
         user.setRoles(Set.of(trainerRole));
         trainer.setUser(user);
         Trainer savedTrainer = trainerRepository.save(trainer);
+        log.info("Trainer created successfully with id: {}", savedTrainer.getId());
         return trainerMapper.toTrainerDTO(savedTrainer);
     }
 
     // ################################# READ ########################################
 
     public TrainerDTO findTrainerById(Long id) {
+        log.debug("Finding trainer by id: {}", id);
         Trainer trainer = getTrainerIdOrThrow(id);
         return trainerMapper.toTrainerDTO(trainer);
     }
 
     public Page<TrainerDTO> findAll(String specialty, Pageable pageable) {
+        log.debug("Fetching trainers page - speciality: {}, pageable: {}", specialty, pageable);
         Specification<Trainer> spec = Specification
                 .where(TrainerSpecifications.hasSpeciality(specialty));
         Page<Trainer> trainerPage = trainerRepository.findAll(spec, pageable);
+        log.debug("Found {} trainers (page {} of {})", trainerPage.getNumberOfElements(), trainerPage.getNumber(), trainerPage.getTotalPages());
         return trainerPage.map(trainerMapper::toTrainerDTO);
     }
 
     public List<TrainerDTO> findAll(String specialty) {
+        log.debug("Fetching all trainers (unpaged) - speciality: {}", specialty);
         Page<TrainerDTO> page = findAll(specialty, Pageable.unpaged());
         return page.getContent();
     }
@@ -89,14 +102,20 @@ public class TrainerService {
     // ################################# DELETE ######################################
 
     public void deleteTrainer(Long id) {
+        log.info("Deleting trainer with id: {}", id);
         Trainer trainer = getTrainerIdOrThrow(id);
         trainerRepository.delete(trainer);
+        log.info("Trainer deleted successfully with id: {}", id);
     }
 
     // ################################# UTILS ######################################
 
     private Trainer getTrainerIdOrThrow(Long id) {
+        log.debug("Looking up trainer by id: {}", id);
         return trainerRepository.findById(id)
-                .orElseThrow(() -> new TrainerNotFoundException(id));
+                .orElseThrow(() -> {
+                    log.warn("Trainer not found with id: {}", id);
+                    return new TrainerNotFoundException(id);
+                });
     }
 }

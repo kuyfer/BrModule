@@ -23,6 +23,9 @@ import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 public class AuditService {
@@ -61,6 +64,8 @@ public class AuditService {
 
     public Page<RevisionDetail> getRevisionsForEntity(Class<?> clazz, Long entityId, Pageable pageable,
                                                       String username, String ipAddress) {
+        log.debug("Fetching revisions for entity {} with id {}, pageable {}, username {}, ip {}",
+                clazz.getSimpleName(), entityId, pageable, username, ipAddress);
         List<Object[]> results = buildEntityQuery(clazz, entityId, username, ipAddress)
                 .setFirstResult((int) pageable.getOffset())
                 .setMaxResults(pageable.getPageSize())
@@ -68,10 +73,13 @@ public class AuditService {
 
         List<RevisionDetail> details = mapToRevisionDetails(results, entityTypeKeyFor(clazz));
         long total = countEntityRevisions(clazz, entityId, username, ipAddress);
+        log.debug("Returning {} revisions of {} for entity {} (total {})",
+                details.size(), clazz.getSimpleName(), entityId, total);
         return new PageImpl<>(details, pageable, total);
     }
 
     public Object getEntityAtRevision(Class<?> clazz, Long entityId, int revisionNumber) {
+        log.debug("Retrieving entity {} with id {} at revision {}", clazz.getSimpleName(), entityId, revisionNumber);
         AuditReader reader = getReader();
         return reader.find(clazz, entityId, revisionNumber);
     }
@@ -92,6 +100,7 @@ public class AuditService {
     // side table you can query directly instead of doing this fan-out.
 
     public List<RevisionDetail> getRecentGlobalChanges(int limit) {
+        log.debug("Fetching recent global changes, limit {}", limit);
         List<RevisionDetail> all = new ArrayList<>();
         for (Class<?> clazz : AUDITED_ENTITY_TYPES.keySet()) {
             List<Object[]> results = getReader().createQuery()
@@ -102,12 +111,16 @@ public class AuditService {
             all.addAll(mapToRevisionDetails(results, entityTypeKeyFor(clazz)));
         }
         all.sort(Comparator.comparing((RevisionDetail r) -> r.getRevisionInfo().getTimestamp()).reversed());
-        return all.size() > limit ? all.subList(0, limit) : all;
+        List<RevisionDetail> finalList = all.size() > limit ? all.subList(0, limit) : all;
+        log.info("Retrieved {} recent global changes (limit {})", finalList.size(), limit);
+        return finalList;
     }
 
     public Page<RevisionDetail> getFilteredGlobalRevisions(String username, String ipAddress,
                                                            RevisionType action, LocalDateTime fromDate,
                                                            LocalDateTime toDate, Pageable pageable) {
+        log.debug("Filtered global revisions - username: {}, ip: {}, action: {}, from: {}, to: {}, pageable: {}",
+                username, ipAddress, action, fromDate, toDate, pageable);
         List<RevisionDetail> all = new ArrayList<>();
         for (Class<?> clazz : AUDITED_ENTITY_TYPES.keySet()) {
             AuditQuery query = buildGlobalQuery(clazz, username, ipAddress, action, fromDate, toDate);
@@ -122,6 +135,7 @@ public class AuditService {
         int from = Math.min((int) pageable.getOffset(), all.size());
         int to = Math.min(from + pageable.getPageSize(), all.size());
         List<RevisionDetail> pageContent = all.subList(from, to);
+        log.debug("Filtered global revisions: total {}, page size {}", total, pageContent.size());
         return new PageImpl<>(pageContent, pageable, total);
     }
 
@@ -129,6 +143,7 @@ public class AuditService {
 
     public List<RevisionDetail> getRevisionsWithFilters(Class<?> clazz, Long entityId,
                                                         AuditFilterRequest filter, int maxResults) {
+        log.debug("Advanced filter revisions for {} id {}, maxResults {}", clazz.getSimpleName(), entityId, maxResults);
         AuditQuery query = getReader().createQuery()
                 .forRevisionsOfEntity(clazz, false, true)
                 .add(AuditEntity.id().eq(entityId))
@@ -150,7 +165,9 @@ public class AuditService {
 
         @SuppressWarnings("unchecked")
         List<Object[]> results = query.getResultList();
-        return mapToRevisionDetails(results, entityTypeKeyFor(clazz));
+        List<RevisionDetail> details = mapToRevisionDetails(results, entityTypeKeyFor(clazz));
+        log.debug("Advanced filter returned {} revisions for {} id {}", details.size(), clazz.getSimpleName(), entityId);
+        return details;
     }
 
     // ---------- Query builders ----------
@@ -196,13 +213,17 @@ public class AuditService {
 
     private long countEntityRevisions(Class<?> clazz, Long entityId,
                                       String username, String ipAddress) {
+        log.debug("Counting revisions for {} id {} with filters username={}, ip={}",
+                clazz.getSimpleName(), entityId, username, ipAddress);
         AuditQuery query = getReader().createQuery()
                 .forRevisionsOfEntity(clazz, false, true)
                 .add(AuditEntity.id().eq(entityId));
         applyCommonFilters(query, username, ipAddress);
         query.addProjection(AuditEntity.id().count());
         Object result = query.getSingleResult();
-        return ((Number) result).longValue();
+        long count = ((Number) result).longValue();
+        log.debug("Count result: {}", count);
+        return count;
     }
 
     private long countGlobalRevisions(String username, String ipAddress, RevisionType action,

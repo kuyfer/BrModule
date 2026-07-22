@@ -33,50 +33,60 @@ public class SubsidiaryService {
 
     @Transactional
     public SubsidiaryDTO createSubsidiary(CreateSubsidiaryRequest request) {
-        // Check if name already exists
         if (subsidiaryRepository.existsByName(request.getName())) {
+            log.warn("Attempt to create subsidiary with duplicate name: {}", request.getName());
             throw new ConflictException("Subsidiary with name '" + request.getName() + "' already exists.");
         }
 
-        // Resolve organization if provided
         Organization organization = null;
         if (request.getOrganizationId() != null) {
             organization = organizationRepository.findById(request.getOrganizationId())
-                    .orElseThrow(() -> new OrganizationNotFoundException(request.getOrganizationId()));
+                    .orElseThrow(() -> {
+                        log.error("Organization not found with id: {}", request.getOrganizationId());
+                        return new OrganizationNotFoundException(request.getOrganizationId());
+                    });
         }
 
         Subsidiary subsidiary = subsidiaryMapper.toSubsidiary(request);
         subsidiary.setOrganization(organization);
 
         Subsidiary saved = subsidiaryRepository.save(subsidiary);
+        log.info("Subsidiary created successfully with id: {} and name: {}", saved.getId(), saved.getName());
         return subsidiaryMapper.toSubsidiaryDto(saved);
     }
 
     // ################################# READ ########################################
 
     public SubsidiaryDTO findSubsidiaryById(Long id) {
+        log.debug("Finding subsidiary by id: {}", id);
         Subsidiary subsidiary = getSubsidiaryOrThrow(id);
         return subsidiaryMapper.toSubsidiaryDto(subsidiary);
     }
 
     public SubsidiaryDTO findSubsidiaryByName(String name) {
+        log.debug("Finding subsidiary by name: {}", name);
         Subsidiary subsidiary = subsidiaryRepository.findByName(name)
-                .orElseThrow(() -> new SubsidiaryNotFoundException(name));
+                .orElseThrow(() -> {
+                    log.warn("Subsidiary not found with name: {}", name);
+                    return new SubsidiaryNotFoundException(name);
+                });
         return subsidiaryMapper.toSubsidiaryDto(subsidiary);
     }
 
     public Page<SubsidiaryDTO> findAll(Pageable pageable, String nameFilter) {
+        log.debug("Fetching subsidiaries page - nameFilter: {}, pageable: {}", nameFilter, pageable);
         Page<Subsidiary> page;
         if (nameFilter != null && !nameFilter.isBlank()) {
             page = subsidiaryRepository.findByNameContainingIgnoreCase(nameFilter, pageable);
         } else {
             page = subsidiaryRepository.findAll(pageable);
         }
+        log.debug("Found {} subsidiaries (page {} of {})", page.getNumberOfElements(), page.getNumber(), page.getTotalPages());
         return page.map(subsidiaryMapper::toSubsidiaryDto);
     }
 
-    // Convenience: unpaged list (if needed)
     public List<SubsidiaryDTO> findAll(String nameFilter) {
+        log.debug("Fetching all subsidiaries (unpaged) - nameFilter: {}", nameFilter);
         Page<SubsidiaryDTO> page = findAll(Pageable.unpaged(), nameFilter);
         return page.getContent();
     }
@@ -88,6 +98,7 @@ public class SubsidiaryService {
         Subsidiary subsidiary = getSubsidiaryOrThrow(id);
         subsidiaryMapper.patchSubsidiaryFromRequest(request, subsidiary);
         Subsidiary saved = subsidiaryRepository.save(subsidiary);
+        log.info("Subsidiary patched successfully id={}, name={}", saved.getId(), saved.getName());
         return subsidiaryMapper.toSubsidiaryDto(saved);
     }
 
@@ -95,14 +106,20 @@ public class SubsidiaryService {
 
     @Transactional
     public void deleteSubsidiary(Long id) {
+        log.info("Deleting subsidiary with id: {}", id);
         Subsidiary subsidiary = getSubsidiaryOrThrow(id);
         subsidiaryRepository.delete(subsidiary);
+        log.info("Subsidiary deleted successfully with id: {}", id);
     }
 
     // ################################# UTILS ######################################
 
     private Subsidiary getSubsidiaryOrThrow(Long id) {
+        log.debug("Looking up subsidiary by id: {}", id);
         return subsidiaryRepository.findById(id)
-                .orElseThrow(() -> new SubsidiaryNotFoundException(id));
+                .orElseThrow(() -> {
+                    log.warn("Subsidiary not found with id: {}", id);
+                    return new SubsidiaryNotFoundException(id);
+                });
     }
 }

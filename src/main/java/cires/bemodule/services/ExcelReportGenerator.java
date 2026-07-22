@@ -2,16 +2,19 @@ package cires.bemodule.services;
 
 import cires.bemodule.dtos.ReportData;
 import cires.bemodule.exceptions.ReportGenerationException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
 
+@Slf4j
 @Component
 public class ExcelReportGenerator {
 
     public byte[] generate(ReportData data) {
+        log.info("Generating Excel report: {}", data.getTitle());
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Rapport");
 
@@ -68,9 +71,12 @@ public class ExcelReportGenerator {
 
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             workbook.write(out);
-            return out.toByteArray();
+            byte[] excel = out.toByteArray();
+            log.info("Excel report generated successfully, size: {} bytes", excel.length);
+            return excel;
         } catch (Exception e) {
-            throw new ReportGenerationException("Échec de la génération du rapport Excel", e);
+            log.error("Failed to generate Excel report: {}", data.getTitle(), e);
+            throw new ReportGenerationException("Failed to generate Excel report", e);
         }
     }
 }

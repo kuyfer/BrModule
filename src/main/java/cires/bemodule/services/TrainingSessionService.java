@@ -81,6 +81,7 @@ public class TrainingSessionService {
     }
 
     public void addParticipants(Long trainingSessionId, List<Long> participantIds) {
+        log.info("Adding {} participants to training session id: {}", participantIds.size(), trainingSessionId);
         TrainingSession session = getSessionIdOrThrow(trainingSessionId);
         List<Participant> participants = participantRepository.findAllById(participantIds);
 
@@ -91,6 +92,7 @@ public class TrainingSessionService {
                     .build();
             sessionParticipantRepository.save(sp);
         }
+        log.info("Successfully added {} participants to training session id: {}", participantIds.size(), trainingSessionId);
     }
 
     // ################################# READ ######################################
@@ -104,6 +106,7 @@ public class TrainingSessionService {
     }
 
     public Page<TrainingSessionDTO> findAll(TrainingSessionStatus status, TrainingSessionMode mode, Pageable pageable) {
+        log.debug("Fetching training sessions with status: {}, mode: {}, pageable: {}", status, mode, pageable);
         Specification<TrainingSession> spec = Specification
                 .where(TrainingSessionSpecifications.hasMode(mode))
                 .and(TrainingSessionSpecifications.hasStatus(status));
@@ -113,6 +116,7 @@ public class TrainingSessionService {
     }
 
     public List<TrainingSessionDTO> findAll(TrainingSessionStatus status, TrainingSessionMode mode) {
+        log.debug("Fetching all training sessions (unpaged) with status: {}, mode: {}", status, mode);
         Page<TrainingSessionDTO> page = findAll(status, mode, Pageable.unpaged());
         return page.getContent();
     }
@@ -162,8 +166,8 @@ public class TrainingSessionService {
     public void deleteTrainingSession(Long id) {
         log.info("Deleting training session id: {}", id);
         TrainingSession session = trainingSessionRepository.findById(id).orElseThrow(() -> {
-                    log.error("training session not found for deletion with id: {}", id);
-                    return new TrainingSessionNotFoundException(id);
+            log.error("training session not found for deletion with id: {}", id);
+            return new TrainingSessionNotFoundException(id);
         });
         trainingSessionRepository.delete(session);
         log.info("Training session deleted id: {}", id);

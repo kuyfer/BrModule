@@ -43,9 +43,11 @@ public class UserService {
 
     public UserDTO createUser(CreateUserRequest request) {
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+            log.warn("Attempt to create user with duplicate username: {}", request.getUsername());
             throw new DuplicateUsernameException("Username already exists");
         }
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            log.warn("Attempt to create user with duplicate email: {}", request.getEmail());
             throw new DuplicateEmailException("Email already exists");
         }
 
@@ -65,6 +67,7 @@ public class UserService {
                 .build();
 
         User saved = userRepository.save(user);
+        log.info("User created successfully with id: {} and username: {}", saved.getId(), saved.getUsername());
         passwordResetService.generateAndSendPasswordSetupToken(saved);
         return userMapper.toUserDto(saved);
     }
@@ -72,20 +75,26 @@ public class UserService {
     // ################################# READ ######################################
 
     public UserDTO findUserById(Long id) {
+        log.debug("Finding user by id: {}", id);
         User user = getUserIdOrThrow(id);
-        return userMapper.toUserDto(user);
+        UserDTO dto = userMapper.toUserDto(user);
+        log.debug("Found user with id: {}", id);
+        return dto;
     }
 
     public Page<UserDTO> findAll(String role, AccountStatus status, Pageable pageable) {
+        log.debug("Fetching users page - role: {}, status: {}, pageable: {}", role, status, pageable);
         Specification<User> spec = Specification
                 .where(UserSpecifications.hasRole(role))
                 .and(UserSpecifications.hasStatus(status));
 
         Page<User> userPage = userRepository.findAll(spec, pageable);
+        log.debug("Found {} users (page {} of {})", userPage.getNumberOfElements(), userPage.getNumber(), userPage.getTotalPages());
         return userPage.map(userMapper::toUserDto);
     }
 
     public List<UserDTO> findAll(String role, AccountStatus status) {
+        log.debug("Fetching all users (unpaged) - role: {}, status: {}", role, status);
         Page<UserDTO> page = findAll(role, status, Pageable.unpaged());
         return page.getContent();
     }
@@ -104,25 +113,32 @@ public class UserService {
     // ################################# DELETE ######################################
 
     public void deleteUser(Long id) {
+        log.info("Deleting user with id: {}", id);
         User user = getUserIdOrThrow(id);
         userRepository.delete(user);
+        log.info("User deleted successfully with id: {}", id);
     }
     // ################################# SPECIAL ####################################
 
     public void activateAccount(Long id) {
+        log.info("Activating account for user id: {}", id);
         User user = getUserIdOrThrow(id);
         user.setAccountStatus(AccountStatus.ACTIVE);
         userRepository.save(user);
+        log.info("Account activated successfully for user id: {}", id);
     }
 
     public void deactivateAccount(Long id) {
+        log.info("Deactivating account for user id: {}", id);
         User user = getUserIdOrThrow(id);
         user.setAccountStatus(AccountStatus.INACTIVE);
         userRepository.save(user);
+        log.info("Account deactivated successfully for user id: {}", id);
     }
 
     @Transactional
     public void addRolesToUser(Long userId, Set<Long> roleIds) {
+        log.info("Adding roles: {} to user id: {}", roleIds, userId);
         User user = getUserIdOrThrow(userId);
         Set<Role> roles = new HashSet<>();
         for (Long rid : roleIds) {
@@ -132,10 +148,12 @@ public class UserService {
         }
         user.getRoles().addAll(roles);
         userRepository.save(user);
+        log.info("Roles added successfully to user id: {}", userId);
     }
 
     @Transactional
     public void removeRolesFromUser(Long userId, Set<Long> roleIds) {
+        log.info("Removing roles: {} from user id: {}", roleIds, userId);
         User user = getUserIdOrThrow(userId);
         for (Long rid : roleIds) {
             Role role = roleRepository.findById(rid)
@@ -143,6 +161,7 @@ public class UserService {
             user.getRoles().remove(role);
         }
         userRepository.save(user);
+        log.info("Roles removed successfully from user id: {}", userId);
     }
 
     // ################################# UTILS ######################################

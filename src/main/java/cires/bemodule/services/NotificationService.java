@@ -13,6 +13,7 @@ import cires.bemodule.models.EmailPayload;
 import cires.bemodule.repositories.NotificationRepository;
 import cires.bemodule.specifications.NotificationSpecifications;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class NotificationService {
@@ -32,27 +34,35 @@ public class NotificationService {
     private final EmailQueueProducer emailQueueProducer;
 
     public NotificationDTO findById(Long id) {
+        log.debug("Finding notification by id: {}", id);
         Notification notification = notificationRepository.findById(id)
-                .orElseThrow(() -> new NotificationNotFoundException(id));
+                .orElseThrow(() -> {
+                    log.warn("Notification not found with id: {}", id);
+                    return new NotificationNotFoundException(id);
+                });
         return notificationMapper.toNotificationDto(notification);
     }
 
     public Page<NotificationDTO> findAll(NotificationType type, NotificationStatus status, String email, Pageable pageable) {
+        log.debug("Fetching notifications - type: {}, status: {}, email: {}, pageable: {}", type, status, email, pageable);
         Specification<Notification> spec = Specification
                 .where(NotificationSpecifications.hasType(type))
                 .and(NotificationSpecifications.hasStatus(status))
                 .and(NotificationSpecifications.toEmailEquals(email));
 
         Page<Notification> notificationPage = notificationRepository.findAll(spec, pageable);
+        log.debug("Found {} notifications (page {} of {})", notificationPage.getNumberOfElements(), notificationPage.getNumber(), notificationPage.getTotalPages());
         return notificationPage.map(notificationMapper::toNotificationDto);
     }
 
     public List<NotificationDTO> findAll(NotificationType type, NotificationStatus status, String email) {
+        log.debug("Fetching all notifications (unpaged) - type: {}, status: {}, email: {}", type, status, email);
         Page<NotificationDTO> page = findAll(type, status, email, Pageable.unpaged());
         return page.getContent();
     }
 
     public void sendTrainerAssignmentEmail(TrainingSession session, Trainer trainer) {
+        log.info("Queuing trainer assignment email for trainer: {} (session: {})", trainer.getUser().getEmail(), session.getId());
         Map<String, Object> model = new HashMap<>();
         model.put("trainerName", trainer.getUser().getFirstName());
         model.put("sessionTitle", session.getTitle());
@@ -73,6 +83,7 @@ public class NotificationService {
     }
 
     public void sendPasswordSetupEmail(User user, String setupLink) {
+        log.info("Queuing password setup email for user: {}", user.getEmail());
         Map<String, Object> model = new HashMap<>();
         model.put("recipientName", user.getFirstName());
         model.put("username", user.getUsername());
@@ -90,6 +101,7 @@ public class NotificationService {
     }
 
     public void sendSessionCancelledEmail(TrainingSession session, String reason) {
+        log.info("Queuing session cancellation email for session: {} to trainer: {}", session.getId(), session.getTrainer().getUser().getEmail());
         Map<String, Object> model = new HashMap<>();
         model.put("sessionTitle", session.getTitle());
         model.put("sessionDescription", session.getDescription());
@@ -109,6 +121,7 @@ public class NotificationService {
     }
 
     public void sendResetEmail(String email, String token) {
+        log.info("Queuing password reset email for: {}", email);
         Map<String, Object> model = new HashMap<>();
         model.put("token", token);
         model.put("email", email);
@@ -124,6 +137,7 @@ public class NotificationService {
     }
 
     public void sendReminderEmail(TrainingSession session) {
+        log.info("Queuing reminder email for session: {} to trainer: {}", session.getId(), session.getTrainer().getUser().getEmail());
         Map<String, Object> model = new HashMap<>();
         model.put("sessionTitle", session.getTitle());
         model.put("sessionDescription", session.getDescription());
@@ -142,6 +156,7 @@ public class NotificationService {
     }
 
     public void sendSessionPostponedEmail(TrainingSession session, String reason, LocalDateTime newStartDate, LocalDateTime newEndDate) {
+        log.info("Queuing session postponement email for session: {} to trainer: {}", session.getId(), session.getTrainer().getUser().getEmail());
         Map<String, Object> model = new HashMap<>();
         model.put("sessionTitle", session.getTitle());
         model.put("sessionDescription", session.getDescription());

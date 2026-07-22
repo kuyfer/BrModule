@@ -29,6 +29,7 @@ public class DashboardService {
     // ─── EXECUTIVE ────────────────────────────────────────────────────────────
 
     public ExecutiveDashboardResponse getExecutiveDashboard() {
+        log.debug("Building executive dashboard");
         long[] attendance = dashboardRepository.globalAttendanceCounts();
         long present   = attendance[0];
         long late      = attendance[1];
@@ -39,7 +40,7 @@ public class DashboardService {
         double absenceRate  = total > 0 ? round((double) absent           / total * 100) : 0;
         double lateRate     = total > 0 ? round((double) late             / total * 100) : 0;
 
-        return ExecutiveDashboardResponse.builder()
+        ExecutiveDashboardResponse response = ExecutiveDashboardResponse.builder()
                 .totalSessions(dashboardRepository.countSessions())
                 .totalParticipants(dashboardRepository.countParticipants())
                 .totalTrainers(dashboardRepository.countActiveTrainers())
@@ -56,11 +57,16 @@ public class DashboardService {
                 .topSessions(dashboardRepository.topSessionsByPresenceRate(5))
                 .recentSessions(dashboardRepository.upcomingSessionsThisWeek())
                 .build();
+
+        log.info("Executive dashboard built: totalSessions={}, totalParticipants={}, presenceRate={}%",
+                response.getTotalSessions(), response.getTotalParticipants(), presenceRate);
+        return response;
     }
 
     // ─── OPERATIONAL ──────────────────────────────────────────────────────────
 
     public OperationalDashboardResponse getOperationalDashboard() {
+        log.debug("Building operational dashboard");
         List<UnvalidatedDayRow> pending  = dashboardRepository.pendingValidations();
         List<SessionSummaryRow> ongoing  = dashboardRepository.ongoingSessions();
         List<SessionSummaryRow> upcoming = dashboardRepository.upcomingSessionsThisWeek();
@@ -69,7 +75,7 @@ public class DashboardService {
                 .mapToLong(SessionSummaryRow::getParticipantCount)
                 .sum();
 
-        return OperationalDashboardResponse.builder()
+        OperationalDashboardResponse response = OperationalDashboardResponse.builder()
                 .ongoingSessionsCount(ongoing.size())
                 .pendingValidationCount(pending.size())
                 .participantsInTrainingToday(participantsToday)
@@ -77,16 +83,21 @@ public class DashboardService {
                 .upcomingThisWeek(upcoming)
                 .pendingValidations(pending)
                 .build();
+
+        log.info("Operational dashboard built: ongoingSessions={}, pendingValidations={}, participantsToday={}",
+                ongoing.size(), pending.size(), participantsToday);
+        return response;
     }
 
     // ─── TRAINER ──────────────────────────────────────────────────────────────
 
     public TrainerDashboardResponse getTrainerDashboard(Long userId) {
+        log.debug("Building trainer dashboard for userId={}", userId);
         Trainer trainer = trainerRepository.findByUserId(userId)
                 .orElseThrow(() -> new TrainerNotFoundException(userId));
         Long trainerId = trainer.getId();
 
-        return TrainerDashboardResponse.builder()
+        TrainerDashboardResponse response = TrainerDashboardResponse.builder()
                 .totalSessionsAssigned(
                         dashboardRepository.countSessionsByTrainer(trainerId, TrainingSessionStatus.SCHEDULED) +
                                 dashboardRepository.countSessionsByTrainer(trainerId, TrainingSessionStatus.ONGOING)   +
@@ -104,6 +115,10 @@ public class DashboardService {
                 .mySessionsAveragePresenceRate(
                         dashboardRepository.averagePresenceRateForTrainer(trainerId))
                 .build();
+
+        log.info("Trainer dashboard built for trainerId={}, totalAssigned={}, ongoing={}, averagePresenceRate={}",
+                trainerId, response.getTotalSessionsAssigned(), response.getOngoingSessions(), response.getMySessionsAveragePresenceRate());
+        return response;
     }
 
     // ─── AUDIT ────────────────────────────────────────────────────────────────

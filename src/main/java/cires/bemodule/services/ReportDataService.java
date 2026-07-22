@@ -4,12 +4,14 @@ import cires.bemodule.dtos.ReportData;
 import cires.bemodule.dtos.ReportRequest;
 import cires.bemodule.repositories.AttendanceRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReportDataService {
@@ -18,6 +20,8 @@ public class ReportDataService {
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public ReportData build(ReportRequest request) {
+        log.debug("Building report data for type: {}, period: {} to {}",
+                request.getReportType(), request.getStartDate(), request.getEndDate());
         return switch (request.getReportType()) {
             case ATTENDANCE_RATE -> buildAttendanceRate(request);
             case ABSENCE_SUMMARY -> buildAbsenceSummary(request);
@@ -33,6 +37,7 @@ public class ReportDataService {
     }
 
     private ReportData buildAttendanceRate(ReportRequest r) {
+        log.debug("Building attendance rate report");
         List<Object[]> rows = attendanceRepository.findAttendanceStatsBySession(
                 r.getStartDate(), r.getEndDate(), r.getSubsidiaryId(), r.getTrainerId());
 
@@ -61,10 +66,12 @@ public class ReportDataService {
         summary.put("Sessions incluses", String.valueOf(rows.size()));
         summary.put("Taux de présence global", String.format("%.1f %%", globalRate));
 
+        log.debug("Attendance rate report generated with {} sessions, global rate {}%", rows.size(), String.format("%.1f", globalRate));
         return new ReportData("Rapport — Taux de présence", subtitle(r), columns, data, summary, LocalDateTime.now());
     }
 
     private ReportData buildAbsenceSummary(ReportRequest r) {
+        log.debug("Building absence summary report");
         List<Object[]> rows = attendanceRepository.findAbsences(
                 r.getStartDate(), r.getEndDate(), r.getSubsidiaryId(), r.getTrainerId());
 
@@ -84,10 +91,12 @@ public class ReportDataService {
         LinkedHashMap<String, String> summary = new LinkedHashMap<>();
         summary.put("Total absences", String.valueOf(rows.size()));
 
+        log.debug("Absence summary report generated with {} records", rows.size());
         return new ReportData("Rapport — Absences", subtitle(r), columns, data, summary, LocalDateTime.now());
     }
 
     private ReportData buildSubsidiaryBreakdown(ReportRequest r) {
+        log.debug("Building subsidiary breakdown report");
         // Reuses the per-session query and aggregates in memory, rather than
         // a separate multi-join JPQL query - see repository note above.
         List<Object[]> sessionRows = attendanceRepository.findAttendanceStatsBySession(
@@ -126,6 +135,7 @@ public class ReportDataService {
         LinkedHashMap<String, String> summary = new LinkedHashMap<>();
         summary.put("Filiales incluses", String.valueOf(bySubsidiary.size()));
 
+        log.debug("Subsidiary breakdown report generated with {} subsidiaries", bySubsidiary.size());
         return new ReportData("Rapport — Répartition par filiale", subtitle(r), columns, data, summary, LocalDateTime.now());
     }
 }

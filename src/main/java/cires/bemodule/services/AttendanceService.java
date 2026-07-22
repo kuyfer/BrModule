@@ -203,6 +203,7 @@ public class AttendanceService {
 
     @Transactional(readOnly = true)
     public AttendanceResponse getById(Long id) {
+        log.debug("Fetching attendance by id: {}", id);
         return attendanceMapper.toResponse(findAttendanceOrThrow(id));
     }
 
@@ -213,6 +214,7 @@ public class AttendanceService {
      */
     @Transactional(readOnly = true)
     public List<AttendanceDayGrid> getGridForSession(Long sessionId) {
+        log.debug("Building attendance grid for session id: {}", sessionId);
         findSessionOrThrow(sessionId);
 
         List<Attendance> records     = attendanceRepository
@@ -249,6 +251,7 @@ public class AttendanceService {
 
     @Transactional(readOnly = true)
     public ParticipantAttendanceSummary getSummaryForParticipant(Long sessionId, Long participantId) {
+        log.debug("Fetching attendance summary for session id: {} and participant id: {}", sessionId, participantId);
         TrainingSession session = findSessionOrThrow(sessionId);
         assertParticipantEnrolled(sessionId, participantId);
 

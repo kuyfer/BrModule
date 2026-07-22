@@ -53,6 +53,8 @@ public class ParticipantImportService {
                         TrainingSessionStatus.SCHEDULED,
                         TrainingSessionStatus.ONGOING));
 
+        log.info("Generating Excel template with {} active sessions", sessions.size());
+
         try (Workbook workbook = new XSSFWorkbook();
              ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 
@@ -102,9 +104,12 @@ public class ParticipantImportService {
             }
 
             workbook.write(out);
-            return out.toByteArray();
+            byte[] template = out.toByteArray();
+            log.info("Excel template generated successfully, size: {} bytes", template.length);
+            return template;
 
         } catch (IOException e) {
+            log.error("Failed to generate Excel template", e);
             throw new FileProcessingException("Failed to generate Excel template: " + e.getMessage());
         }
     }
@@ -112,15 +117,21 @@ public class ParticipantImportService {
     // ─── CSV IMPORT ───────────────────────────────────────────────────────────
 
     public ImportResult importFromCsv(MultipartFile file) {
+        log.info("Importing participants from CSV file: {}", file.getOriginalFilename());
         validateFile(file, "text/csv");
-        return process(parseCsv(file));
+        List<RawImportRow> rows = parseCsv(file);
+        log.debug("Parsed {} rows from CSV", rows.size());
+        return process(rows);
     }
 
     // ─── EXCEL IMPORT ─────────────────────────────────────────────────────────
 
     public ImportResult importFromExcel(MultipartFile file) {
+        log.info("Importing participants from Excel file: {}", file.getOriginalFilename());
         validateFile(file, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        return process(parseExcel(file));
+        List<RawImportRow> rows = parseExcel(file);
+        log.debug("Parsed {} rows from Excel", rows.size());
+        return process(rows);
     }
 
     // ─── CORE PIPELINE ────────────────────────────────────────────────────────
@@ -133,6 +144,7 @@ public class ParticipantImportService {
      */
     @Transactional
     protected ImportResult process(List<RawImportRow> rawRows) {
+        log.debug("Processing {} import rows", rawRows.size());
         List<ImportRowError>     errors   = new ArrayList<>();
         List<ValidatedImportRow> valid    = new ArrayList<>();
         int skippedCount = 0;
@@ -235,6 +247,7 @@ public class ParticipantImportService {
             }
 
         } catch (IOException e) {
+            log.error("Failed to parse CSV", e);
             throw new FileProcessingException("Failed to parse CSV: " + e.getMessage());
         }
 
@@ -267,6 +280,7 @@ public class ParticipantImportService {
             }
 
         } catch (IOException e) {
+            log.error("Failed to parse Excel", e);
             throw new FileProcessingException("Failed to parse Excel: " + e.getMessage());
         }
 
@@ -303,6 +317,7 @@ public class ParticipantImportService {
                 .filter(h -> !normalized.contains(h))
                 .toList();
         if (!missing.isEmpty()) {
+            log.warn("Invalid file headers. Missing columns: {}", missing);
             throw new ImportValidationException("Invalid file. Missing columns: " + missing);
         }
     }
@@ -318,6 +333,7 @@ public class ParticipantImportService {
             String idPart = raw.contains("-") ? raw.split("-")[0].trim() : raw.trim();
             return Long.parseLong(idPart);
         } catch (NumberFormatException e) {
+            log.warn("Failed to parse session id from '{}' at row {}", raw, rowNumber);
             throw new ImportRowException(
                     "Row " + rowNumber + ": cannot read formation ID from '" + raw + "'.");
         }
@@ -325,6 +341,7 @@ public class ParticipantImportService {
 
     private void validateFile(MultipartFile file, String expectedType) {
         if (file == null || file.isEmpty()) {
+            log.error("File is null or empty");
             throw new FileProcessingException("File is empty.");
         }
     }

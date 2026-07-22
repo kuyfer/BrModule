@@ -2,18 +2,21 @@ package cires.bemodule.services;
 
 import cires.bemodule.dtos.ReportData;
 import cires.bemodule.exceptions.ReportGenerationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.ByteArrayOutputStream;
 import java.time.format.DateTimeFormatter;
 
+@Slf4j
 @Component
 public class PdfReportGenerator {
 
     private static final DateTimeFormatter TS_FMT = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     public byte[] generate(ReportData data) {
+        log.info("Generating PDF report: {}", data.getTitle());
         String html = buildHtml(data);
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -21,8 +24,11 @@ public class PdfReportGenerator {
             renderer.setDocumentFromString(html);
             renderer.layout();
             renderer.createPDF(out);
-            return out.toByteArray();
+            byte[] pdf = out.toByteArray();
+            log.info("PDF report generated successfully, size: {} bytes", pdf.length);
+            return pdf;
         } catch (Exception e) {
+            log.error("Failed to generate PDF report: {}", data.getTitle(), e);
             throw new ReportGenerationException("Échec de la génération du rapport PDF", e);
         }
     }
