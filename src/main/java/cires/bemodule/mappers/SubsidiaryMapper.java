@@ -15,5 +15,6 @@ public interface SubsidiaryMapper {
     Subsidiary toSubsidiary(CreateSubsidiaryRequest request);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(source = "organizationId", target = "organization.id")
     void patchSubsidiaryFromRequest(PatchSubsidiaryRequest request, @MappingTarget Subsidiary subsidiary);
 }
