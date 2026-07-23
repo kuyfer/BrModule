@@ -2,9 +2,12 @@ package cires.bemodule.services;
 
 import cires.bemodule.dtos.requests.CreateRoleRequest;
 import cires.bemodule.dtos.requests.PatchRoleRequest;
+import cires.bemodule.dtos.requests.PatchUserRequest;
 import cires.bemodule.dtos.views.RoleDTO;
+import cires.bemodule.dtos.views.UserDTO;
 import cires.bemodule.entities.Permission;
 import cires.bemodule.entities.Role;
+import cires.bemodule.entities.User;
 import cires.bemodule.enums.RoleType;
 import cires.bemodule.exceptions.notfound.PermissionNotFoundException;
 import cires.bemodule.exceptions.notfound.RoleNotFoundException;
@@ -80,27 +83,13 @@ public class RoleService {
 
     // ################################# UPDATE ######################################
 
-    @Transactional
     public RoleDTO patchRole(Long id, PatchRoleRequest request) {
-        log.info("Patching role id={} with request: {}", id, request);
-        Role existing = getRoleOrThrow(id);
-
-        if (request.getRoleName() != null && request.getRoleName() != existing.getRoleName()) {
-            if (roleRepository.existsByRoleName(request.getRoleName())) {
-                log.warn("Patch conflict: role name '{}' already exists", request.getRoleName());
-                throw new ConflictException("Role with name '" + request.getRoleName() + "' already exists.");
-            }
-            existing.setRoleName(request.getRoleName());
-        }
-
-        if (request.getPermissionIds() != null) {
-            Set<Permission> permissions = resolvePermissions(request.getPermissionIds());
-            existing.setPermissions(permissions);
-        }
-
-        Role updated = roleRepository.save(existing);
-        log.info("Role patched successfully id={}, name={}", updated.getId(), updated.getRoleName());
-        return roleMapper.toRoleDto(updated);
+        log.info("Patching User id={} with request: {}", id, request);
+        Role role = getRoleOrThrow(id);
+        roleMapper.patchRoleFromRequest(request, role);
+        Role saved = roleRepository.save(role);
+        log.info("User patched id={}", saved.getId());
+        return roleMapper.toRoleDto(saved);
     }
 
     // ################################# DELETE ######################################
