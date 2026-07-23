@@ -85,10 +85,6 @@ public class OrganizationService {
     public void deleteOrganization(Long id) {
         log.info("Deleting organization with id: {}", id);
         Organization organization = getOrganizationOrThrow(id);
-        // Optional: check if it has subsidiaries and decide to throw ConflictException
-        // if (organization.getSubsidiaries() != null && !organization.getSubsidiaries().isEmpty()) {
-        //     throw new ConflictException("Cannot delete organization with existing subsidiaries.");
-        // }
         organizationRepository.delete(organization);
         log.info("Organization deleted successfully with id: {}", id);
     }

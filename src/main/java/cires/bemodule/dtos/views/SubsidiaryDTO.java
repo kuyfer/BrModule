@@ -14,6 +14,5 @@ public class SubsidiaryDTO {
     private Long id;
     private String name;
     private String address;
-    private Long organizationId;
     private String organizationName;
 }

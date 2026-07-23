@@ -4,14 +4,12 @@ import cires.bemodule.dtos.requests.CreateSubsidiaryRequest;
 import cires.bemodule.dtos.requests.PatchSubsidiaryRequest;
 import cires.bemodule.dtos.views.SubsidiaryDTO;
 import cires.bemodule.entities.Subsidiary;
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface SubsidiaryMapper {
 
+    @Mapping(source = "organization.name", target = "organizationName")
     SubsidiaryDTO toSubsidiaryDto(Subsidiary subsidiary);
 
     Subsidiary toSubsidiary(CreateSubsidiaryRequest request);
