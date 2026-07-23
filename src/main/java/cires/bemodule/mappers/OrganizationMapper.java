@@ -4,19 +4,17 @@ import cires.bemodule.dtos.requests.CreateOrganizationRequest;
 import cires.bemodule.dtos.requests.PatchOrganizationRequest;
 import cires.bemodule.dtos.views.OrganizationDTO;
 import cires.bemodule.entities.Organization;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", uses = { SubsidiaryMapper.class })
 public interface OrganizationMapper {
 
     @Mapping(target = "subsidiaryCount",
             expression = "java(organization.getSubsidiaries() != null ? organization.getSubsidiaries().size() : 0)")
-    @Mapping(target = "subsidiaries", source = "subsidiaries")
-    OrganizationDTO toDto(Organization organization);
+    OrganizationDTO toOrganizationDto(Organization organization);
 
-    Organization toEntity(CreateOrganizationRequest request);
+    Organization toOrganization(CreateOrganizationRequest request);
 
-    void updateEntity(PatchOrganizationRequest request, @MappingTarget Organization entity);
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void patchOrganizationFromRequest(PatchOrganizationRequest request, @MappingTarget Organization organization);
 }

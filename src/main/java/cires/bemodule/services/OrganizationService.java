@@ -32,10 +32,10 @@ public class OrganizationService {
             throw new ConflictException("Organization with name '" + request.getName() + "' already exists.");
         }
 
-        Organization organization = organizationMapper.toEntity(request);
+        Organization organization = organizationMapper.toOrganization(request);
         Organization saved = organizationRepository.save(organization);
         log.info("Organization created successfully with id: {} and name: {}", saved.getId(), saved.getName());
-        return organizationMapper.toDto(saved);
+        return organizationMapper.toOrganizationDto(saved);
     }
 
     // ################################# READ ########################################
@@ -43,7 +43,7 @@ public class OrganizationService {
     public OrganizationDTO findOrganizationById(Long id) {
         log.debug("Finding organization by id: {}", id);
         Organization organization = getOrganizationOrThrow(id);
-        return organizationMapper.toDto(organization);
+        return organizationMapper.toOrganizationDto(organization);
     }
 
     public OrganizationDTO findOrganizationByName(String name) {
@@ -53,7 +53,7 @@ public class OrganizationService {
                     log.warn("Organization not found with name: {}", name);
                     return new OrganizationNotFoundException(name);
                 });
-        return organizationMapper.toDto(organization);
+        return organizationMapper.toOrganizationDto(organization);
     }
 
     public Page<OrganizationDTO> findAll(Pageable pageable, String nameFilter) {
@@ -65,7 +65,7 @@ public class OrganizationService {
             page = organizationRepository.findAll(pageable);
         }
         log.debug("Found {} organizations (page {} of {})", page.getNumberOfElements(), page.getNumber(), page.getTotalPages());
-        return page.map(organizationMapper::toDto);
+        return page.map(organizationMapper::toOrganizationDto);
     }
 
     // ################################# UPDATE ######################################
@@ -96,7 +96,7 @@ public class OrganizationService {
 
         Organization updated = organizationRepository.save(existing);
         log.info("Organization patched successfully id={}, name={}", updated.getId(), updated.getName());
-        return organizationMapper.toDto(updated);
+        return organizationMapper.toOrganizationDto(updated);
     }
 
     // ################################# DELETE ######################################

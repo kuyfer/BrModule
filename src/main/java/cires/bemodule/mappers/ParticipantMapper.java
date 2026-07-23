@@ -20,5 +20,4 @@ public interface ParticipantMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void patchParticipantFromRequest(PatchParticipantRequest request, @MappingTarget Participant participant);
-
 }

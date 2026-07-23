@@ -18,5 +18,4 @@ public interface SubsidiaryMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void patchSubsidiaryFromRequest(PatchSubsidiaryRequest request, @MappingTarget Subsidiary subsidiary);
-
 }

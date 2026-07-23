@@ -18,9 +18,9 @@ import java.util.stream.Collectors;
 public interface RoleMapper {
 
     @Mapping(target = "permissions", source = "permissions", qualifiedByName = "toSummary")
-    RoleDTO toDto(Role role);
+    RoleDTO toRoleDto(Role role);
 
-    Role toEntity(CreateRoleRequest request);
+    Role toRole(CreateRoleRequest request);
 
     void updateEntity(PatchRoleRequest request, @MappingTarget Role role);
 

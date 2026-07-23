@@ -40,7 +40,7 @@ public class RoleService {
             throw new ConflictException("Role with name '" + request.getRoleName() + "' already exists.");
         }
 
-        Role role = roleMapper.toEntity(request);
+        Role role = roleMapper.toRole(request);
 
         if (request.getPermissionIds() != null && !request.getPermissionIds().isEmpty()) {
             Set<Permission> permissions = resolvePermissions(request.getPermissionIds());
@@ -49,7 +49,7 @@ public class RoleService {
 
         Role saved = roleRepository.save(role);
         log.info("Role created successfully with id: {} and name: {}", saved.getId(), saved.getRoleName());
-        return roleMapper.toDto(saved);
+        return roleMapper.toRoleDto(saved);
     }
 
     // ################################# READ ########################################
@@ -57,7 +57,7 @@ public class RoleService {
     public RoleDTO findRoleById(Long id) {
         log.debug("Finding role by id: {}", id);
         Role role = getRoleOrThrow(id);
-        return roleMapper.toDto(role);
+        return roleMapper.toRoleDto(role);
     }
 
     public RoleDTO findRoleByName(RoleType roleName) {
@@ -67,13 +67,13 @@ public class RoleService {
                     log.warn("Role not found with name: {}", roleName);
                     return new RoleNotFoundException(roleName);
                 });
-        return roleMapper.toDto(role);
+        return roleMapper.toRoleDto(role);
     }
 
     public Page<RoleDTO> findAll(Pageable pageable) {
         log.debug("Fetching all roles, pageable: {}", pageable);
         Page<RoleDTO> page = roleRepository.findAll(pageable)
-                .map(roleMapper::toDto);
+                .map(roleMapper::toRoleDto);
         log.debug("Found {} roles (page {} of {})", page.getNumberOfElements(), page.getNumber(), page.getTotalPages());
         return page;
     }
@@ -100,7 +100,7 @@ public class RoleService {
 
         Role updated = roleRepository.save(existing);
         log.info("Role patched successfully id={}, name={}", updated.getId(), updated.getRoleName());
-        return roleMapper.toDto(updated);
+        return roleMapper.toRoleDto(updated);
     }
 
     // ################################# DELETE ######################################
@@ -123,7 +123,7 @@ public class RoleService {
         role.getPermissions().addAll(permissions);
         Role updated = roleRepository.save(role);
         log.info("Permissions added successfully to role id: {}", roleId);
-        return roleMapper.toDto(updated);
+        return roleMapper.toRoleDto(updated);
     }
 
     @Transactional
@@ -134,7 +134,7 @@ public class RoleService {
         role.getPermissions().removeAll(permissionsToRemove);
         Role updated = roleRepository.save(role);
         log.info("Permissions removed successfully from role id: {}", roleId);
-        return roleMapper.toDto(updated);
+        return roleMapper.toRoleDto(updated);
     }
 
     // ################################# UTILS ######################################
