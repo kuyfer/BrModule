@@ -70,33 +70,13 @@ public class OrganizationService {
 
     // ################################# UPDATE ######################################
 
-    @Transactional
     public OrganizationDTO patchOrganization(Long id, PatchOrganizationRequest request) {
-        log.info("Patching organization id={} with request: {}", id, request);
-        Organization existing = getOrganizationOrThrow(id);
-
-        // If name is being updated, check uniqueness
-        if (request.getName() != null && !existing.getName().equals(request.getName())) {
-            if (organizationRepository.existsByName(request.getName())) {
-                log.warn("Patch conflict: organization name '{}' already exists", request.getName());
-                throw new ConflictException("Organization with name '" + request.getName() + "' already exists.");
-            }
-            existing.setName(request.getName());
-        }
-
-        if (request.getAddress() != null) {
-            existing.setAddress(request.getAddress());
-        }
-        if (request.getContactEmail() != null) {
-            existing.setContactEmail(request.getContactEmail());
-        }
-        if (request.getPhone() != null) {
-            existing.setPhone(request.getPhone());
-        }
-
-        Organization updated = organizationRepository.save(existing);
-        log.info("Organization patched successfully id={}, name={}", updated.getId(), updated.getName());
-        return organizationMapper.toOrganizationDto(updated);
+        log.info("Patching Organization id={} with request: {}", id, request);
+        Organization organization = getOrganizationOrThrow(id);
+        organizationMapper.patchOrganizationFromRequest(request, organization);
+        Organization saved = organizationRepository.save(organization);
+        log.info("Organization patched id={}", saved.getId());
+        return organizationMapper.toOrganizationDto(saved);
     }
 
     // ################################# DELETE ######################################
