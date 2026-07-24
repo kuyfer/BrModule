@@ -13,4 +13,5 @@ public class ImportRowError {
     private int    row;
     private String email;
     private String reason;
+    private String formationRaw;
 }

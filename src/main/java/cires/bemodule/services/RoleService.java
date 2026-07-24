@@ -96,7 +96,7 @@ public class RoleService {
         Role role = getRoleOrThrow(id);
 
         log.debug("Removing role references from users for role id: {}", id);
-        roleRepository.deleteRoleReferences(id);   // clean up join table
+        roleRepository.deleteRoleReferences(id);
 
         roleRepository.delete(role);
         log.info("Role deleted successfully with id: {}", id);

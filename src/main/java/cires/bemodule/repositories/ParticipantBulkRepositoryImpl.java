@@ -23,7 +23,7 @@ public class ParticipantBulkRepositoryImpl implements ParticipantBulkRepository 
         String sql = """
             INSERT INTO participants
                 (first_name, last_name, email, phone_number, registration_source)
-            VALUES (?, ?, ?, ?, 'IMPORT')
+            VALUES (?, ?, ?, ?, 'UPLOAD')
             ON CONFLICT (email) DO UPDATE
                 SET first_name = EXCLUDED.first_name,
                     last_name  = EXCLUDED.last_name,

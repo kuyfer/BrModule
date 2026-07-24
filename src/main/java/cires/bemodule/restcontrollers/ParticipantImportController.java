@@ -33,14 +33,16 @@ public class ParticipantImportController {
     @PostMapping(value = "/csv", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAuthority('import:execute')")
     public ResponseEntity<ImportResult> importCsv(
-            @RequestParam("file") MultipartFile file) {
-        return ResponseEntity.ok(importService.importFromCsv(file));
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(required = false) Long sessionId) {
+        return ResponseEntity.ok(importService.importFromCsv(file, sessionId));
     }
 
     @PostMapping(value = "/excel", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAuthority('import:execute')")
     public ResponseEntity<ImportResult> importExcel(
-            @RequestParam("file") MultipartFile file) {
-        return ResponseEntity.ok(importService.importFromExcel(file));
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(required = false) Long sessionId) {
+        return ResponseEntity.ok(importService.importFromExcel(file, sessionId));
     }
 }

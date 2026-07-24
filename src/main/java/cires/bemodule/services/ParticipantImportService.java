@@ -1,6 +1,5 @@
 package cires.bemodule.services;
 
-
 import cires.bemodule.dtos.imports.*;
 import cires.bemodule.entities.TrainingSession;
 import cires.bemodule.enums.TrainingSessionStatus;
@@ -18,6 +17,7 @@ import org.apache.commons.csv.CSVRecord;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +26,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.sql.Statement;
 import java.util.*;
 
 @Slf4j
@@ -116,24 +117,23 @@ public class ParticipantImportService {
 
     // ─── CSV IMPORT ───────────────────────────────────────────────────────────
 
-    public ImportResult importFromCsv(MultipartFile file) {
+    public ImportResult importFromCsv(MultipartFile file, Long sessionId) {
         log.info("Importing participants from CSV file: {}", file.getOriginalFilename());
         validateFile(file, "text/csv");
         List<RawImportRow> rows = parseCsv(file);
         log.debug("Parsed {} rows from CSV", rows.size());
-        return process(rows);
+        return process(rows, sessionId);
     }
 
-    // ─── EXCEL IMPORT ─────────────────────────────────────────────────────────
+// ─── EXCEL IMPORT ─────────────────────────────────────────────────────────
 
-    public ImportResult importFromExcel(MultipartFile file) {
+    public ImportResult importFromExcel(MultipartFile file, Long sessionId) {
         log.info("Importing participants from Excel file: {}", file.getOriginalFilename());
         validateFile(file, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         List<RawImportRow> rows = parseExcel(file);
         log.debug("Parsed {} rows from Excel", rows.size());
-        return process(rows);
+        return process(rows, sessionId);
     }
-
     // ─── CORE PIPELINE ────────────────────────────────────────────────────────
 
     /**
@@ -142,8 +142,24 @@ public class ParticipantImportService {
      * 3. Batch insert participants   (one DB round trip)
      * 4. Batch insert session links  (one DB round trip)
      */
+    /**
+     * Original processing without a forced session (delegates to the new method).
+     */
     @Transactional
     protected ImportResult process(List<RawImportRow> rawRows) {
+        return process(rawRows, null);
+    }
+
+    /**
+     * Processes the raw rows.
+     * <p>
+     * If {@code forcedSessionId} is not {@code null}, every valid row is linked to
+     * that session and the file's "formation" column is ignored.
+     * Otherwise the session ID is extracted from the formation column.
+     * </p>
+     */
+    @Transactional
+    protected ImportResult process(List<RawImportRow> rawRows, Long forcedSessionId) {
         log.debug("Processing {} import rows", rawRows.size());
         List<ImportRowError>     errors   = new ArrayList<>();
         List<ValidatedImportRow> valid    = new ArrayList<>();
@@ -157,7 +173,14 @@ public class ParticipantImportService {
                 validate(raw);
 
                 String email     = raw.getEmail().trim().toLowerCase();
-                Long   sessionId = resolveSessionId(raw.getFormationRaw(), raw.getRowNumber());
+                Long   sessionId;
+
+                if (forcedSessionId != null) {
+                    // Force all rows into this session, ignore formationRaw
+                    sessionId = forcedSessionId;
+                } else {
+                    sessionId = resolveSessionId(raw.getFormationRaw(), raw.getRowNumber());
+                }
 
                 boolean sessionExists = sessionCache.computeIfAbsent(
                         sessionId, sessionRepository::existsById);
@@ -180,6 +203,7 @@ public class ParticipantImportService {
                         .row(raw.getRowNumber())
                         .email(raw.getEmail())
                         .reason(e.getMessage())
+                        .formationRaw(raw.getFormationRaw())
                         .build());
                 skippedCount++;
             }
@@ -189,11 +213,15 @@ public class ParticipantImportService {
 
         if (!valid.isEmpty()) {
             // Batch 1 — upsert participants
-            int[] participantResults = bulkRepository.bulkInsertParticipants(valid);
-            insertedCount = (int) Arrays.stream(participantResults)
-                    .filter(r -> r >= 0)
-                    .count();
-
+            try {
+                int[] participantResults = bulkRepository.bulkInsertParticipants(valid);
+                insertedCount = (int) Arrays.stream(participantResults)
+                        .filter(r -> r >= 0 || r == Statement.SUCCESS_NO_INFO)
+                        .count();
+            } catch (DataAccessException e) {
+                log.error("Bulk insert failed: {}", e.getMostSpecificCause().getMessage());
+                throw new FileProcessingException("Database error during import. Check table constraints.");
+            }
             // Batch 2 — link participants to their session
             List<SessionParticipantLink> links = valid.stream()
                     .map(r -> SessionParticipantLink.builder()
@@ -216,7 +244,6 @@ public class ParticipantImportService {
                 .errors(errors)
                 .build();
     }
-
     // ─── PARSERS ──────────────────────────────────────────────────────────────
 
     private List<RawImportRow> parseCsv(MultipartFile file) {
