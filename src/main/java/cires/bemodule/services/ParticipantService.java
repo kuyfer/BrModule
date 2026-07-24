@@ -12,6 +12,8 @@ import cires.bemodule.repositories.ParticipantRepository;
 import cires.bemodule.specifications.ParticipantsSpecifications;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -47,16 +49,17 @@ public class ParticipantService {
         return dto;
     }
 
-    public List<ParticipantDTO> findAll(RegistrationSource source) {
-        log.info("Finding all participants with registration source: {}", source);
+    public Page<ParticipantDTO> findAll(RegistrationSource source, Pageable pageable) {
+        log.debug("Fetching participants with source: {}, pageable: {}", source, pageable);
         Specification<Participant> spec = Specification
                 .where(ParticipantsSpecifications.hasRegistration(source));
-        List<ParticipantDTO> result = participantRepository.findAll(spec)
-                .stream()
-                .map(participantMapper::toParticipantDto)
-                .toList();
-        log.info("Found {} participants for source: {}", result.size(), source);
-        return result;
+        Page<Participant> participantPage = participantRepository.findAll(spec, pageable);
+        return participantPage.map(participantMapper::toParticipantDto);
+    }
+
+    public List<ParticipantDTO> findAll(RegistrationSource source) {
+        log.info("Finding all participants (unpaged) with source: {}", source);
+        return findAll(source, Pageable.unpaged()).getContent();
     }
 
     // ################################# UPDATE ######################################

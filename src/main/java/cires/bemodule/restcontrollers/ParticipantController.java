@@ -8,12 +8,14 @@ import cires.bemodule.enums.RegistrationSource;
 import cires.bemodule.services.ParticipantService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,12 +45,11 @@ public class ParticipantController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('participant:read')")
-    public ResponseEntity<List<ParticipantDTO>> getAllParticipants(
-            @RequestParam(required = false) RegistrationSource source) {
-        List<ParticipantDTO> participants = participantService.findAll(source);
-        return ResponseEntity.ok(participants);
+    public ResponseEntity<Page<ParticipantDTO>> getAllParticipants(
+            @RequestParam(required = false) RegistrationSource source,
+            @PageableDefault(size = 20) Pageable pageable) {
+        return ResponseEntity.ok(participantService.findAll(source, pageable));
     }
-
     // ################################# UPDATE ######################################
 
     @PatchMapping("/{id}")
