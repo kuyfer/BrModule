@@ -26,10 +26,8 @@ public class Participant extends Auditable {
 
     private String phoneNumber;
 
-    private String address;
-
     @Enumerated(EnumType.STRING)
-//    @Column(nullable = false)
+    @Column(nullable = false)
     private RegistrationSource registrationSource;
 
 }

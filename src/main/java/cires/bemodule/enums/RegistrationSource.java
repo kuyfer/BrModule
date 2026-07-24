@@ -8,6 +8,6 @@ public enum RegistrationSource {
     /** Registered manually by an administrator or trainer via the UI. */
     MANUAL,
 
-    /** Imported in bulk through a file upload (CSV or Excel). */
-    UPLOAD
+    /** Imported in bulk through a file import (CSV or Excel). */
+    IMPORT
 }
