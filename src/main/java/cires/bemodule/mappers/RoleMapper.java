@@ -6,7 +6,7 @@ import cires.bemodule.dtos.views.RoleDTO;
 import cires.bemodule.entities.Role;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { PermissionMapper.class })
 public interface RoleMapper {
 
     @Mapping(target = "permissions", source = "permissions")
