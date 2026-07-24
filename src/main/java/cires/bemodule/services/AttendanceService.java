@@ -28,11 +28,11 @@ import cires.bemodule.dtos.requests.MarkAttendanceRequest;
 import cires.bemodule.dtos.requests.CorrectAttendanceRequest;
 import cires.bemodule.dtos.responses.BulkMarkResult;
 
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -206,46 +206,55 @@ public class AttendanceService {
         return attendanceMapper.toResponse(findAttendanceOrThrow(id));
     }
 
-    /**
-     * Builds the full attendance grid for a session.
-     * Each row is one day. Each row has an AM column and a PM column.
-     * Each column lists every enrolled participant with their status (or null if unmarked).
-     */
     @Transactional(readOnly = true)
     public List<AttendanceDayGrid> getGridForSession(Long sessionId) {
         log.debug("Building attendance grid for session id: {}", sessionId);
-        findSessionOrThrow(sessionId);
+        TrainingSession session = findSessionOrThrow(sessionId);
 
-        List<Attendance> records     = attendanceRepository
+        List<Attendance> records = attendanceRepository
                 .findAllBySessionIdOrderByDateAscSlotAsc(sessionId);
-        List<Long> enrolledIds       = sessionParticipantRepository
+        List<Long> enrolledIds = sessionParticipantRepository
                 .findParticipantIdByTrainingSessionId(sessionId);
 
-        Map<LocalDate, List<Attendance>> byDate = records.stream()
-                .collect(Collectors.groupingBy(Attendance::getDate));
+        Map<Long, String> participantNames = new HashMap<>();
+        if (!enrolledIds.isEmpty()) {
+            List<Participant> parts = participantRepository.findAllById(enrolledIds);
+            for (Participant p : parts) {
+                participantNames.put(p.getId(), p.getFirstName() + " " + p.getLastName());
+            }
+        }
 
-        return byDate.entrySet().stream()
-                .sorted(Map.Entry.comparingByKey())
-                .map(entry -> {
-                    LocalDate date = entry.getKey();
-                    Map<AttendanceSlot, List<Attendance>> bySlot = entry.getValue().stream()
-                            .collect(Collectors.groupingBy(Attendance::getSlot));
+        Map<LocalDate, Map<AttendanceSlot, List<Attendance>>> byDateAndSlot = new HashMap<>();
+        for (Attendance a : records) {
+            byDateAndSlot
+                    .computeIfAbsent(a.getDate(), d -> new HashMap<>())
+                    .computeIfAbsent(a.getSlot(), s -> new ArrayList<>())
+                    .add(a);
+        }
 
-                    List<Attendance> amRecords = bySlot.getOrDefault(AttendanceSlot.AM, List.of());
-                    List<Attendance> pmRecords = bySlot.getOrDefault(AttendanceSlot.PM, List.of());
+        List<AttendanceDayGrid> grid = new ArrayList<>();
+        LocalDate start = session.getStartDate().toLocalDate();
+        LocalDate end   = session.getEndDate().toLocalDate();
 
-                    boolean dayValidated = entry.getValue().stream()
-                            .anyMatch(Attendance::isValidated);
+        for (LocalDate date = start; !date.isAfter(end); date = date.plusDays(1)) {
+            Map<AttendanceSlot, List<Attendance>> slotMap = byDateAndSlot.getOrDefault(date, new HashMap<>());
 
-                    return AttendanceDayGrid.builder()
-                            .date(date)
-                            .dayValidated(dayValidated)
-                            .totalEnrolled(enrolledIds.size())
-                            .amSlot(buildSlotGrid(amRecords, enrolledIds))
-                            .pmSlot(buildSlotGrid(pmRecords, enrolledIds))
-                            .build();
-                })
-                .toList();
+            List<Attendance> amList = slotMap.getOrDefault(AttendanceSlot.AM, List.of());
+            List<Attendance> pmList = slotMap.getOrDefault(AttendanceSlot.PM, List.of());
+
+            boolean dayValidated = (amList.stream().anyMatch(Attendance::isValidated) ||
+                    pmList.stream().anyMatch(Attendance::isValidated));
+
+            grid.add(AttendanceDayGrid.builder()
+                    .date(date)
+                    .dayValidated(dayValidated)
+                    .totalEnrolled(enrolledIds.size())
+                    .amSlot(buildSlotGrid(amList, enrolledIds, participantNames))
+                    .pmSlot(buildSlotGrid(pmList, enrolledIds, participantNames))
+                    .build());
+        }
+
+        return grid;
     }
 
     @Transactional(readOnly = true)
@@ -284,7 +293,9 @@ public class AttendanceService {
 
     // ─── PRIVATE HELPERS ──────────────────────────────────────────────────────
 
-    private SlotGrid buildSlotGrid(List<Attendance> slotRecords, List<Long> enrolledIds) {
+    private SlotGrid buildSlotGrid(List<Attendance> slotRecords,
+                                   List<Long> enrolledIds,
+                                   Map<Long, String> participantNames) {
         Map<Long, Attendance> byParticipant = slotRecords.stream()
                 .collect(Collectors.toMap(
                         a -> a.getParticipant().getId(), a -> a));
@@ -292,9 +303,11 @@ public class AttendanceService {
         List<SlotEntry> entries = enrolledIds.stream()
                 .map(id -> {
                     Attendance a = byParticipant.get(id);
+                    // Use pre‑fetched name if no attendance record exists
                     String fullName = a != null
                             ? a.getParticipant().getFirstName() + " " + a.getParticipant().getLastName()
-                            : null;
+                            : participantNames.getOrDefault(id, "Participant #" + id);
+
                     return SlotEntry.builder()
                             .participantId(id)
                             .participantFullName(fullName)
