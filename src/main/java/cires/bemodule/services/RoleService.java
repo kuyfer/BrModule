@@ -94,10 +94,13 @@ public class RoleService {
     public void deleteRole(Long id) {
         log.info("Deleting role with id: {}", id);
         Role role = getRoleOrThrow(id);
+
+        log.debug("Removing role references from users for role id: {}", id);
+        roleRepository.deleteRoleReferences(id);   // clean up join table
+
         roleRepository.delete(role);
         log.info("Role deleted successfully with id: {}", id);
     }
-
     // ################################# PERMISSION MANAGEMENT ########################
 
     @Transactional
