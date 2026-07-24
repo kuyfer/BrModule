@@ -1,6 +1,7 @@
 package cires.bemodule.security.jwt;
 
 import cires.bemodule.entities.Permission;
+import cires.bemodule.entities.Role;
 import cires.bemodule.security.models.UserPrincipal;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -87,7 +88,7 @@ public class JwtService {
 
         claims.put(TOKEN_TYPE_CLAIM, "access");
         List<String> roles = userPrincipal.getUser().getRoles().stream()
-                .map(role -> role.getRoleName().name())
+                .map(Role::getRoleName)
                 .toList();
         claims.put(ROLES_CLAIM, roles);
 
@@ -105,7 +106,7 @@ public class JwtService {
         claims.put(TOKEN_TYPE_CLAIM, "refresh");
 
         List<String> roles = userPrincipal.getUser().getRoles().stream()
-                .map(role -> role.getRoleName().name())
+                .map(Role::getRoleName)
                 .toList();
         claims.put(ROLES_CLAIM, roles);
         return buildJwtToken(claims, userPrincipal, refreshExpiration);

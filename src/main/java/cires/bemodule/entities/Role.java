@@ -1,6 +1,5 @@
 package cires.bemodule.entities;
 
-import cires.bemodule.enums.RoleType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.envers.Audited;
@@ -18,9 +17,7 @@ public class Role extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(unique = true, nullable = false)
-    private RoleType roleName;
+    private String roleName;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

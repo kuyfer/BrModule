@@ -6,7 +6,6 @@ import cires.bemodule.dtos.requests.CreateTrainerRequest;
 import cires.bemodule.entities.Role;
 import cires.bemodule.entities.Trainer;
 import cires.bemodule.entities.User;
-import cires.bemodule.enums.RoleType;
 import cires.bemodule.exceptions.notfound.RoleNotFoundException;
 import cires.bemodule.exceptions.business.ConflictException;
 import cires.bemodule.exceptions.notfound.TrainerNotFoundException;
@@ -53,7 +52,7 @@ public class TrainerService {
 
         Trainer trainer = trainerMapper.toTrainer(request);
         trainer.setSpeciality(request.getSpeciality());
-        Role trainerRole = roleRepository.findByRoleName(RoleType.TRAINER)
+        Role trainerRole = roleRepository.findByRoleName("TRAINER")
                 .orElseThrow(() -> {
                     log.error("Trainer role not found");
                     return new RoleNotFoundException();
@@ -73,7 +72,7 @@ public class TrainerService {
         return trainerMapper.toTrainerDTO(trainer);
     }
 
-    public Page<TrainerDTO> findAll(String specialty, Pageable pageable) {
+    public Page<TrainerDTO> findAll(java.lang.String specialty, Pageable pageable) {
         log.debug("Fetching trainers page - speciality: {}, pageable: {}", specialty, pageable);
         Specification<Trainer> spec = Specification
                 .where(TrainerSpecifications.hasSpeciality(specialty));
@@ -82,7 +81,7 @@ public class TrainerService {
         return trainerPage.map(trainerMapper::toTrainerDTO);
     }
 
-    public List<TrainerDTO> findAll(String specialty) {
+    public List<TrainerDTO> findAll(java.lang.String specialty) {
         log.debug("Fetching all trainers (unpaged) - speciality: {}", specialty);
         Page<TrainerDTO> page = findAll(specialty, Pageable.unpaged());
         return page.getContent();

@@ -1,6 +1,5 @@
 package cires.bemodule.dtos.requests;
 
-import cires.bemodule.enums.RoleType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +12,6 @@ import java.util.Set;
  */
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class PatchRoleRequest {
-    private RoleType roleName;  
+    private String roleName;
     private Set<Long> permissionIds;
 }

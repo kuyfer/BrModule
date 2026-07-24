@@ -2,13 +2,9 @@ package cires.bemodule.services;
 
 import cires.bemodule.dtos.requests.CreateRoleRequest;
 import cires.bemodule.dtos.requests.PatchRoleRequest;
-import cires.bemodule.dtos.requests.PatchUserRequest;
 import cires.bemodule.dtos.views.RoleDTO;
-import cires.bemodule.dtos.views.UserDTO;
 import cires.bemodule.entities.Permission;
 import cires.bemodule.entities.Role;
-import cires.bemodule.entities.User;
-import cires.bemodule.enums.RoleType;
 import cires.bemodule.exceptions.notfound.PermissionNotFoundException;
 import cires.bemodule.exceptions.notfound.RoleNotFoundException;
 import cires.bemodule.exceptions.business.ConflictException;
@@ -63,7 +59,7 @@ public class RoleService {
         return roleMapper.toRoleDto(role);
     }
 
-    public RoleDTO findRoleByName(RoleType roleName) {
+    public RoleDTO findRoleByName(String roleName) {
         log.debug("Finding role by name: {}", roleName);
         Role role = roleRepository.findByRoleName(roleName)
                 .orElseThrow(() -> {

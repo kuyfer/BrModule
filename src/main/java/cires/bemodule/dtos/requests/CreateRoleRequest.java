@@ -1,6 +1,5 @@
 package cires.bemodule.dtos.requests;
 
-import cires.bemodule.enums.RoleType;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +14,7 @@ import java.util.Set;
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class CreateRoleRequest {
     @NotNull(message = "Role type is required")
-    private RoleType roleName;
+    private String roleName;
 
     private Set<Long> permissionIds;
 }
