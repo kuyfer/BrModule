@@ -17,4 +17,5 @@ public class SlotEntry {
     private String           delayReason;
     private String           comment;
     private boolean          validated;
+    private Long             attendanceId;
 }

@@ -43,11 +43,10 @@ import java.util.stream.Collectors;
 @Transactional
 public class AttendanceService {
 
-    private final AttendanceRepository        attendanceRepository;
+    private final AttendanceRepository attendanceRepository;
     private final TrainingSessionRepository sessionRepository;
     private final ParticipantRepository participantRepository;
     private final SessionParticipantRepository sessionParticipantRepository;
-    private final TrainerRepository trainerRepository;
     private final AttendanceMapper attendanceMapper;
 
     // ─── MARK ─────────────────────────────────────────────────────────────────
@@ -303,6 +302,7 @@ public class AttendanceService {
                             .delayReason(a != null ? a.getDelayReason() : null)
                             .comment(a != null ? a.getComment() : null)
                             .validated(a != null && a.isValidated())
+                            .attendanceId(a != null ? a.getId() : null)
                             .build();
                 })
                 .toList();
