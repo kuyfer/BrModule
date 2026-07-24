@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>500 - Internal Server Error</title>
+    <title>500 - Erreur interne du serveur</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: Arial, sans-serif; background-color: #f4f4f4; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
@@ -24,21 +24,21 @@
     <div class="error-code">500</div>
     <div class="accent-bar"></div>
 
-    <div class="title">Internal Server Error</div>
+    <div class="title">Erreur interne du serveur</div>
     <p class="message">
-        Something went wrong on our end. Our team has been notified.<br/>
-        Please try again in a few moments.
+        Une erreur s'est produite de notre côté. Notre équipe a été informée.<br/>
+        Veuillez réessayer dans quelques instants.
     </p>
 
     <div class="highlight-box">
-        <span>Error: </span>
-        <span th:text="${error} ?: 'An unexpected error occurred'">An unexpected error occurred</span>
+        <span>Erreur : </span>
+        <span th:text="${error} ?: 'Une erreur inattendue s\'est produite'">Une erreur inattendue s'est produite</span>
     </div>
 
-    <a href="/" class="btn">Back to Home</a>
+    <a href="/" class="btn">Retour à l'accueil</a>
 
     <div class="footer">
-        If the problem persists, please contact support.<br/>
+        Si le problème persiste, veuillez contacter le support.<br/>
         &copy; Cires Technology
     </div>
 
