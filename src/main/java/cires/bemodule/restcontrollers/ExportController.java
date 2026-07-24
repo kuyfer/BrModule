@@ -63,9 +63,10 @@ public class ExportController {
     @PreAuthorize("hasAuthority('participant:read')")
     public void exportParticipants(HttpServletResponse response,
                                    @RequestParam(required = false) RegistrationSource source,
+                                   @RequestParam(required = false) Long sessionId,
                                    @RequestParam(defaultValue = "CSV") ExportFormat format) throws IOException {
 
-        List<ParticipantDTO> participants = participantService.findAll(source);
+        List<ParticipantDTO> participants = participantService.findAll(source, sessionId);
 
         if (format == ExportFormat.EXCEL) {
             exportService.exportToExcel(response, "participants.xlsx", "Participants", PARTICIPANT_HEADERS, participants,

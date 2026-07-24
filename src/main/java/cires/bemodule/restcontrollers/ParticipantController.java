@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/participants")
@@ -47,9 +46,11 @@ public class ParticipantController {
     @PreAuthorize("hasAuthority('participant:read')")
     public ResponseEntity<Page<ParticipantDTO>> getAllParticipants(
             @RequestParam(required = false) RegistrationSource source,
+            @RequestParam(required = false) Long sessionId,
             @PageableDefault(size = 20) Pageable pageable) {
-        return ResponseEntity.ok(participantService.findAll(source, pageable));
+        return ResponseEntity.ok(participantService.findAll(source, sessionId, pageable));
     }
+    
     // ################################# UPDATE ######################################
 
     @PatchMapping("/{id}")

@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.envers.Audited;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Builder
 @Audited @Entity
 @Getter @Setter
@@ -29,5 +32,8 @@ public class Participant extends Auditable {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RegistrationSource registrationSource;
+
+    @OneToMany(mappedBy = "participant")
+    private List<SessionParticipant> sessionParticipants = new ArrayList<>();
 
 }

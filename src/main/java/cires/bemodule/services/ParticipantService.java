@@ -49,17 +49,16 @@ public class ParticipantService {
         return dto;
     }
 
-    public Page<ParticipantDTO> findAll(RegistrationSource source, Pageable pageable) {
-        log.debug("Fetching participants with source: {}, pageable: {}", source, pageable);
+    public Page<ParticipantDTO> findAll(RegistrationSource source, Long sessionId, Pageable pageable) {
         Specification<Participant> spec = Specification
-                .where(ParticipantsSpecifications.hasRegistration(source));
-        Page<Participant> participantPage = participantRepository.findAll(spec, pageable);
-        return participantPage.map(participantMapper::toParticipantDto);
+                .where(ParticipantsSpecifications.hasRegistration(source))
+                .and(ParticipantsSpecifications.hasSession(sessionId));
+        return participantRepository.findAll(spec, pageable)
+                .map(participantMapper::toParticipantDto);
     }
 
-    public List<ParticipantDTO> findAll(RegistrationSource source) {
-        log.info("Finding all participants (unpaged) with source: {}", source);
-        return findAll(source, Pageable.unpaged()).getContent();
+    public List<ParticipantDTO> findAll(RegistrationSource source, Long sessionId) {
+        return findAll(source, sessionId, Pageable.unpaged()).getContent();
     }
 
     // ################################# UPDATE ######################################

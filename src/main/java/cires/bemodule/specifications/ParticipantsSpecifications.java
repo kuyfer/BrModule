@@ -1,7 +1,9 @@
 package cires.bemodule.specifications;
 
 import cires.bemodule.entities.Participant;
+import cires.bemodule.entities.SessionParticipant;
 import cires.bemodule.enums.RegistrationSource;
+import jakarta.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
 
 /**
@@ -47,5 +49,13 @@ public class ParticipantsSpecifications {
     public static Specification<Participant> hasRegistration(RegistrationSource source) {
         return (root, query, criteriaBuilder) ->
                 source == null ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("registrationSource"), source);
+    }
+
+    public static Specification<Participant> hasSession(Long sessionId) {
+        return (root, query, cb) -> {
+            if (sessionId == null) return cb.conjunction();
+            Join<Participant, SessionParticipant> spJoin = root.join("sessionParticipants");
+            return cb.equal(spJoin.get("trainingSession").get("id"), sessionId);
+        };
     }
 }
