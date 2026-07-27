@@ -120,10 +120,10 @@ public class NotificationService {
         emailQueueProducer.queueEmail(payload, NotificationType.SESSION_CANCELLATION);
     }
 
-    public void sendResetEmail(String email, String token) {
+    public void sendResetEmail(String email, String resetLink) {
         log.info("Queuing password reset email for: {}", email);
         Map<String, Object> model = new HashMap<>();
-        model.put("token", token);
+        model.put("resetLink", resetLink);
         model.put("email", email);
 
         EmailPayload payload = new EmailPayload(

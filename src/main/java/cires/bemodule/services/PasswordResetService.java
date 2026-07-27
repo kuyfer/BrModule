@@ -78,7 +78,13 @@ public class PasswordResetService {
         resetTokenRepository.save(resetTokenEntity);
         log.info("Reset token saved for user id: {}, expires at: {}", user.getId(), resetTokenEntity.getExpiresAt());
 
-        notificationService.sendResetEmail(user.getEmail(), token);
+        String resetLink = UriComponentsBuilder.fromUriString(frontendUrl)
+                .path("/reset-password")
+                .queryParam("token", token)
+                .build()
+                .toUriString();
+
+        notificationService.sendResetEmail(user.getEmail(), resetLink);
     }
 
     /**
