@@ -21,9 +21,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -37,6 +37,7 @@ public class TrainerService {
 
     // ################################# CREATE ######################################
 
+    @Transactional
     public TrainerDTO createTrainer(CreateTrainerRequest request, Long userId) {
         log.info("Creating trainer for user id: {}, speciality: {}", userId, request.getSpeciality());
         User user = userRepository.findById(userId)
@@ -51,7 +52,7 @@ public class TrainerService {
         }
 
         Trainer trainer = trainerMapper.toTrainer(request);
-        trainer.setSpeciality(request.getSpeciality());
+
         Role trainerRole = roleRepository.findByRoleName("TRAINER")
                 .orElseThrow(() -> {
                     log.error("Trainer role not found");

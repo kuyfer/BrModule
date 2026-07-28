@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -33,10 +32,8 @@ import java.util.Set;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
     private final RoleRepository roleRepository;
-    private final NotificationService notificationService;
     private final PasswordResetService passwordResetService;
 
 // ################################# CREATE ######################################
@@ -118,7 +115,8 @@ public class UserService {
         userRepository.delete(user);
         log.info("User deleted successfully with id: {}", id);
     }
-    // ################################# SPECIAL ####################################
+
+    // ################################# ACCOUNT ####################################
 
     public void activateAccount(Long id) {
         log.info("Activating account for user id: {}", id);
@@ -135,6 +133,8 @@ public class UserService {
         userRepository.save(user);
         log.info("Account deactivated successfully for user id: {}", id);
     }
+
+    // ################################# ROLES ######################################
 
     @Transactional
     public void addRolesToUser(Long userId, Set<Long> roleIds) {
