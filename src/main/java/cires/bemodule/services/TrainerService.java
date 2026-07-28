@@ -57,7 +57,10 @@ public class TrainerService {
                     log.error("Trainer role not found");
                     return new RoleNotFoundException();
                 });
-        user.setRoles(Set.of(trainerRole));
+
+        user.getRoles().add(trainerRole);
+        userRepository.save(user);
+
         trainer.setUser(user);
         Trainer savedTrainer = trainerRepository.save(trainer);
         log.info("Trainer created successfully with id: {}", savedTrainer.getId());
