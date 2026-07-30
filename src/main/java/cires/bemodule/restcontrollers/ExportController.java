@@ -9,26 +9,28 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.lang.String;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/exports")
 public class ExportController {
 
-    private final ExportService exportService;
+    private final ExportFacadeService exportFacade;
     private final NotificationService notificationService;
     private final UserService userService;
     private final ParticipantService participantService;
     private final TrainingSessionService trainingSessionService;
     private final TrainerService trainerService;
 
-    private static final String[] NOTIFICATION_HEADERS = {"Id", "Subject", "To Email", "Status", "Type"};
-    private static final String[] PARTICIPANT_HEADERS = {"Id", "First Name", "Last Name", "Email", "Registration Source"};
-    private static final String[] SESSION_HEADERS = {"Id", "Name", "Start Date", "End Date", "Status", "Mode"};
-    private static final String[] USER_HEADERS = {"Id", "Username", "First name", "Last name", "Email", "Role", "Status"};
-    private static final String[] TRAINER_HEADERS = {"Id", "User Name", "First Name", "Last Name", "Email", "Speciality", "Status"};
+    // Colonnes en français
+    private static final String[] NOTIFICATION_HEADERS = {"Id", "Sujet", "Destinataire", "Statut", "Type"};
+    private static final String[] PARTICIPANT_HEADERS = {"Id", "Prénom", "Nom", "Email", "Source d'inscription"};
+    private static final String[] SESSION_HEADERS = {"Id", "Nom", "Date début", "Date fin", "Statut", "Mode"};
+    private static final String[] USER_HEADERS = {"Id", "Nom d'utilisateur", "Prénom", "Nom", "Email", "Rôle", "Statut"};
+    private static final String[] TRAINER_HEADERS = {"Id", "Nom d'utilisateur", "Prénom", "Nom", "Email", "Spécialité", "Statut"};
 
     @GetMapping("/notifications")
     @PreAuthorize("hasAuthority('notification:read')")
@@ -37,26 +39,21 @@ public class ExportController {
                                     @RequestParam(required = false) NotificationStatus status,
                                     @RequestParam(required = false) String email,
                                     @RequestParam(defaultValue = "CSV") ExportFormat format) throws IOException {
+        List<NotificationDTO> data = notificationService.findAll(type, status, email);
+        Map<String, String> filters = new LinkedHashMap<>();
+        if (type != null)   filters.put("type", type.name());
+        if (status != null) filters.put("statut", status.name());
+        if (email != null && !email.isBlank()) filters.put("email", email);
 
-        List<NotificationDTO> notifications = notificationService.findAll(type, status, email);
-
-        if (format == ExportFormat.EXCEL) {
-            exportService.exportToExcel(response, "notifications.xlsx", "Notifications", NOTIFICATION_HEADERS, notifications,
-                    n -> new String[]{
-                            String.valueOf(n.getId()),
-                            n.getSubject(),
-                            n.getToEmail(),
-                            n.getNotificationStatus().toString(),
-                            n.getNotificationType().toString()});
-        } else {
-            exportService.exportToCsv(response, "notifications.csv", NOTIFICATION_HEADERS, notifications,
-                    n -> new String[]{
-                            String.valueOf(n.getId()),
-                            n.getSubject(),
-                            n.getToEmail(),
-                            n.getNotificationStatus().toString(),
-                            n.getNotificationType().toString()});
-        }
+        exportFacade.export(response, "notifications", format, filters,
+                NOTIFICATION_HEADERS, data,
+                n -> new String[]{
+                        String.valueOf(n.getId()),
+                        n.getSubject(),
+                        n.getToEmail(),
+                        n.getNotificationStatus().toString(),
+                        n.getNotificationType().toString()},
+                "Notifications");
     }
 
     @GetMapping("/participants")
@@ -65,28 +62,20 @@ public class ExportController {
                                    @RequestParam(required = false) RegistrationSource source,
                                    @RequestParam(required = false) Long sessionId,
                                    @RequestParam(defaultValue = "CSV") ExportFormat format) throws IOException {
+        List<ParticipantDTO> data = participantService.findAll(source, sessionId);
+        Map<String, String> filters = new LinkedHashMap<>();
+        if (source != null) filters.put("source", source.name());
+        if (sessionId != null) filters.put("session", sessionId.toString());
 
-        List<ParticipantDTO> participants = participantService.findAll(source, sessionId);
-
-        if (format == ExportFormat.EXCEL) {
-            exportService.exportToExcel(response, "participants.xlsx", "Participants", PARTICIPANT_HEADERS, participants,
-                    participant -> new String[]{
-                            String.valueOf(participant.getId()),
-                            participant.getFirstName(),
-                            participant.getLastName(),
-                            participant.getEmail(),
-                            participant.getRegistrationSource().toString()
-                    });
-        } else {
-            exportService.exportToCsv(response, "participants.csv", PARTICIPANT_HEADERS, participants,
-                    participant -> new String[]{
-                            String.valueOf(participant.getId()),
-                            participant.getFirstName(),
-                            participant.getLastName(),
-                            participant.getEmail(),
-                            participant.getRegistrationSource().toString()
-                    });
-        }
+        exportFacade.export(response, "participants", format, filters,
+                PARTICIPANT_HEADERS, data,
+                p -> new String[]{
+                        String.valueOf(p.getId()),
+                        p.getFirstName(),
+                        p.getLastName(),
+                        p.getEmail(),
+                        p.getRegistrationSource().toString()},
+                "Participants");
     }
 
     @GetMapping("/sessions")
@@ -95,30 +84,21 @@ public class ExportController {
                                @RequestParam(required = false) TrainingSessionStatus status,
                                @RequestParam(required = false) TrainingSessionMode mode,
                                @RequestParam(defaultValue = "CSV") ExportFormat format) throws IOException {
+        List<TrainingSessionDTO> data = trainingSessionService.findAll(status, mode);
+        Map<String, String> filters = new LinkedHashMap<>();
+        if (status != null) filters.put("statut", status.name());
+        if (mode != null)   filters.put("mode", mode.name());
 
-        List<TrainingSessionDTO> sessions = trainingSessionService.findAll(status, mode);
-
-        if (format == ExportFormat.EXCEL) {
-            exportService.exportToExcel(response, "sessions.xlsx", "Training Sessions", SESSION_HEADERS, sessions,
-                    session -> new String[]{
-                            String.valueOf(session.getId()),
-                            session.getTitle(),
-                            session.getStartDate().toString(),
-                            session.getEndDate().toString(),
-                            session.getStatus().toString(),
-                            session.getMode().toString()
-                    });
-        } else {
-            exportService.exportToCsv(response, "sessions.csv", SESSION_HEADERS, sessions,
-                    session -> new String[]{
-                            String.valueOf(session.getId()),
-                            session.getTitle(),
-                            session.getStartDate().toString(),
-                            session.getEndDate().toString(),
-                            session.getStatus().toString(),
-                            session.getMode().toString()
-                    });
-        }
+        exportFacade.export(response, "sessions", format, filters,
+                SESSION_HEADERS, data,
+                s -> new String[]{
+                        String.valueOf(s.getId()),
+                        s.getTitle(),
+                        s.getStartDate().toString(),
+                        s.getEndDate().toString(),
+                        s.getStatus().toString(),
+                        s.getMode().toString()},
+                "Sessions de formation");
     }
 
     @GetMapping("/users")
@@ -127,32 +107,22 @@ public class ExportController {
                             @RequestParam(required = false) AccountStatus status,
                             @RequestParam(required = false) String role,
                             @RequestParam(defaultValue = "CSV") ExportFormat format) throws IOException {
+        List<UserDTO> data = userService.findAll(role, status);
+        Map<String, String> filters = new LinkedHashMap<>();
+        if (status != null) filters.put("statut", status.name());
+        if (role != null && !role.isBlank()) filters.put("role", role);
 
-        List<UserDTO> users = userService.findAll(role, status);
-
-        if (format == ExportFormat.EXCEL) {
-            exportService.exportToExcel(response, "users.xlsx", "Users", USER_HEADERS, users,
-                    user -> new String[]{
-                            String.valueOf(user.getId()),
-                            user.getUsername(),
-                            user.getFirstName(),
-                            user.getLastName(),
-                            user.getEmail(),
-                            user.getRoles().toString(),
-                            user.getAccountStatus().toString()
-                    });
-        } else {
-            exportService.exportToCsv(response, "users.csv", USER_HEADERS, users,
-                    user -> new String[]{
-                            String.valueOf(user.getId()),
-                            user.getUsername(),
-                            user.getFirstName(),
-                            user.getLastName(),
-                            user.getEmail(),
-                            user.getRoles().toString(),
-                            user.getAccountStatus().toString()
-                    });
-        }
+        exportFacade.export(response, "utilisateurs", format, filters,
+                USER_HEADERS, data,
+                u -> new String[]{
+                        String.valueOf(u.getId()),
+                        u.getUsername(),
+                        u.getFirstName(),
+                        u.getLastName(),
+                        u.getEmail(),
+                        u.getRoles().toString(),
+                        u.getAccountStatus().toString()},
+                "Utilisateurs");
     }
 
     @GetMapping("/trainers")
@@ -160,30 +130,20 @@ public class ExportController {
     public void exportTrainers(HttpServletResponse response,
                                @RequestParam(required = false) String speciality,
                                @RequestParam(defaultValue = "CSV") ExportFormat format) throws IOException {
-        List<TrainerDTO> trainers = trainerService.findAll(speciality);
+        List<TrainerDTO> data = trainerService.findAll(speciality);
+        Map<String, String> filters = new LinkedHashMap<>();
+        if (speciality != null && !speciality.isBlank()) filters.put("spécialité", speciality);
 
-        if (format == ExportFormat.EXCEL) {
-            exportService.exportToExcel(response, "trainers.xlsx", "Trainers", TRAINER_HEADERS, trainers,
-                    trainer -> new String[]{
-            String.valueOf(trainer.getId()),
-                    trainer.getUser().getUsername(),
-                    trainer.getUser().getFirstName(),
-                    trainer.getUser().getLastName(),
-                    trainer.getUser().getEmail(),
-                    trainer.getSpeciality(),
-                    trainer.getUser().getAccountStatus().toString()
-                    });
-        } else {
-            exportService.exportToCsv(response, "trainers.csv", TRAINER_HEADERS, trainers,
-                    trainer -> new String[]{
-            String.valueOf(trainer.getId()),
-                    trainer.getUser().getUsername(),
-                    trainer.getUser().getFirstName(),
-                            trainer.getUser().getLastName(),
-                            trainer.getUser().getEmail(),
-                            trainer.getSpeciality(),
-                            trainer.getUser().getAccountStatus().toString()
-                    });
-        }
+        exportFacade.export(response, "formateurs", format, filters,
+                TRAINER_HEADERS, data,
+                t -> new String[]{
+                        String.valueOf(t.getId()),
+                        t.getUser().getUsername(),
+                        t.getUser().getFirstName(),
+                        t.getUser().getLastName(),
+                        t.getUser().getEmail(),
+                        t.getSpeciality(),
+                        t.getUser().getAccountStatus().toString()},
+                "Formateurs");
     }
 }
