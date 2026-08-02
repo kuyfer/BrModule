@@ -1,6 +1,7 @@
 package cires.bemodule.dtos;
 
 import cires.bemodule.entities.CustomRevisionEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import org.hibernate.envers.RevisionType;
 @AllArgsConstructor
 public class RevisionDetail {
     private CustomRevisionEntity revisionInfo;
+    @JsonIgnore
     private Object entity;
     private RevisionType revisionType;
     private String entityType;

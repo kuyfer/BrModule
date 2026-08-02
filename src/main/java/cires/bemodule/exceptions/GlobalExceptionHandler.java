@@ -21,10 +21,7 @@ import cires.bemodule.exceptions.security.SecurityException;
 
 import java.net.URI;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Optional;
 
 /**

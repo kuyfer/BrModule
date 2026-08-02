@@ -25,7 +25,6 @@ public class ExportController {
     private final TrainingSessionService trainingSessionService;
     private final TrainerService trainerService;
 
-    // Colonnes en français
     private static final String[] NOTIFICATION_HEADERS = {"Id", "Sujet", "Destinataire", "Statut", "Type"};
     private static final String[] PARTICIPANT_HEADERS = {"Id", "Prénom", "Nom", "Email", "Source d'inscription"};
     private static final String[] SESSION_HEADERS = {"Id", "Nom", "Date début", "Date fin", "Statut", "Mode"};
