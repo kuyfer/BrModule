@@ -198,7 +198,7 @@ public class PasswordResetService {
      * @return a 6‑character token string (4 random bytes → ~6 Base64 characters)
      */
     private String makeResetToken() {
-        byte[] randomBytes = new byte[4];
+        byte[] randomBytes = new byte[24];
         secureRandom.nextBytes(randomBytes);
         String token = base64Encoder.encodeToString(randomBytes);
         log.debug("Generated raw token (for internal use)");
